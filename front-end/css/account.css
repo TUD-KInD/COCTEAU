@@ -1,0 +1,33 @@
+#account-dialog #google-sign-in-button {
+  margin-top: 17px !important;
+  box-sizing: border-box;
+}
+
+#account-dialog #google-sign-in-button div {
+  box-shadow: none !important;
+}
+
+#account-dialog #hello-text {
+  display: none;
+}
+
+#account-dialog #google-sign-out-button {
+  display: none;
+}
+
+#account-dialog #user-id-sentence {
+  display: none;
+}
+
+#account-dialog .custom-button {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif !important;
+  font-size: 16px !important;
+  height: 46px !important;
+  border-radius: 0 !important;
+  width: 231px !important;
+  margin-top: 17px !important;
+  background-color: #7d7d7d !important;
+  border-color: #7d7d7d !important;
+  color: white !important;
+  line-height: 25px;
+}

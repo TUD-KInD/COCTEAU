@@ -1,0 +1,162 @@
+{
+  "1": {
+    "id": 1,
+    "topic_id": 2,
+    "title": "Shuttercam: Responsible Cameras",
+    "image": "img/scenario_1.jpg",
+    "description": "<a href='https://www.ams-institute.org/urban-challenges/urban-data-intelligence/shuttercam-would-cameras-equipped-with-shutters-contribute-to-a-responsible-smart-city/' target='_blank'>Shuttercam</a> is a collaboration project between the City of Amsterdam and the Responsible Sensing Lab in the AMS Institute. What if cameras are equipped with shutters showing us when the camera sees you or not? The project explores how the design of three types of cameras in public space can contribute to a responsible Smart City.",
+    "question": [{
+      "text": "1. The Scheduled Shuttercam camera has a shutter operating based on a set time schedule. For example, the shutter opens from 9 AM to 10 PM on weekend days. How do you think about this one?",
+      "option": [{
+        "text": "Like Extremely",
+        "value": 1
+      }, {
+        "text": "Like Somewhat",
+        "value": 2
+      }, {
+        "text": "Neutral",
+        "value": 3
+      }, {
+        "text": "Dislike somewhat",
+        "value": 4
+      }, {
+        "text": "Dislike Extremely",
+        "value": 5
+      }]
+    }, {
+      "text": "2. The Opt-out Shuttercam has a shutter operating based on the same set schedule but has a large push button. When visitors press the button, the shutter covers the camera for 15 minutes. How do you think about this one?",
+      "option": [{
+        "text": "Like Extremely",
+        "value": 1
+      }, {
+        "text": "Like Somewhat",
+        "value": 2
+      }, {
+        "text": "Neutral",
+        "value": 3
+      }, {
+        "text": "Dislike somewhat",
+        "value": 4
+      }, {
+        "text": "Dislike Extremely",
+        "value": 5
+      }]
+    }, {
+      "text": "3. The Winding Clock Shuttercam has a shutter that can be controlled via a winding mechanism, adding a layer of physical limitation against remote hacking. How do you think about this one?",
+      "option": [{
+        "text": "Like Extremely",
+        "value": 1
+      }, {
+        "text": "Like Somewhat",
+        "value": 2
+      }, {
+        "text": "Neutral",
+        "value": 3
+      }, {
+        "text": "Dislike somewhat",
+        "value": 4
+      }, {
+        "text": "Dislike Extremely",
+        "value": 5
+      }]
+    }]
+  },
+  "2": {
+    "id": 2,
+    "topic_id": 1,
+    "title": "Back to Campus from COVID-19",
+    "image": "img/scenario_2.jpeg",
+    "description": "COVID-19 situation is getting better. Schools have decided to keep in place agile working approaches. Therefore, students and employees chose to continue to work from their households or come back to the shared workplace.",
+    "question": [{
+      "text": "1. If I was not obliged to stay home, I would go to my workplace",
+      "option": [{
+        "text": "Strongly Agree",
+        "value": 1
+      }, {
+        "text": "Agree",
+        "value": 2
+      }, {
+        "text": "Neutral",
+        "value": 3
+      }, {
+        "text": "Disagree",
+        "value": 4
+      }, {
+        "text": "Strongly Disagree",
+        "value": 5
+      }]
+    }, {
+      "text": "2. Working from home is more productive",
+      "option": [{
+        "text": "Strongly Agree",
+        "value": 1
+      }, {
+        "text": "Agree",
+        "value": 2
+      }, {
+        "text": "Neutral",
+        "value": 3
+      }, {
+        "text": "Disagree",
+        "value": 4
+      }, {
+        "text": "Strongly Disagree",
+        "value": 5
+      }]
+    }, {
+      "text": "3. Working from home reduces the workload",
+      "option": [{
+        "text": "Strongly Agree",
+        "value": 1
+      }, {
+        "text": "Agree",
+        "value": 2
+      }, {
+        "text": "Neutral",
+        "value": 3
+      }, {
+        "text": "Disagree",
+        "value": 4
+      }, {
+        "text": "Strongly Disagree",
+        "value": 5
+      }]
+    }, {
+      "text": "4. Working from home reduces stress",
+      "option": [{
+        "text": "Strongly Agree",
+        "value": 1
+      }, {
+        "text": "Agree",
+        "value": 2
+      }, {
+        "text": "Neutral",
+        "value": 3
+      }, {
+        "text": "Disagree",
+        "value": 4
+      }, {
+        "text": "Strongly Disagree",
+        "value": 5
+      }]
+    }, {
+      "text": "5. Working from home makes my work schedule and timeline more flexible",
+      "option": [{
+        "text": "Strongly Agree",
+        "value": 1
+      }, {
+        "text": "Agree",
+        "value": 2
+      }, {
+        "text": "Neutral",
+        "value": 3
+      }, {
+        "text": "Disagree",
+        "value": 4
+      }, {
+        "text": "Strongly Disagree",
+        "value": 5
+      }]
+    }]
+  }
+}

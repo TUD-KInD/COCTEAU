@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>COCTEAU.nl</title>
+  <!-- Start for Google Sign-In -->
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="google-signin-client_id" content="878004336244-j1s2d006vt99evg8k92oiu8gegoiah9h.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js"></script>
+  <!-- End for Google Sign-In -->
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/frame.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/controls.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/widgets.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/account.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/custom.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/widgets.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/environment.js"></script>
+  <script src="js/game.js"></script>
+</head>
+
+<body>
+  <div class="menu-container"></div>
+  <div class="content-container">
+    <div class="content">
+      <div class="content-table flex-column">
+        <div class="flex-row">
+          <div class="flex-item flex-column">
+            <!-- The title will be loaded from the scenario.json file using quiz.js -->
+            <h2 id="scenario-title" class="add-top-margin"></h2>
+            <p class="text">
+              <!-- The description will be loaded from the scenario.json file using quiz.js -->
+              <span id="scenario-description"></span>
+            </p>
+            <hr>
+            <p class="text highlight-text">
+              Play a game!
+              Guess another person's emotion based on the meme.
+            </p>
+          </div>
+          <div class="flex-item flex-column-no-wrap full-width">
+            <!-- TODO: need to use a game.json to fill this part automatically -->
+            <div class="meme">
+              <figure>
+                <img id="vision-image" class="meme-image" style="max-height: 400px;">
+                <figcaption id="vision-caption" class="meme-caption"></figcaption>
+                <div id="vision-credit"></div>
+              </figure>
+            </div>
+            <!-- TODO: add the pick-a-mood images -->
+            <div class="custom-survey add-top-margin add-bottom-margin" id="express-emotion">
+              <span class="text">What do you think the meme creator's emotion is? Choose TWO options.</span>
+              <div class="custom-radio-group-survey add-top-margin">
+                <div><input type="checkbox" name="express-emotion-scale" value="0" id="express-emotion-item-0"><label for="express-emotion-item-0">Excited<img src="img/pam_excited.png" /></label></div>
+                <div><input type="checkbox" name="express-emotion-scale" value="1" id="express-emotion-item-1"><label for="express-emotion-item-1">Happy<img src="img/pam_happy.png" /></label></div>
+                <div><input type="checkbox" name="express-emotion-scale" value="2" id="express-emotion-item-2"><label for="express-emotion-item-2">Relaxed<img src="img/pam_relaxed.png" /></label></div>
+                <div><input type="checkbox" name="express-emotion-scale" value="3" id="express-emotion-item-3"><label for="express-emotion-item-3">Calm<img src="img/pam_calm.png" /></label></div>
+                <div><input type="checkbox" name="express-emotion-scale" value="8" id="express-emotion-item-8"><label for="express-emotion-item-8">Neutral<img src="img/pam_neutral.png" /></label></div>
+                <div><input type="checkbox" name="express-emotion-scale" value="4" id="express-emotion-item-4"><label for="express-emotion-item-4">Bored<img src="img/pam_bored.png" /></label></div>
+                <div><input type="checkbox" name="express-emotion-scale" value="5" id="express-emotion-item-5"><label for="express-emotion-item-5">Sad<img src="img/pam_sad.png" /></label></div>
+                <div><input type="checkbox" name="express-emotion-scale" value="6" id="express-emotion-item-6"><label for="express-emotion-item-6">Annoyed<img src="img/pam_annoyed.png" /></label></div>
+                <div><input type="checkbox" name="express-emotion-scale" value="7" id="express-emotion-item-7"><label for="express-emotion-item-7">Nervous<img src="img/pam_nervous.png" /></label></div>
+              </div>
+            </div>
+            <div class="custom-survey add-top-margin add-bottom-margin" id="provide-feedback">
+              <span class="text">Would you be willing to share your thoughts about this meme (optional)?</span>
+              <textarea class="custom-textbox-survey add-top-margin" placeholder="Your thoughts"></textarea>
+            </div>
+          </div>
+          <div class="flex-item flex-column" id="show-game-result">
+            <p class="text">
+              Thank you for playing the game! Click the button below to view the result.
+            </p>
+            <div class="control-group">
+              <div class="control-group">
+                <a id="show-result-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
+                  <img src="img/book.png"><span>View Result</span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="flex-item flex-column" id="play-another-round" style="display: none;">
+            <p class="text">
+              Please see the above highlighed answers. How about playing another round of the game?
+            </p>
+            <div class="control-group">
+              <div class="control-group">
+                <a id="game-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
+                  <img src="img/next.png"><span>Play games</span>
+                </a>
+                <a id="browse-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
+                  <img src="img/next.png"><span>Browse visions</span>
+                </a>
+                <a id="vision-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
+                  <img src="img/next.png"><span>Express visions</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

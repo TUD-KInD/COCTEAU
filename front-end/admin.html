@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>COCTEAU.nl</title>
+  <!-- Start for Google Sign-In -->
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="google-signin-client_id" content="878004336244-j1s2d006vt99evg8k92oiu8gegoiah9h.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js"></script>
+  <!-- End for Google Sign-In -->
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/frame.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/controls.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/widgets.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/account.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/custom.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/widgets.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/tracker.js"></script>
+  <script src="js/environment.js"></script>
+  <script src="js/admin.js"></script>
+</head>
+
+<body>
+  <div class="menu-container"></div>
+  <div class="content-container">
+    <div class="content">
+      <div class="content-table flex-column">
+        <div class="flex-row-space-between">
+          <div class="flex-item flex-column">
+            <h2 class="add-top-margin">
+              Admin Control Panel
+            </h2>
+          </div>
+          <div class="flex-item flex-column">
+            <div class="control-group">
+              <a id="sign-in-prompt" class="custom-button-flat large stretch-on-mobile pulse-primary"><img src="img/user.png"><span>Sign In</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div class="flex-item flex-column">
+            <p class="text">
+              Some functions require admin permission, and you need to sign in to verify your identity.
+              Open the debug console on the browser to see messages returned by the back-end.
+            </p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div class="flex-item flex-column">
+            <div id="admin-control">
+              <div>
+                <!-- Begin for Topic -->
+                <hr style="height: 6px; width: 100%; background-color: black;">
+                <h3>GET Topic</h3>
+                <button id="get-all-topic">Get all topics</button><br>
+                <label for="want-topic-get-id">Topic ID to get:</label>
+                <input type="number" id="want-topic-get-id" name=""><br>
+                <button id="get-topic-by-id">Get topic by ID</button><br>
+                <br>
+                <hr style="height: 6px; width: 100%; background-color: black;">
+                <h3>POST or PATCH Topic (admin only)</h3>
+                <label for="want-topic-title">Topic title:</label><br>
+                <textarea name="" id="want-topic-title" cols="30" rows="2"></textarea><br>
+                <label for="want-topic-description">Topic description:</label><br>
+                <textarea name="" id="want-topic-description" cols="30" rows="5"></textarea><br>
+                <button id="create-topic">Create topic</button><br>
+                <label for="want-topic-update-id">Topic ID to update:</label>
+                <input type="number" id="want-topic-update-id" name=""><br>
+                <button id="update-topic">Update topic</button><br>
+                <br>
+                <hr style="height: 6px; width: 100%; background-color: black;">
+                <h3>DELETE Topic (admin only)</h3>
+                <label for="want-topic-delete-id">Topic ID to delete:</label>
+                <input type="number" id="want-topic-delete-id" name=""><br>
+                <button id="delete-topic">Delete topic</button><br>
+                <!-- End for Topic -->
+                <br>
+                <!-- Begin for Scenario -->
+                <hr style="height: 6px; width: 100%; background-color: black;">
+                <h3>GET Scenario</h3>
+                <button id="get-all-scenario">Get all scenarios</button><br>
+                <label for="want-scenario-get-topic-id">Topic ID of the scenarios:</label>
+                <input type="number" id="want-scenario-get-topic-id" name=""><br>
+                <button id="get-scenario-by-topic-id">Get scenarios by topic ID</button><br>
+                <label for="want-scenario-get-id">Scenario ID to get:</label>
+                <input type="number" id="want-scenario-get-id" name=""><br>
+                <button id="get-scenario-by-id">Get scenario by its ID</button><br>
+                <br>
+                <hr style="height: 6px; width: 100%; background-color: black;">
+                <h3>POST or PATCH Scenario (admin only)</h3>
+                <label for="want-scenario-topic-id">Topic ID of the scenario:</label>
+                <input type="number" id="want-scenario-topic-id" name=""><br>
+                <label for="want-scenario-title">Scenario title:</label><br>
+                <textarea name="" id="want-scenario-title" cols="30" rows="2"></textarea><br>
+                <label for="want-scenario-description">Scenario description:</label><br>
+                <textarea name="" id="want-scenario-description" cols="30" rows="5"></textarea><br>
+                <label for="want-scenario-image">Scenario image URL:</label><br>
+                <textarea name="" id="want-scenario-image" cols="30" rows="5"></textarea><br>
+                <button id="create-scenario">Create scenario</button><br>
+                <label for="want-scenario-update-id">Scenario ID to update:</label>
+                <input type="number" id="want-scenario-update-id" name=""><br>
+                <button id="update-scenario">Update scenario</button><br>
+                <br>
+                <hr style="height: 6px; width: 100%; background-color: black;">
+                <h3>DELETE Scenario (admin only)</h3>
+                <label for="want-scenario-delete-id">Scenario ID to delete:</label>
+                <input type="number" id="want-scenario-delete-id" name=""><br>
+                <button id="delete-scenario">Delete scenario</button><br>
+                <!-- End for Scenario -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
