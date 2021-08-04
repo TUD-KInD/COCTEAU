@@ -9,15 +9,11 @@ class UserTest(BasicTest):
     def setUp(self):
         db.create_all()
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
     def test_create_user(self):
         user = user_operations.create_user("123")
         assert user in db.session
 
-    def test_get_user(self):
+    def test_get_user_by_id(self):
         client_id = "456"
         user = user_operations.create_user(client_id)
 
@@ -27,7 +23,7 @@ class UserTest(BasicTest):
 
         assert retrieved_user.client_id == client_id
 
-    def test_get_userby_client_id(self):
+    def test_get_user_by_client_id(self):
         client_id = "456"
         user = user_operations.create_user(client_id)
 

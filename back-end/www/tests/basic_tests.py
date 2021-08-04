@@ -19,3 +19,8 @@ class BasicTest(TestCase):
 
         # pass in test configuration
         return app
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        db.session.close()

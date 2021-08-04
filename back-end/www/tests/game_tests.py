@@ -57,9 +57,29 @@ class GameTest(BasicTest):
         self.vision = vision_operations.create_vision(
             mood_id=mood_id, medias=medias, user_id=user_id, scenario_id=scenario_id)
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
+    def test_create_random_game(self):
+        game_1 = game_operations.create_random_game(self.user_2.id)
+        assert game_1 in db.session
+        assert game_1.status == GameStatusEnum.IN_PROGRESS
+
+        game_2 = game_operations.create_random_game(self.user_1.id)
+        assert game_2 is None
+
+        game_3 = game_operations.create_random_game(self.user_2.id)
+        assert game_3 in db.session
+        assert game_3.status == GameStatusEnum.IN_PROGRESS
+
+        game_5 = game_operations.create_random_game(self.user_2.id, scenario_id=self.scenario_2.id)
+        assert game_5 is None
+
+        game_6 = game_operations.create_random_game(self.user_2.id, scenario_id=self.scenario_1.id)
+        assert game_6 in db.session
+        assert game_6.status == GameStatusEnum.IN_PROGRESS
+
+        game_operations.submit_game(game_1.id, self.user_2.id, "", [self.mood_1.id])
+
+        game_4 = game_operations.create_random_game(self.user_2.id)
+        assert game_4 is None
 
     def test_create_game(self):
         user_id = self.user_2.id
@@ -155,7 +175,7 @@ class GameTest(BasicTest):
 
         assert retrieved_game == game
 
-    def test_get_game_by_user(self):
+    def test_get_games_by_user(self):
         user_id = self.user_2.id
         vision_id = self.vision.id
 
@@ -169,13 +189,13 @@ class GameTest(BasicTest):
         game_2 = game_operations.create_game(
             user_id=user_id, vision_id=vision_id)
 
-        retrieved_games = game_operations.get_game_by_user(user_id)
+        retrieved_games = game_operations.get_games_by_user(user_id)
 
         assert len(retrieved_games) == 2
         assert retrieved_games[0] == game_1
         assert retrieved_games[1] == game_2
 
-    def test_get_game_by_vision(self):
+    def test_get_games_by_vision(self):
         user_id = self.user_2.id
         vision_id = self.vision.id
 
@@ -189,7 +209,7 @@ class GameTest(BasicTest):
         game_2 = game_operations.create_game(
             user_id=user_id, vision_id=vision_id)
 
-        retrieved_games = game_operations.get_game_by_vision(vision_id)
+        retrieved_games = game_operations.get_games_by_vision(vision_id)
 
         assert len(retrieved_games) == 2
         assert retrieved_games[0] == game_1

@@ -6,8 +6,8 @@ from flask import jsonify
 from flask import make_response
 from util.util import InvalidUsage
 from util.util import handle_invalid_usage
-from util.util import handle_admin_permission
-import jwt
+from util.util import decode_user_token
+from util.util import try_wrap_response
 from config.config import config
 from models.model_operations.scenario_operations import create_scenario
 from models.model_operations.scenario_operations import get_scenario_by_id
@@ -32,41 +32,45 @@ def scenario():
     user_token : str
         The encoded user JWT, issued by the back-end.
         (required for POST, PATCH, and DELETE)
-    scenario_id : str
-        The ID for getting, updating, or deleting a scenario.
+    scenario_id : int
+        The ID of a scenario.
         (required for PATCH and DELETE)
-        (optinal in the URL query parameters for GET)
+        (optional in the URL query parameters for GET)
     image : str
         The URL to an image of the scenario.
         (required for POST)
         (optional for PATCH)
     title : str
-        The title for creating or updating a scenario.
+        The title of a scenario.
         (required for POST)
         (optional for PATCH)
     description : str
-        The description for creating or updating a scenario.
+        The description of a scenario.
+        (required for POST)
+        (optional for PATCH)
+    topic_id : int
+        The topic ID of a scenario.
+        (optional in the URL query parameters for GET)
         (required for POST)
         (optional for PATCH)
 
     Returns
     -------
-    Scenario
+    Scenario or list of Scenario
         The retrieved scenario object.
-        (for GET with id in the URL query parameters)
+        (for GET with scenario_id in the URL query parameters)
         (for POST and PATCH)
-    list of Scenario
-        A list of retrieved scenario objects.
-        (for GET with no id in the URL query parameters)
+        Or a list of retrieved scenario objects.
+        (for GET with topic_id in the URL query parameters)
+        (for GET with no URL query parameters)
     """
     rj = request.json
 
     # Sanity and permission check
     # (POST, PATCH, and DELETE methods are for administrators only)
     if request.method in ["POST", "PATCH", "DELETE"]:
-        r = handle_admin_permission(rj, config.JWT_PRIVATE_KEY)
-        if r is not None: # None means passing the admin permission check
-            return r
+        error, _ = decode_user_token(rj, config.JWT_PRIVATE_KEY, check_if_admin=True)
+        if error is not None: return error
 
     # Process the request
     if request.method == "GET":
@@ -75,73 +79,87 @@ def scenario():
         topic_id = request.args.get("topic_id")
         if topic_id is None:
             if scenario_id is None:
-                data = get_all_scenarios()
-                data = scenarios_schema.dump(data)
+                return try_get_all_scenarios()
             else:
-                try:
-                    data = get_scenario_by_id(scenario_id)
-                    data = scenario_schema.dump(data)
-                except Exception as ex:
-                    e = InvalidUsage(ex.args[0], status_code=400)
-                    return handle_invalid_usage(e)
+                return try_get_scenario_by_id(scenario_id)
         else:
             if scenario_id is None:
-                try:
-                    data = get_scenarios_by_topic(topic_id)
-                    data = scenarios_schema.dump(data)
-                except Exception as ex:
-                    e = InvalidUsage(ex.args[0], status_code=400)
-                    return handle_invalid_usage(e)
+                return try_get_scenarios_by_topic(topic_id)
             else:
-                e = InvalidUsage("Cannot have both topic_id and scenario_id.", status_code=400)
+                e = InvalidUsage("Cannot have both 'topic_id' and 'scenario_id'.", status_code=400)
                 return handle_invalid_usage(e)
-        return jsonify({"data": data})
     elif request.method == "POST":
         # Create a scenario (admin only)
-        if "title" in rj and "description" in rj and "topic_id" in rj and "image" in rj:
-            try:
-                data = create_scenario(rj["title"], rj["description"], rj["image"], rj["topic_id"])
-                data = scenario_schema.dump(data)
-            except Exception as ex:
-                e = InvalidUsage(ex.args[0], status_code=400)
-                return handle_invalid_usage(e)
-        else:
-            e = InvalidUsage("Missing field: title, description, topic_id, or image", status_code=400)
+        title = rj.get("title")
+        description = rj.get("description")
+        topic_id = rj.get("topic_id")
+        image = rj.get("image")
+        if title is None or description is None or topic_id is None or image is None:
+            e = InvalidUsage("Must have 'title', 'description', 'topic_id', and 'image'.", status_code=400)
             return handle_invalid_usage(e)
-        return jsonify({"data": data})
+        else:
+            return try_create_scenario(title, description, image, topic_id)
     elif request.method == "PATCH":
         # Update a scenario (admin only)
-        if "scenario_id" in rj:
-            t = rj["title"] if "title" in rj else None
-            d = rj["description"] if "description" in rj else None
-            i = rj["image"] if "image" in rj else None
-            ti = rj["topic_id"] if "topic_id" in rj else None
-            if t is None and d is None and i is None and ti is None:
-                e = InvalidUsage("Need to have either title, description, image, or topic_id", status_code=400)
-                return handle_invalid_usage(e)
-            try:
-                data = update_scenario(rj["scenario_id"], title=t, description=d, image=i, topic_id=ti)
-                data = scenario_schema.dump(data)
-            except Exception as ex:
-                e = InvalidUsage(ex.args[0], status_code=400)
-                return handle_invalid_usage(e)
-        else:
-            e = InvalidUsage("Missing field: scenario_id", status_code=400)
+        scenario_id = rj.get("scenario_id")
+        if scenario_id is None:
+            e = InvalidUsage("Must have 'scenario_id'.", status_code=400)
             return handle_invalid_usage(e)
-        return jsonify({"data": data})
+        else:
+            t = rj.get("title")
+            d = rj.get("description")
+            ti = rj.get("topic_id")
+            i = rj.get("image")
+            if t is None and d is None and i is None and ti is None:
+                e = InvalidUsage("Must have at least one field to update.", status_code=400)
+                return handle_invalid_usage(e)
+            else:
+                return try_update_scenario(scenario_id, title=t, description=d, image=i, topic_id=ti)
     elif request.method == "DELETE":
         # Delete a scenario (admin only)
-        if "scenario_id" in rj:
-            try:
-                remove_scenario(rj["scenario_id"])
-            except Exception as ex:
-                e = InvalidUsage(ex.args[0], status_code=400)
-                return handle_invalid_usage(e)
-        else:
-            e = InvalidUsage("Missing field: scenario_id", status_code=400)
+        scenario_id = rj.get("scenario_id")
+        if scenario_id is None:
+            e = InvalidUsage("Must have 'scenario_id'.", status_code=400)
             return handle_invalid_usage(e)
-        return make_response("", 204)
+        else:
+            return try_remove_scenario(scenario_id)
     else:
         # Wrong methods
-        e = InvalidUsage("Method not allowed", status_code=405)
+        e = InvalidUsage("Method not allowed.", status_code=405)
         return handle_invalid_usage(e)
+
+
+@try_wrap_response
+def try_get_all_scenarios():
+    data = get_all_scenarios()
+    return jsonify({"data": scenarios_schema.dump(data)})
+
+
+@try_wrap_response
+def try_get_scenario_by_id(scenario_id):
+    data = get_scenario_by_id(scenario_id)
+    return jsonify({"data": scenario_schema.dump(data)})
+
+
+@try_wrap_response
+def try_get_scenarios_by_topic(topic_id):
+    data = get_scenarios_by_topic(topic_id)
+    return jsonify({"data": scenarios_schema.dump(data)})
+
+
+@try_wrap_response
+def try_create_scenario(title, description, image, topic_id):
+    data = create_scenario(title, description, image, topic_id)
+    return jsonify({"data": scenario_schema.dump(data)})
+
+
+@try_wrap_response
+def try_update_scenario(scenario_id, title=None, description=None, image=None, topic_id=None):
+    data = update_scenario(scenario_id, title=title, description=description, image=image, topic_id=topic_id)
+    return jsonify({"data": scenario_schema.dump(data)})
+
+
+@try_wrap_response
+def try_remove_scenario(scenario_id):
+    remove_scenario(scenario_id)
+    return make_response("", 204)

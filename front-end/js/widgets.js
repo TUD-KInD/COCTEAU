@@ -83,9 +83,6 @@
       var cancel_text = has_action_callback ? "Cancel" : "Ok";
       cancel_text = safeGet(settings["cancel_text"], cancel_text);
 
-      // The callback function when the user click on the "x" button to close the dialog
-      var has_close_callback = (typeof settings["close_callback"] === "function");
-
       // Hide the cancel button or not
       var show_cancel_btn = safeGet(settings["show_cancel_btn"], true);
 
@@ -126,11 +123,11 @@
         buttons.push({
           class: btn_class,
           text: cancel_text,
-          click: function () {
+          click: function (event) {
             if (close_dialog_on_cancel) {
               $(this).dialog("close");
             }
-            if (has_cancel_callback) settings["cancel_callback"]();
+            if (has_cancel_callback) settings["cancel_callback"](event);
           }
         });
       }
@@ -144,11 +141,11 @@
         buttons.push({
           class: btn_class,
           text: action_text,
-          click: function () {
+          click: function (event) {
             if (close_dialog_on_action) {
               $(this).dialog("close");
             }
-            if (has_action_callback) settings["action_callback"]();
+            if (has_action_callback) settings["action_callback"](event);
           }
         });
       }
@@ -274,12 +271,6 @@
         $dialog.on("dialogopen", function () {
           $(this).parent().find(".ui-dialog-titlebar-close").hide();
         });
-      } else {
-        if (has_close_callback) {
-          $dialog.on("dialogclose", function () {
-            settings["close_callback"]();
-          });
-        }
       }
       return $dialog;
     }

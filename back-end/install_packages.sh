@@ -7,6 +7,7 @@ pip install --upgrade flask-migrate==2.7.0
 pip install --upgrade flask-marshmallow==0.14.0
 pip install --upgrade marshmallow-sqlalchemy==0.24.2
 pip install --upgrade flask-cors==3.0.10
+pip install --upgrade marshmallow_enum
 
 # Testing
 pip install --upgrade flask-testing==0.8.1

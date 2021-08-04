@@ -1,0 +1,73 @@
+[{
+  "text": "Gender Identity:",
+  "choices": [{
+    "text": "Female",
+    "value": 1
+  }, {
+    "text": "Male",
+    "value": 2
+  }, {
+    "text": "Non-binary/non-conforming",
+    "value": 3
+  }, {
+    "text": "Transgender",
+    "value": 4
+  }, {
+    "text": "Others",
+    "value": 0
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
+}, {
+  "text": "Age Range:",
+  "choices": [{
+    "text": "Under 18 years old",
+    "value": 1
+  }, {
+    "text": "18-24 years old",
+    "value": 2
+  }, {
+    "text": "25-34 years old",
+    "value": 3
+  }, {
+    "text": "35-44 years old",
+    "value": 4
+  }, {
+    "text": "45-54 years old",
+    "value": 5
+  }, {
+    "text": "55-64 years old",
+    "value": 6
+  }, {
+    "text": "65-74 years old",
+    "value": 7
+  }, {
+    "text": "75 years or older",
+    "value": 8
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
+}, {
+  "text": "Job Category:",
+  "choices": [{
+    "text": "Student (e.g., PhD student)",
+    "value": 1
+  }, {
+    "text": "Staff (e.g., secretary)",
+    "value": 2
+  }, {
+    "text": "Researcher (e.g., postdoc)",
+    "value": 3
+  }, {
+    "text": "Faculty (e.g., lecturer, professor)",
+    "value": 4
+  }, {
+    "text": "Other",
+    "value": 5
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
+}]

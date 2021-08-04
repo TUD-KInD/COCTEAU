@@ -16,6 +16,7 @@ For development, please check this [video labeling tool](https://github.com/CMU-
 - [Setup Unsplash (administrator only)](#setup-unsplash)
 - [Setup Google Analytics (administrator only)](#setup-ga)
 - [Setup development environment](#setup-dev-env)
+- [Setup initial data](#setup-init-data)
 - [Manipulate database](#manipulate-database)
 - [Code infrastructure](#code-infrastructure)
 - [Deploy back-end using uwsgi (administrator only)](#deploy-back-end-using-uwsgi)
@@ -291,6 +292,16 @@ tail -100 periscope-public-engagement-tool/back-end/log/uwsgi.log
 sudo systemctl restart apache2
 ```
 
+# <a name="setup-init-data"></a>Setup initial data
+Before releasing the website, you need to provide the initial data. First, you need to go to the [index.html](/front-end/index.html) page to sign in using your Google account. Then, the account sign-in dialog will display your user ID. After that, use the [set_client_type.py](/back-end/www/set_client_type.py) script to give yourself the admin permission:
+```sh
+python set_client_type.py [user_id] [client_type]
+
+# For example, giving the user with ID 1 the admin permission
+python set_client_type.py 1 0
+```
+After giving yourself the admin permission, go to the [admin.html](/front-end/admin.html) to manipulate data (e.g., creating scenarios and questions). We have made this step easier by providing the "Delete all data" and "Set initial data" buttons at the end of the admin page. Just click on the checkbox before the "Set initial data" button to enable it, and then you can click on the button to give initial data to the website for testing. To delete the testing data, use the "Delete all data" button.
+
 # <a name="manipulate-database"></a>Manipulate database
 We use [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/) to manage database migrations. The script "db.sh" enhances the workflow by adding the FLASK_APP environment. If you edit the database model and want to perform database migration, run the following:
 ```sh
@@ -411,6 +422,7 @@ sudo vim /etc/apache2/sites-available/[BACK_END_DOMAIN].conf
 <VirtualHost *:80>
   ServerName [BACK_END_DOMAIN]
   Header always set Access-Control-Allow-Origin "http://[FRONT_END_DOMAIN]"
+  Header set Access-Control-Allow-Methods "POST, GET, PUT, DELETE, PATCH, OPTIONS"
   Header set Access-Control-Allow-Headers "Content-Type"
   # The following line forces the browser to break the cache
   Header set Cache-Control "max-age=5, public, must-revalidate"
@@ -540,6 +552,7 @@ sudo vim /etc/apache2/sites-available/[BACK_END_DOMAIN].conf
   SSLEngine On
   # The following line enables cors
   Header always set Access-Control-Allow-Origin "https://[FRONT_END_DOMAIN]"
+  Header set Access-Control-Allow-Methods "POST, GET, PUT, DELETE, PATCH, OPTIONS"
   Header set Access-Control-Allow-Headers "Content-Type"
   # The following line forces the browser to break the cache
   Header set Cache-Control "max-age=5, public, must-revalidate"

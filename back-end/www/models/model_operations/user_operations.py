@@ -64,6 +64,21 @@ def get_user_by_client_id(client_id):
     return user
 
 
+def get_all_users():
+    """
+    Get all users.
+
+    Returns
+    -------
+    users : list of User
+        The list of retrieved user objects.
+    """
+    # TODO: need a testing case
+    users = User.query.all()
+
+    return users
+
+
 def update_client_type_by_user_id(user_id, client_type):
     """
     Update client type by user ID.
@@ -74,13 +89,21 @@ def update_client_type_by_user_id(user_id, client_type):
         ID of the user.
     client_type : int
         Type of the user (see the description in the User model).
+
+    Raises
+    ------
+    exception : Exception
+        When no user is found.
     """
-    # TODO: need testing case for this function
+    # TODO: need a testing case
     user = User.query.filter_by(id=user_id).first()
 
-    if user is not None:
-        user.client_type = client_type
-        db.session.commit()
+    if user is None:
+        raise Exception("No user found in the database to update.")
+
+    user.client_type = client_type
+
+    db.session.commit()
 
     return user
 
@@ -93,8 +116,16 @@ def remove_user(user_id):
     ----------
     user_id : int
         ID of the user.
+
+    Raises
+    ------
+    exception : Exception
+        When no user is found.
     """
     user = User.query.filter_by(id=user_id).first()
+
+    if user is None:
+        raise Exception("No user found in the database to delete.")
 
     db.session.delete(user)
     db.session.commit()

@@ -19,27 +19,29 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script src="js/menu.js"></script>
   <script src="js/widgets.js"></script>
   <script src="js/util.js"></script>
   <script src="js/account.js"></script>
+  <script src="js/tracker.js"></script>
   <script src="js/environment.js"></script>
   <script src="js/vision.js"></script>
 </head>
 
 <body>
   <div class="menu-container"></div>
-  <div class="content-container">
+  <div class="content-container" id="main-content-container" style="display: none;">
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row">
           <div class="flex-item flex-column">
-            <!-- The title will be loaded from the scenario.json file using quiz.js -->
+            <!-- The scenario title will be loaded by using the back-end API -->
             <h2 id="scenario-title" class="add-top-margin"></h2>
             <p class="text">
-              <!-- The description will be loaded from the scenario.json file using quiz.js -->
+              <!-- The scenario description will be loaded by using the back-end API -->
               <span id="scenario-description"></span>
             </p>
             <hr>
@@ -56,44 +58,40 @@
                   <img id="vision-image" class="painting-frame-image" style="max-height: 300px;" src="img/dummy_image.png">
                 </div>
               </a>
-              <textarea class="custom-textbox-survey add-top-margin" placeholder="Your caption about this image (max 100 characters)" maxlength="100"></textarea>
+              <textarea class="custom-textbox-survey add-top-margin" id="vision-description" placeholder="Your caption about this image (max 140 characters)" maxlength="140"></textarea>
             </div>
-            <!-- TODO: add the pick-a-mood images -->
             <div class="custom-survey add-top-margin add-bottom-margin" id="express-emotion">
-              <span class="text">2. What is your emotion about the meme that you created?</span>
-              <div class="custom-radio-group-survey add-top-margin">
-                <div><input type="radio" name="express-emotion-scale" value="0" id="express-emotion-item-0"><label for="express-emotion-item-0">Excited<img src="img/pam_excited.png" /></label></div>
-                <div><input type="radio" name="express-emotion-scale" value="1" id="express-emotion-item-1"><label for="express-emotion-item-1">Happy<img src="img/pam_happy.png" /></label></div>
-                <div><input type="radio" name="express-emotion-scale" value="2" id="express-emotion-item-2"><label for="express-emotion-item-2">Relaxed<img src="img/pam_relaxed.png" /></label></div>
-                <div><input type="radio" name="express-emotion-scale" value="3" id="express-emotion-item-3"><label for="express-emotion-item-3">Calm<img src="img/pam_calm.png" /></label></div>
-                <div><input type="radio" name="express-emotion-scale" value="8" id="express-emotion-item-8"><label for="express-emotion-item-8">Neutral<img src="img/pam_neutral.png" /></label></div>
-                <div><input type="radio" name="express-emotion-scale" value="4" id="express-emotion-item-4"><label for="express-emotion-item-4">Bored<img src="img/pam_bored.png" /></label></div>
-                <div><input type="radio" name="express-emotion-scale" value="5" id="express-emotion-item-5"><label for="express-emotion-item-5">Sad<img src="img/pam_sad.png" /></label></div>
-                <div><input type="radio" name="express-emotion-scale" value="6" id="express-emotion-item-6"><label for="express-emotion-item-6">Annoyed<img src="img/pam_annoyed.png" /></label></div>
-                <div><input type="radio" name="express-emotion-scale" value="7" id="express-emotion-item-7"><label for="express-emotion-item-7">Nervous<img src="img/pam_nervous.png" /></label></div>
-              </div>
+              <span class="text">2. What is your mood about the meme that you created?</span>
+              <!-- The moods will be loaded by using the back-end API -->
+              <div class="custom-radio-group-survey add-top-margin" id="mood-option-container"></div>
             </div>
           </div>
-          <div class="flex-item flex-column">
+          <div class="flex-item flex-column full-width" id="submit-vision">
             <p class="text">
-              Thank you! Click the buttons below to express other visions, play games, or browse visions.
+              Click the button below to submit the vision.
+              <span class="custom-text-danger" id="submit-error-message" style="display: none;"></span>
             </p>
             <div class="control-group">
-              <div class="control-group">
-                <a id="vision-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
-                  <img src="img/next.png"><span>Express visions</span>
-                </a>
-                <a id="game-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
-                  <img src="img/next.png"><span>Play games</span>
-                </a>
-                <a id="browse-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
-                  <img src="img/next.png"><span>Browse visions</span>
-                </a>
-              </div>
+              <button id="submit-vision-button" class="custom-button-flat large pulse-primary stretch-on-mobile">
+                <img src="img/book.png"><span>Submit vision</span>
+              </button>
+            </div>
+          </div>
+          <div class="flex-item flex-column" id="next-step-buttons">
+            <p class="text">
+              You can also play games or browse visions.
+            </p>
+            <div class="control-group">
+              <a id="game-button" class="custom-button-flat large stretch-on-mobile" href="javascript:void(0)">
+                <img src="img/next.png"><span>Play games</span>
+              </a>
+              <a id="browse-button" class="custom-button-flat large stretch-on-mobile" href="javascript:void(0)">
+                <img src="img/next.png"><span>Browse visions</span>
+              </a>
             </div>
             <div id="dialog-photo-picker" title="Photo Picker" data-role="none" style="display: none;">
               <p class="text" id="dialog-photo-picker-text">
-                Search photos and pick one:
+                Search photos using <a href="https://unsplash.com/" target="_blank">Unsplash</a> and pick one:
               </p>
               <form class="search-box-container" id="photo-search-form">
                 <input class="custom-textbox search-box" placeholder="Enter search terms" id="photo-search-query">
@@ -103,7 +101,24 @@
                   </svg>
                 </button>
               </form>
-              <div class="masonry" id="photos-masonry" style="display: none;"></div>
+              <p class="text custom-text-danger" id="photos-masonry-error-message">No images found. Please search again using other terms.</p>
+              <div class="masonry" id="photos-masonry"></div>
+            </div>
+            <div id="dialog-submit-vision" title="Submit Vision" data-role="none" style="display: none;">
+              <p class="text">
+                Below is a preview of the vision:
+              </p>
+              <div id="submit-vision-frame" class="meme" style="margin-top: 25px;">
+                <figure>
+                  <img src="img/dummy_image.png">
+                  <div>Credit: <a href="javascript:void(0)" target="_blank"></a></div>
+                  <figcaption></figcaption>
+                </figure>
+              </div>
+              <p class="text custom-text-primary" id="vision-submitted-message" style="display: none; margin-top: 25px;">
+                Your vision is submitted successfully.
+                Please click on the "close" button to go back.
+              </p>
             </div>
           </div>
         </div>

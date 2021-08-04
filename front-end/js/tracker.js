@@ -210,7 +210,7 @@
     function Tracker() {
       loadGoogleTracker();
       // Use a timeout event to make sure that the ready event will be triggered
-      setTimeout(handleGoogleTrackerError, 5000);
+      setTimeout(handleGoogleTrackerError, 3000);
     }
     Tracker();
   };

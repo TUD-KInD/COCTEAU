@@ -22,12 +22,8 @@ class VisionTest(BasicTest):
         self.user_1 = user_operations.create_user("user1")
         self.user_2 = user_operations.create_user("user2")
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
-    def test_get_moods(self):
-        moods = vision_operations.get_moods()
+    def test_get_all_moods(self):
+        moods = vision_operations.get_all_moods()
 
         assert len(moods) == 1
         assert moods[0].name == "happy"
@@ -148,13 +144,19 @@ class VisionTest(BasicTest):
         vision_3 = vision_operations.create_vision(
             mood_id=mood_id, medias=medias, user_id=user_id_2, scenario_id=scenario_id)
 
-        retrieved_visions = vision_operations.get_visions_by_user(user_id)
+        retrieved_visions = vision_operations.get_visions_by_user(user_id, paginate=False, order=None)
 
         assert len(retrieved_visions) == 2
-        assert retrieved_visions[0]. medias == vision_1.medias and retrieved_visions[
-            0].mood_id == vision_1.mood_id and retrieved_visions[0].scenario_id == vision_1.scenario_id
-        assert retrieved_visions[1]. medias == vision_2.medias and retrieved_visions[
-            1].mood_id == vision_2.mood_id and retrieved_visions[1].scenario_id == vision_2.scenario_id
+
+        c1 = retrieved_visions[0].medias == vision_1.medias
+        c2 = retrieved_visions[0].mood_id == vision_1.mood_id
+        c3 = retrieved_visions[0].scenario_id == vision_1.scenario_id
+        assert c1 and c2 and c3
+
+        c4 = retrieved_visions[1].medias == vision_2.medias
+        c5 = retrieved_visions[1].mood_id == vision_2.mood_id
+        c6 = retrieved_visions[1].scenario_id == vision_2.scenario_id
+        assert c4 and c5 and c6
 
     def test_get_visions_by_scenario(self):
         medias = [
@@ -196,13 +198,19 @@ class VisionTest(BasicTest):
         vision_3 = vision_operations.create_vision(
             mood_id=mood_id, medias=medias, user_id=user_id, scenario_id=scenario_id_2)
 
-        retrieved_visions = vision_operations.get_visions_by_scenario(user_id)
+        retrieved_visions = vision_operations.get_visions_by_scenario(user_id, paginate=False, order=None)
 
         assert len(retrieved_visions) == 2
-        assert retrieved_visions[0]. medias == vision_1.medias and retrieved_visions[
-            0].mood_id == vision_1.mood_id and retrieved_visions[0].scenario_id == vision_1.scenario_id
-        assert retrieved_visions[1]. medias == vision_2.medias and retrieved_visions[
-            1].mood_id == vision_2.mood_id and retrieved_visions[1].scenario_id == vision_2.scenario_id
+
+        c1 = retrieved_visions[0].medias == vision_1.medias
+        c2 = retrieved_visions[0].mood_id == vision_1.mood_id
+        c3 = retrieved_visions[0].scenario_id == vision_1.scenario_id
+        assert c1 and c2 and c3
+
+        c4 = retrieved_visions[1].medias == vision_2.medias
+        c5 = retrieved_visions[1].mood_id == vision_2.mood_id
+        c6 = retrieved_visions[1].scenario_id == vision_2.scenario_id
+        assert c4 and c5 and c6
 
     def test_update_vision(self):
         medias = [

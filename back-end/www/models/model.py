@@ -153,8 +153,8 @@ class Question(db.Model):
     answers = db.relationship("Answer", backref=db.backref("question", lazy=True), lazy=True)
 
     def __repr__(self):
-        return "<Question id=%r text=%r question_type=%r scenario_id=%r topic_id=%r>" % (
-                self.id, self.text, self.question_type, self.scenario_id, self.topic_id)
+        return "<Question id=%r text=%r question_type=%r scenario_id=%r topic_id=%r choices=%r>" % (
+                self.id, self.text, self.question_type, self.scenario_id, self.topic_id, self.choices)
 
 
 answer_choice_table = db.Table("answers_choice_table", db.Model.metadata,
@@ -265,13 +265,16 @@ class Mood(db.Model):
         Unique identifier.
     name : str
         Name of the mood.
+    image : str
+        Image URL of the mood.
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    image = db.Column(db.String, nullable=True)
 
     def __repr__(self):
-        return "<Mood id=%r name=%r>" % (
-                self.id, self.name)
+        return "<Mood id=%r name=%r image=%r>" % (
+                self.id, self.name, self.image)
 
 
 class MediaTypeEnum(enum.Enum):

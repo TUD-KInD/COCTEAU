@@ -19,6 +19,7 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script src="js/menu.js"></script>
@@ -28,11 +29,29 @@
   <script src="js/tracker.js"></script>
   <script src="js/environment.js"></script>
   <script src="js/admin.js"></script>
+  <style>
+    .custom-hr {
+      height: 6px;
+      width: 100%;
+      background-color: black;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100px;
+    }
+
+    #choices-table {
+      border: 1px solid black;
+      margin: 5px 0;
+      table-layout: auto;
+    }
+  </style>
 </head>
 
 <body>
   <div class="menu-container"></div>
-  <div class="content-container">
+  <div class="content-container" id="main-content-container" style="display: none;">
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row-space-between">
@@ -60,45 +79,45 @@
             <div id="admin-control">
               <div>
                 <!-- Begin for Topic -->
-                <hr style="height: 6px; width: 100%; background-color: black;">
+                <hr class="custom-hr">
                 <h3>GET Topic</h3>
                 <button id="get-all-topic">Get all topics</button><br>
-                <label for="want-topic-get-id">Topic ID to get:</label>
+                <label for="want-topic-get-id">Topic ID to get:</label><br>
                 <input type="number" id="want-topic-get-id" name=""><br>
                 <button id="get-topic-by-id">Get topic by ID</button><br>
                 <br>
-                <hr style="height: 6px; width: 100%; background-color: black;">
+                <hr class="custom-hr">
                 <h3>POST or PATCH Topic (admin only)</h3>
                 <label for="want-topic-title">Topic title:</label><br>
                 <textarea name="" id="want-topic-title" cols="30" rows="2"></textarea><br>
                 <label for="want-topic-description">Topic description:</label><br>
                 <textarea name="" id="want-topic-description" cols="30" rows="5"></textarea><br>
                 <button id="create-topic">Create topic</button><br>
-                <label for="want-topic-update-id">Topic ID to update:</label>
+                <label for="want-topic-update-id">Topic ID to update:</label><br>
                 <input type="number" id="want-topic-update-id" name=""><br>
                 <button id="update-topic">Update topic</button><br>
                 <br>
-                <hr style="height: 6px; width: 100%; background-color: black;">
+                <hr class="custom-hr">
                 <h3>DELETE Topic (admin only)</h3>
-                <label for="want-topic-delete-id">Topic ID to delete:</label>
+                <label for="want-topic-delete-id">Topic ID to delete:</label><br>
                 <input type="number" id="want-topic-delete-id" name=""><br>
                 <button id="delete-topic">Delete topic</button><br>
                 <!-- End for Topic -->
                 <br>
                 <!-- Begin for Scenario -->
-                <hr style="height: 6px; width: 100%; background-color: black;">
+                <hr class="custom-hr">
                 <h3>GET Scenario</h3>
                 <button id="get-all-scenario">Get all scenarios</button><br>
-                <label for="want-scenario-get-topic-id">Topic ID of the scenarios:</label>
+                <label for="want-scenario-get-topic-id">Topic ID of the scenarios:</label><br>
                 <input type="number" id="want-scenario-get-topic-id" name=""><br>
                 <button id="get-scenario-by-topic-id">Get scenarios by topic ID</button><br>
-                <label for="want-scenario-get-id">Scenario ID to get:</label>
+                <label for="want-scenario-get-id">Scenario ID to get:</label><br>
                 <input type="number" id="want-scenario-get-id" name=""><br>
-                <button id="get-scenario-by-id">Get scenario by its ID</button><br>
+                <button id="get-scenario-by-id">Get scenario by ID</button><br>
                 <br>
-                <hr style="height: 6px; width: 100%; background-color: black;">
+                <hr class="custom-hr">
                 <h3>POST or PATCH Scenario (admin only)</h3>
-                <label for="want-scenario-topic-id">Topic ID of the scenario:</label>
+                <label for="want-scenario-topic-id">Topic ID of the scenario:</label><br>
                 <input type="number" id="want-scenario-topic-id" name=""><br>
                 <label for="want-scenario-title">Scenario title:</label><br>
                 <textarea name="" id="want-scenario-title" cols="30" rows="2"></textarea><br>
@@ -107,16 +126,166 @@
                 <label for="want-scenario-image">Scenario image URL:</label><br>
                 <textarea name="" id="want-scenario-image" cols="30" rows="5"></textarea><br>
                 <button id="create-scenario">Create scenario</button><br>
-                <label for="want-scenario-update-id">Scenario ID to update:</label>
+                <label for="want-scenario-update-id">Scenario ID to update:</label><br>
                 <input type="number" id="want-scenario-update-id" name=""><br>
                 <button id="update-scenario">Update scenario</button><br>
                 <br>
-                <hr style="height: 6px; width: 100%; background-color: black;">
+                <hr class="custom-hr">
                 <h3>DELETE Scenario (admin only)</h3>
-                <label for="want-scenario-delete-id">Scenario ID to delete:</label>
+                <label for="want-scenario-delete-id">Scenario ID to delete:</label><br>
                 <input type="number" id="want-scenario-delete-id" name=""><br>
                 <button id="delete-scenario">Delete scenario</button><br>
                 <!-- End for Scenario -->
+                <br>
+                <!-- Begin for Question -->
+                <hr class="custom-hr">
+                <h3>GET Question</h3>
+                <button id="get-all-question">Get all questions</button><br>
+                <label for="want-question-get-topic-id">Topic ID of the questions:</label><br>
+                <input type="number" id="want-question-get-topic-id" name=""><br>
+                <button id="get-question-by-topic-id">Get questions by topic ID</button><br>
+                <label for="want-question-get-scenario-id">Scenario ID of the questions:</label><br>
+                <input type="number" id="want-question-get-scenario-id" name=""><br>
+                <button id="get-question-by-scenario-id">Get questions by scenario ID</button><br>
+                <label for="want-question-get-id">Question ID to get:</label><br>
+                <input type="number" id="want-question-get-id" name=""><br>
+                <button id="get-question-by-id">Get question by ID</button><br>
+                <br>
+                <hr class="custom-hr">
+                <h3>POST or PATCH Question (admin only)</h3>
+                <label for="want-question-topic-id">Topic ID of the question:</label><br>
+                <input type="number" id="want-question-topic-id" name=""><br>
+                <label for="want-question-scenario-id">Scenario ID of the question:</label><br>
+                <input type="number" id="want-question-scenario-id" name=""><br>
+                <label for="want-question-text">Question text:</label><br>
+                <textarea name="" id="want-question-text" cols="30" rows="5"></textarea><br>
+                <label for="want-multiple-choice">Is multiple-choice question?</label>
+                <input type="checkbox" id="want-multiple-choice" name="" /><br>
+                <button id="question-choices-add-row">Add a choice</button>
+                <button id="question-choices-delete-row">Delete choices</button>
+                <table id="choices-table">
+                  <tr>
+                    <td><input type="checkbox" class="choice-checkbox" name="" /></td>
+                    <td><input type="text" class="choice-text" name="" placeholder="text" /></td>
+                    <td><input type="number" class="choice-value" name="" placeholder="value" /></td>
+                  </tr>
+                </table>
+                <button id="create-question">Create question</button><br>
+                <label for="want-question-update-id">Question ID to update:</label><br>
+                <input type="number" id="want-question-update-id" name=""><br>
+                <button id="update-question">Update question</button><br>
+                <br>
+                <hr class="custom-hr">
+                <h3>DELETE Question (admin only)</h3>
+                <label for="want-question-delete-id">Question ID to delete:</label><br>
+                <input type="number" id="want-question-delete-id" name=""><br>
+                <button id="delete-question">Delete question</button><br>
+                <!-- End for Question -->
+                <br>
+                <!-- Begin for Mood -->
+                <hr class="custom-hr">
+                <h3>GET Mood</h3>
+                <button id="get-all-mood">Get all moods</button><br>
+                <label for="want-mood-get-id">Mood ID to get:</label><br>
+                <input type="number" id="want-mood-get-id" name=""><br>
+                <button id="get-mood-by-id">Get mood by ID</button><br>
+                <br>
+                <hr class="custom-hr">
+                <h3>POST or PATCH Mood (admin only)</h3>
+                <label for="want-mood-name">Mood name:</label><br>
+                <textarea name="" id="want-mood-name" cols="30" rows="2"></textarea><br>
+                <label for="want-mood-image">Mood image URL:</label><br>
+                <textarea name="" id="want-mood-image" cols="30" rows="5"></textarea><br>
+                <button id="create-mood">Create mood</button><br>
+                <label for="want-mood-update-id">Mood ID to update:</label><br>
+                <input type="number" id="want-mood-update-id" name=""><br>
+                <button id="update-mood">Update mood</button><br>
+                <br>
+                <hr class="custom-hr">
+                <h3>DELETE Mood (admin only)</h3>
+                <label for="want-mood-delete-id">Mood ID to delete:</label><br>
+                <input type="number" id="want-mood-delete-id" name=""><br>
+                <button id="delete-mood">Delete mood</button><br>
+                <!-- End for Mood -->
+                <br>
+                <!-- Begin for Vision -->
+                <hr class="custom-hr">
+                <h3>GET Vision</h3>
+                <button id="get-all-vision">Get all visions</button><br>
+                <label for="want-vision-get-scenario-id">Scenario ID of the visions:</label><br>
+                <input type="number" id="want-vision-get-scenario-id" name=""><br>
+                <button id="get-vision-by-scenario-id">Get visions by scenario ID</button><br>
+                <label for="want-vision-get-user-id">User ID of the visions:</label><br>
+                <input type="number" id="want-vision-get-user-id" name=""><br>
+                <button id="get-vision-by-user-id">Get visions by user ID</button><br>
+                <label for="want-vision-get-id">Vision ID to get:</label><br>
+                <input type="number" id="want-vision-get-id" name=""><br>
+                <button id="get-vision-by-id">Get vision by ID</button><br>
+                <br>
+                <hr class="custom-hr">
+                <h3>DELETE Vision (admin only)</h3>
+                <label for="want-vision-delete-id">Vision ID to delete:</label><br>
+                <input type="number" id="want-vision-delete-id" name=""><br>
+                <button id="delete-vision">Delete vision</button><br>
+                <!-- End for Vision -->
+                <br>
+                <!-- Begin for Answer -->
+                <hr class="custom-hr">
+                <h3>GET Answer</h3>
+                <button id="get-all-answer">Get all answers</button><br>
+                <label for="want-answer-get-scenario-id">Scenario ID of the answers:</label><br>
+                <input type="number" id="want-answer-get-scenario-id" name=""><br>
+                <button id="get-answer-by-scenario-id">Get answers by scenario ID</button><br>
+                <label for="want-answer-get-topic-id">Topic ID of the answers:</label><br>
+                <input type="number" id="want-answer-get-topic-id" name=""><br>
+                <button id="get-answer-by-topic-id">Get answers by topic ID</button><br>
+                <label for="want-answer-get-user-id">User ID of the answers:</label><br>
+                <input type="number" id="want-answer-get-user-id" name=""><br>
+                <button id="get-answer-by-user-id">Get answers by user ID</button><br>
+                <label for="want-answer-get-question-id">Question ID of the answers:</label><br>
+                <input type="number" id="want-answer-get-question-id" name=""><br>
+                <button id="get-answer-by-question-id">Get answers by question ID</button><br>
+                <label for="want-answer-get-id">Answer ID to get:</label><br>
+                <input type="number" id="want-answer-get-id" name=""><br>
+                <button id="get-answer-by-id">Get answer by ID</button><br>
+                <br>
+                <hr class="custom-hr">
+                <h3>DELETE Answer (admin only)</h3>
+                <label for="want-answer-delete-id">Answer ID to delete:</label><br>
+                <input type="number" id="want-answer-delete-id" name=""><br>
+                <button id="delete-answer">Delete answer</button><br>
+                <!-- End for Answer -->
+                <br>
+                <!-- Begin for Game -->
+                <hr class="custom-hr">
+                <h3>GET Game</h3>
+                <button id="get-all-game">Get all games</button><br>
+                <label for="want-game-get-vision-id">Vision ID of the games:</label><br>
+                <input type="number" id="want-game-get-vision-id" name=""><br>
+                <button id="get-game-by-vision-id">Get games by vision ID</button><br>
+                <label for="want-game-get-user-id">User ID of the games:</label><br>
+                <input type="number" id="want-game-get-user-id" name=""><br>
+                <button id="get-game-by-user-id">Get games by user ID</button><br>
+                <label for="want-game-get-id">Game ID to get:</label><br>
+                <input type="number" id="want-game-get-id" name=""><br>
+                <button id="get-game-by-id">Get game by ID</button><br>
+                <br>
+                <hr class="custom-hr">
+                <h3>DELETE Game (admin only)</h3>
+                <label for="want-game-delete-id">Game ID to delete:</label><br>
+                <input type="number" id="want-game-delete-id" name=""><br>
+                <button id="delete-game">Delete game</button><br>
+                <!-- End for Game -->
+                <br>
+                <!-- Begin for Danger -->
+                <hr class="custom-hr">
+                <h3>Dangerous operations (admin only)</h3>
+                Be very careful about using the following operations.<br>
+                <input type="checkbox" id="confirm-delete-all-data" name="" />
+                <button id="delete-all-data" disabled>Delete all data</button><br>
+                <input type="checkbox" id="confirm-set-initial-data" name="" />
+                <button id="set-initial-data" disabled>Set initial data</button><br>
+                <!-- End for Danger -->
               </div>
             </div>
           </div>

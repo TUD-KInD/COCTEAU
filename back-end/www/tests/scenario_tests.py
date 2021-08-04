@@ -11,10 +11,6 @@ class ScenarioTest(BasicTest):
         db.create_all()
         self.topic = topic_operations.create_topic("test", "test")
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
     def test_create_scenario(self):
         title = "this is a scenario title"
         description = "this is a scenario description"
@@ -57,8 +53,7 @@ class ScenarioTest(BasicTest):
         scenario_2 = scenario_operations.create_scenario(
             title=title, description=description, image=image, topic_id=topic_id)
 
-        retrieved_scenarios = list(
-            scenario_operations.get_scenarios_by_topic(topic_id))
+        retrieved_scenarios = scenario_operations.get_scenarios_by_topic(topic_id)
 
         assert len(retrieved_scenarios) == 2
         assert retrieved_scenarios[0].title == scenario_1.title and retrieved_scenarios[

@@ -1,0 +1,28 @@
+[{
+  "name": "Excited",
+  "image": "pam_excited.png"
+}, {
+  "name": "Happy",
+  "image": "pam_happy.png"
+}, {
+  "name": "Relaxed",
+  "image": "pam_relaxed.png"
+}, {
+  "name": "Calm",
+  "image": "pam_calm.png"
+}, {
+  "name": "Neutral",
+  "image": "pam_neutral.png"
+}, {
+  "name": "Bored",
+  "image": "pam_bored.png"
+}, {
+  "name": "Sad",
+  "image": "pam_sad.png"
+}, {
+  "name": "Annoyed",
+  "image": "pam_annoyed.png"
+}, {
+  "name": "Nervous",
+  "image": "pam_nervous.png"
+}]

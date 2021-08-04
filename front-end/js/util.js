@@ -58,6 +58,35 @@
     };
 
     /**
+     * A helper for getting data safely with a default value.
+     * @public
+     * @param {*} v - the original value.
+     * @param {*} defaultVal - the default value to return when the original one is undefined.
+     * @returns {*} - the original value (if not undefined) or the default value.
+     */
+    var safeGet = function (v, defaultVal) {
+      if (typeof defaultVal === "undefined") defaultVal = "";
+      return (typeof v === "undefined") ? defaultVal : v;
+    };
+    this.safeGet = safeGet;
+
+    /**
+     * Scroll to an element's top position.
+     * @public
+     * @param {object} $element - a jQuery object to scroll to.
+     * @param {number} [topMargin] - the top margin to reserve for scrolling.
+     * @param {object} [$window] - a jQuery object that we want to scroll.
+     */
+    this.scrollTop = function ($element, topMargin, $window) {
+      topMargin = safeGet(topMargin, 0);
+      $window = safeGet($window, $(window));
+      var p = $element.offset();
+      if (typeof p !== "undefined") {
+        $window.scrollTop(Math.max(p.top - topMargin, 0));
+      }
+    };
+
+    /**
      * Check if the browser is Firefox.
      * @public
      * @returns {boolean} - is Firefox or not.

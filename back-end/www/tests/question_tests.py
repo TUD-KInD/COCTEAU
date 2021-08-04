@@ -15,10 +15,6 @@ class QuestionTest(BasicTest):
         self.scenario = scenario_operations.create_scenario(
             "test", "test", "test", self.topic.id)
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
     def test_create_free_text_question(self):
         text = "question"
         topic_id = self.topic.id
@@ -223,11 +219,22 @@ class QuestionTest(BasicTest):
         new_text = "new_text"
         new_choices = [{
             "text":"d",
-            "value":1
+            "value":4
         },{
             "text":"e",
-            "value":2
+            "value":5
+        },{
+            "text":"f",
+            "value":6
         }]
+
+        with self.assertRaises(Exception):
+            question_operations.update_question(
+                question_id=question.id, choices=[{"text":"g","value":7}])
+
+        with self.assertRaises(Exception):
+            question_operations.update_question(
+                question_id=question.id, choices=[{"text":"g"}])
 
         question_operations.update_question(
             question_id=question.id, text=new_text, choices=new_choices)
@@ -237,8 +244,9 @@ class QuestionTest(BasicTest):
 
         assert updated_question.text == new_text
 
-        retrieved_choices = [c.text for c in updated_question.choices]
-        retrieved_choices == new_choices
+        retrieved_choices = [{"text":c.text,"value":c.value} for c in updated_question.choices]
+
+        assert retrieved_choices == new_choices
 
         text = "text"
 

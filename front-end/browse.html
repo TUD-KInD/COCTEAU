@@ -11,6 +11,7 @@
   <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" media="screen" rel="stylesheet" type="text/css" />
   <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="lib/pagination/pagination.css" media="screen" rel="stylesheet" type="text/css" />
   <link href="css/frame.css" media="screen" rel="stylesheet" type="text/css" />
   <link href="css/controls.css" media="screen" rel="stylesheet" type="text/css" />
   <link href="css/widgets.css" media="screen" rel="stylesheet" type="text/css" />
@@ -19,27 +20,30 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="lib/pagination/pagination.js"></script>
   <script src="js/menu.js"></script>
   <script src="js/widgets.js"></script>
   <script src="js/util.js"></script>
   <script src="js/account.js"></script>
+  <script src="js/tracker.js"></script>
   <script src="js/environment.js"></script>
   <script src="js/browse.js"></script>
 </head>
 
 <body>
   <div class="menu-container"></div>
-  <div class="content-container">
+  <div class="content-container" id="main-content-container" style="display: none;">
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row">
           <div class="flex-item flex-column">
-            <!-- The title will be loaded from the scenario.json file using quiz.js -->
+            <!-- The scenario title will be loaded by using the back-end API -->
             <h2 id="scenario-title" class="add-top-margin"></h2>
             <p class="text">
-              <!-- The description will be loaded from the scenario.json file using quiz.js -->
+              <!-- The scenario description will be loaded by using the back-end API -->
               <span id="scenario-description"></span>
             </p>
             <hr>
@@ -47,8 +51,17 @@
               Browse the visions created by citizens to express thoughts about the scenario!
             </p>
           </div>
-          <!-- The memes will be loaded from the browse.json file using browse.js -->
+          <!-- The visions will be loaded by using the back-end API -->
           <div class="masonry add-top-margin-small add-bottom-margin-small" id="browse"></div>
+        </div>
+        <div class="flex-row">
+          <div class="flex-item flex-column full-width">
+            <div id="page-control" class="control-group add-top-margin force-hidden">
+              <button id="page-back" class="custom-button-flat large stretch-on-mobile" disabled><img src="img/back.png"><span>Back</span></button>
+              <button id="page-next" class="custom-button-flat large stretch-on-mobile"><img src="img/next.png"><span>Next</span></button>
+              <div id="page-navigator" class="stretch-on-mobile"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -19,53 +19,59 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script src="js/menu.js"></script>
   <script src="js/widgets.js"></script>
   <script src="js/util.js"></script>
   <script src="js/account.js"></script>
+  <script src="js/tracker.js"></script>
   <script src="js/environment.js"></script>
   <script src="js/opinion.js"></script>
 </head>
 
 <body>
   <div class="menu-container"></div>
-  <div class="content-container">
+  <div class="content-container" id="main-content-container" style="display: none;">
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row">
           <div class="flex-item flex-column">
-            <!-- The title will be loaded from the scenario.json file using opinion.js -->
+            <!-- The scenario title will be loaded by using the back-end API -->
             <h2 id="scenario-title" class="add-top-margin"></h2>
             <p class="text">
-              <!-- The description will be loaded from the scenario.json file using opinion.js -->
+              <!-- The scenario description will be loaded by using the back-end API -->
               <span id="scenario-description"></span>
             </p>
             <hr>
             <p class="text highlight-text">
-              What are your opinions on this scenario?
-              Please let us know by answering the questions below (and give comments optionally).
+              Before expressing visions, would you mind providing opinions on this scenario?
+              This is totally optional.
+              Please let us know by answering the questions below.
             </p>
           </div>
-          <!-- The questions will be loaded from the scenario.json file using opinion.js -->
+          <!-- The questions will be loaded by using the back-end API -->
           <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
           <div class="flex-item flex-column">
             <p class="text">
-              Thank you! Click the button below to express visions.
+              Thank you! Please click the button below to submit opinions.
+              <span class="custom-text-danger" id="submit-survey-error-message" style="display: none;"></span>
             </p>
             <div class="control-group">
               <a id="next-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
-                <img src="img/next.png"><span>Express visions</span>
+                <img src="img/next.png"><span>Submit opinions</span>
               </a>
             </div>
-            <div id="dialog-demographics" title="Demographics" data-role="none" style="display: none;">
-              <p>
-                Please help us collect diverse opinions by providing demographics.
-                Your data will only be used in anonymous and aggregated form.
-              </p>
-              <div id="demographics-questions" class="add-top-margin"></div>
-            </div>
+          </div>
+          <div id="dialog-demographics" title="Demographics" data-role="none" style="display: none;">
+            <p>
+              Would you mind helping us understand the diversity of opinions?
+              Your data will only be used in anonymous and aggregated form.
+              Thank you!
+              <span class="custom-text-danger" id="submit-demographics-error-message" style="display: none;"></span>
+            </p>
+            <div id="demographics-questions" class="add-top-margin"></div>
           </div>
         </div>
       </div>

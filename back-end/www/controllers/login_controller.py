@@ -15,6 +15,7 @@ from models.model_operations.user_operations import create_user
 import jwt
 import time
 import uuid
+import traceback
 
 
 bp = Blueprint("login_controller", __name__)
@@ -33,7 +34,7 @@ def login():
     google_id_token : str
         The token obtained from the Google Sign-In API.
     client_id : str
-        The client ID returned by the Google Analytics tracker or created by the front-end client.
+        The client ID string returned by the Google Analytics tracker or created by the front-end client.
 
     Returns
     -------
@@ -53,8 +54,12 @@ def login():
                 # Token is valid
                 client_id = "google.%s" % id_info["sub"]
             except ValueError:
-                # Invalid token
-                e = InvalidUsage("Invalid Google ID token", status_code=401)
+                traceback.print_exc()
+                e = InvalidUsage("Invalid Google ID token.", status_code=401)
+                return handle_invalid_usage(e)
+            except:
+                traceback.print_exc()
+                e = InvalidUsage(traceback.format_exc(), status_code=401)
                 return handle_invalid_usage(e)
         else:
             if "client_id" in request_json:
@@ -63,12 +68,12 @@ def login():
 
     # Get user id by client id, and issued an user jwt
     if client_id is None:
-        e = InvalidUsage("Missing field: google_id_token or client_id", status_code=400)
+        e = InvalidUsage("Must have either 'google_id_token' or 'client_id'.", status_code=400)
         return handle_invalid_usage(e)
     else:
         user_token = get_user_token_by_client_id(client_id)
         if user_token is None:
-            e = InvalidUsage("Permission denied", status_code=403)
+            e = InvalidUsage("Permission denied.", status_code=403)
             return handle_invalid_usage(e)
         else:
             return_json = {"user_token": user_token}

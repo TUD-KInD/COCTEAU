@@ -2,47 +2,81 @@
   "use strict";
 
   /**
-   * Load the scenario title and description.
+   * Set the limit of the number of checkbox selections.
    * @private
-   * @param {number} scenarioId - the ID of the scenario.
+   * @param {Object} $container - jQuery object of the checkbox container.
+   * @param {number} limit - limit of the number of checkbox selections.
    */
-  function loadScenario(scenarioId) {
-    $.getJSON("file/scenario.json", function (data) {
-      var scenarioData = data[scenarioId];
-      $("#scenario-title").text(scenarioData["title"]);
-      $("#scenario-description").html(scenarioData["description"]);
-    });
-  }
-
-  /**
-   * Set the checkbox for the emotions.
-   * @private
-   */
-  function setCheckbox() {
-    // Set the limit of the number of checkbox selections
-    var limit = 2;
-    var $emotionCheckboxGroup = $("#express-emotion .custom-radio-group-survey");
-    $("#express-emotion input[type='checkbox']").on("change", function () {
-      if ($emotionCheckboxGroup.find("input[type='checkbox']:checked").length > limit) {
+  function setCheckboxNumberLimit($container, limit) {
+    $container.find("input[type='checkbox']").on("change", function () {
+      if ($container.find("input[type='checkbox']:checked").length > limit) {
         this.checked = false;
       }
     });
   }
 
   /**
+   * Load the moods.
+   * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   * @param {number} limit - limit of the number of checkbox selections.
+   */
+  function loadMood(envObj, limit) {
+    envObj.getAllMood(function (data) {
+      var moods = data["data"];
+      var $moodOptionContainer = $("#mood-option-container");
+      for (var i = 0; i < moods.length; i++) {
+        var m = moods[i];
+        $moodOptionContainer.append(createMoodHTML(m["id"], m["name"], "img/" + m["image"]));
+      }
+      setCheckboxNumberLimit($("#express-emotion .custom-radio-group-survey"), limit);
+    });
+  }
+
+  /**
+   * Create the html elements for a mood.
+   * @private
+   * @param {number} moodId - the ID of the mood.
+   * @param {string} name - the name of the mood.
+   * @param {string} imageUrl - the source URL of an image for the mood.
+   * @returns {Object} - a jQuery DOM object.
+   */
+  function createMoodHTML(moodId, name, imageUrl) {
+    var radioId = "express-emotion-item-" + moodId;
+    var html = '<div><input type="checkbox" name="express-emotion-scale" value="' + moodId + '" id="' + radioId + '"><label for="' + radioId + '">' + name + '<img src="' + imageUrl + '" /></label></div>';
+    return $(html);
+  }
+
+  /**
    * Load the game.
    * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   * @param {number} limit - limit of the number of checkbox selections.
+   * @param {number} scenarioId - the ID of the scenario.
    */
-  function loadGame() {
-    $.getJSON("file/game.json", function (data) {
-      var gameVisionMedia = data["vision"]["media"];
-      for (var i = 0; i < gameVisionMedia.length; i++) {
-        var g = gameVisionMedia[i];
-        if (g["media_type"] == "image") {
-          $("#vision-image").attr("src", g["url"]);
-          $("#vision-caption").text(g["description"]);
-          $("#vision-credit").html('Credit: <a href="' + g["unsplash_creator_url"] + '" target="_blank">' + g["unsplash_creator_name"] + '</a>');
+  function loadGame(envObj, limit, scenarioId) {
+    envObj.createRandomGame(scenarioId, function (data) {
+      if (typeof data === "undefined") {
+        // This means no games are available for play
+        $("#no-game-message").show();
+      } else {
+        // This means the server returns a game object
+        $("#game-ui").show();
+        var game = data["data"];
+        var gameVisionMedia = game["vision"]["medias"];
+        for (var i = 0; i < gameVisionMedia.length; i++) {
+          var g = gameVisionMedia[i];
+          if (g["media_type"] == "IMAGE") {
+            $("#vision-image").attr("src", g["url"]);
+            $("#vision-caption").text(g["description"]);
+            $("#vision-credit").html('Credit: <a href="' + g["unsplash_creator_url"] + '" target="_blank">' + g["unsplash_creator_name"] + '</a>');
+          }
         }
+        $("#show-game-result").show();
+        $("#show-result-button").on("click", function () {
+          loadAndShowGameResult(envObj, limit);
+        });
+        $("#game").data("raw", game);
       }
     });
   }
@@ -50,19 +84,37 @@
   /**
    * Load the result of the game and show it.
    * @private
-   * @todo The front-end must POST the vision_id and the game_token (obtained from the server) to get the result.
+   * @param {Object} envObj - environment object (in environment.js).
+   * @param {number} limit - limit of the number of checkbox selections.
    */
-  function loadAndShowGameResult() {
-    $.getJSON("file/vision.json", function (data) {
-      var valuesOfCorrectAnswers = [];
-      for (var i = 0; i < data["mood"].length; i++) {
-        valuesOfCorrectAnswers.push(data["mood"][i]["id"].toString());
+  function loadAndShowGameResult(envObj, limit, success, error) {
+    var gameData = $("#game").data("raw");
+    if (typeof gameData === "undefined") {
+      console.error("Game is not loaded correctly.");
+      if (typeof error === "function") error();
+    } else {
+      var moods = $("#mood-option-container").find("input[type='checkbox']:checked").map(function () {
+        return parseInt($(this).val());
+      }).get();
+      var feedback = $("#game-feedback").val();
+      if (feedback == "") feedback = undefined;
+      if (moods.length != limit) {
+        var errorMessage = "(Would you please guess TWO options about the mood of the meme?)";
+        console.error(errorMessage);
+        $("#submit-game-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
+        if (typeof error === "function") error();
+      } else {
+        envObj.updateGame(gameData["id"], moods, feedback, function (data) {
+          var valuesOfCorrectAnswers = [data["data"]["vision"]["mood_id"].toString()];
+          showQuizResult($("#express-emotion"), valuesOfCorrectAnswers);
+          $("#play-game").show();
+          $("#show-game-result").hide();
+          $("#provide-feedback").addClass("answer-mode");
+          $("#game-feedback").attr("placeholder", "").attr("disabled", "disabled");
+          if (typeof success === "function") success(data);
+        }, error);
       }
-      showQuizResult($("#express-emotion"), valuesOfCorrectAnswers);
-      $("#play-another-round").show();
-      $("#show-game-result").hide();
-      $("#provide-feedback").addClass("answer-mode").find("textarea").attr("placeholder", "").attr("disabled", "disabled");
-    });
+    }
   }
 
   /**
@@ -94,36 +146,58 @@
       }
     });
     // Scroll to the quiz element
-    var p = $quizContainer.offset();
-    if (typeof p !== "undefined") {
-      window.scrollTo(0, Math.max(p.top - 30, 0));
+    periscope.util.scrollTop($quizContainer, 30);
+  }
+
+  /**
+   * Initialize the user interface.
+   * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   */
+  function initUI(envObj) {
+    var queryParas = periscope.util.parseVars(window.location.search);
+    var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
+    if (typeof scenarioId !== "undefined") {
+      var limit = 2;
+      envObj.getScenarioById(scenarioId, function (data) {
+        var scenario = data["data"];
+        if ($.isEmptyObject(scenario)) {
+          envObj.showErrorPage();
+        } else {
+          $("#scenario-title").text(scenario["title"]);
+          $("#scenario-description").html(scenario["description"]);
+          loadMood(envObj, limit);
+          loadGame(envObj, limit, scenarioId);
+          $("#vision-button").on("click", function () {
+            window.location.replace("vision.html" + window.location.search);
+          });
+          $("#game-button").on("click", function () {
+            window.location.replace("game.html" + window.location.search);
+          });
+          $("#browse-button").on("click", function () {
+            window.location.replace("browse.html" + window.location.search);
+          });
+          envObj.showPage();
+        }
+      });
+    } else {
+      envObj.showErrorPage();
     }
   }
 
   /**
    * Initialize the page.
    * @private
-   * @todo Only enable the "view result" button when all the questions are filled.
-   * @todo If scenario_id is not defined, show a blank page with error messages.
    */
   function init() {
-    var queryParas = periscope.util.parseVars(window.location.search);
-    var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
-    if (typeof scenarioId !== "undefined") {
-      loadScenario(scenarioId);
-      loadGame();
-      setCheckbox();
-      $("#show-result-button").on("click", loadAndShowGameResult);
-      $("#vision-button").on("click", function () {
-        window.location.replace("vision.html" + window.location.search);
-      });
-      $("#game-button").on("click", function () {
-        window.location.replace("game.html" + window.location.search);
-      });
-      $("#browse-button").on("click", function () {
-        window.location.replace("browse.html" + window.location.search);
-      });
-    }
+    var env = new periscope.Environment({
+      "ready": function (envObj) {
+        initUI(envObj);
+      },
+      "fail": function (message) {
+        console.error(message);
+      }
+    });
   }
   $(init);
 })();

@@ -48,10 +48,6 @@ class AnswerTest(BasicTest):
         self.user_1 = user_operations.create_user("user1")
         self.user_2 = user_operations.create_user("user2")
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
     def test_create_free_text_answer(self):
         question_id = self.free_question.id
         user_id = self.user_1.id
@@ -77,10 +73,6 @@ class AnswerTest(BasicTest):
             choices=choice, user_id=user_id, question_id=question_id)
 
         assert answer in db.session
-
-        with self.assertRaises(Exception):
-            answer_operations.create_choice_answer(
-                choices=choice, user_id=user_id, question_id=self.free_question.id)
 
         choices = [x.id for x in self.single_choice_question.choices]
 
@@ -163,6 +155,17 @@ class AnswerTest(BasicTest):
         assert len(answers) == 1
         assert answers[0].choices == answer_1.choices and answers[0].user_id == answer_1.user_id
 
+        answers = answer_operations.get_answers_by_scenario(
+            scenario_id=scenario_id, user_id=self.user_2.id)
+
+        assert len(answers) == 0
+
+        answers = answer_operations.get_answers_by_scenario(
+            scenario_id=scenario_id, user_id=answer_1.user_id)
+
+        assert len(answers) == 1
+        assert answers[0].choices == answer_1.choices and answers[0].user_id == answer_1.user_id
+
     def test_get_answers_by_topic(self):
         question_id = self.choice_question.id
         user_id = self.user_1.id
@@ -179,7 +182,19 @@ class AnswerTest(BasicTest):
             text, user_id=user_id, question_id=question_id)
 
         topic_id = self.topic.id
-        answers = answer_operations.get_answers_by_topic(topic_id=topic_id)
+        answers = answer_operations.get_answers_by_topic(
+                topic_id=topic_id)
+
+        assert len(answers) == 1
+        assert answers[0].text == answer_2.text and answers[0].user_id == answer_2.user_id
+
+        answers = answer_operations.get_answers_by_topic(
+            topic_id=topic_id, user_id=self.user_2.id)
+
+        assert len(answers) == 0
+
+        answers = answer_operations.get_answers_by_topic(
+            topic_id=topic_id, user_id=answer_2.user_id)
 
         assert len(answers) == 1
         assert answers[0].text == answer_2.text and answers[0].user_id == answer_2.user_id

@@ -19,6 +19,7 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script src="js/menu.js"></script>
@@ -39,13 +40,13 @@
 
 <body>
   <div class="menu-container"></div>
-  <div class="content-container">
+  <div class="content-container" id="main-content-container" style="display: none;">
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row-space-between">
           <div class="flex-item flex-column">
             <h2 class="add-top-margin">
-              Express, Submit, Play!
+              Express and Play!
             </h2>
           </div>
           <div class="flex-item flex-column">
@@ -57,13 +58,13 @@
         <div class="flex-row">
           <div class="flex-item flex-column">
             <p class="text">
-              We need your feedback on city projects and policies!
+              We need your feedback on city projects and policy decision-making!
               Below are scenarios that the decision makers and project teams are interested in knowing your thoughts.
               Please click or tap on a scenario to express thoughts and play games.
             </p>
           </div>
         </div>
-        <!-- The scenarios will be loaded from the scenario.json file using index.js -->
+        <!-- The scenarios will be loaded by using the back-end API -->
         <div class="gallery add-top-margin-small add-bottom-margin-small" id="scenario"></div>
         <div class="flex-row">
           <div class="flex-item flex-item-stretch flex-column">

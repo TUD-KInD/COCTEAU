@@ -56,7 +56,7 @@ def get_all_topics():
     topics : list of Topic
         The list of retrieved topic objects.
     """
-    # TODO: need a testing case for this function
+    # TODO: need a testing case
     topics = Topic.query.all()
 
     return topics
@@ -79,8 +79,16 @@ def update_topic(topic_id, title=None, description=None):
     -------
     topic : Topic
         The retrieved topic object.
+
+    Raises
+    ------
+    exception : Exception
+        When no topic is found.
     """
-    topic = Topic.query.filter_by(id=topic_id).first()
+    topic = get_topic_by_id(topic_id)
+
+    if topic is None:
+        raise Exception("No topic found in the database to update.")
 
     if title is not None:
         topic.title = title
@@ -101,8 +109,16 @@ def remove_topic(topic_id):
     ----------
     topic_id : int
         ID of the topic.
+
+    Raises
+    ------
+    exception : Exception
+        When no topic is found.
     """
-    topic = Topic.query.filter_by(id=topic_id).first()
+    topic = get_topic_by_id(topic_id)
+
+    if topic is None:
+        raise Exception("No topic found in the database to delete.")
 
     db.session.delete(topic)
     db.session.commit()

@@ -66,7 +66,7 @@ def get_scenarios_by_topic(topic_id):
     scenarios : list of Scenario
         List of scenarios belonging to the topic.
     """
-    scenarios = Scenario.query.filter_by(topic_id=topic_id)
+    scenarios = Scenario.query.filter_by(topic_id=topic_id).all()
 
     return scenarios
 
@@ -80,7 +80,7 @@ def get_all_scenarios():
     scenarios : list of Scenario
         The list of retrieved scenario objects.
     """
-    # TODO: need a testing case for this function
+    # TODO: need a testing case
     scenarios = Scenario.query.all()
 
     return scenarios
@@ -105,8 +105,16 @@ def update_scenario(scenario_id, title=None, description=None, image=None, topic
     -------
     scenario : Scenario
         The retrieved scenario object.
+
+    Raises
+    ------
+    exception : Exception
+        When no scenario is found.
     """
-    scenario = Scenario.query.filter_by(id=scenario_id).first()
+    scenario = get_scenario_by_id(scenario_id)
+
+    if scenario is None:
+        raise Exception("No scenario found in the database to update.")
 
     if title is not None:
         scenario.title = title
@@ -133,8 +141,16 @@ def remove_scenario(scenario_id):
     ----------
     scenario_id : int
         ID of the scenario.
+
+    Raises
+    ------
+    exception : Exception
+        When no scenario is found.
     """
-    scenario = Scenario.query.filter_by(id=scenario_id).first()
+    scenario = get_scenario_by_id(scenario_id)
+
+    if scenario is None:
+        raise Exception("No scenario found in the database to delete.")
 
     db.session.delete(scenario)
     db.session.commit()

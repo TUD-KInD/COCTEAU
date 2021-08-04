@@ -1,5 +1,5 @@
 #!/bin/sh
-export FLASK_APP=app.py
+export FLASK_APP=application.py
 
 if [ "$1" = "init" ]
 then
