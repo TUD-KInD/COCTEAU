@@ -62,6 +62,50 @@
     }
 
     /**
+     * Get the client ID for the Google Sign-In API.
+     * @private
+     * @returns {string} - the client ID for the Google Sign-In API.
+     */
+    function getGoogleSignInClientId() {
+      var urlHostName = window.location.hostname;
+      var gid;
+      if (urlHostName.indexOf("145.38.198.35") !== -1) {
+        // staging back-end
+        gid = "878004336244-j1s2d006vt99evg8k92oiu8gegoiah9h.apps.googleusercontent.com";
+      } else if (urlHostName.indexOf("staging") !== -1) {
+        // staging back-end
+        gid = "878004336244-j1s2d006vt99evg8k92oiu8gegoiah9h.apps.googleusercontent.com";
+      } else if (urlHostName.indexOf("periscope.io.tudelft.nl") !== -1) {
+        // production back-end
+        gid = "878004336244-5s4m7msoevi271o26550r0t2qjvuena3.apps.googleusercontent.com";
+      } else if (urlHostName.indexOf("localhost") !== -1) {
+        // developement back-end
+        gid = "878004336244-j1s2d006vt99evg8k92oiu8gegoiah9h.apps.googleusercontent.com";
+      }
+      return gid;
+    }
+
+    /**
+     * Load a script asynchronously.
+     * @private
+     * @param {string} scriptUrl - URL of the script.
+     * @returns {Promise} - Promise object for loading a script asynchronously.
+     */
+    function loaderScript(scriptUrl) {
+      return new Promise(function (resolve, reject) {
+        var script = document.createElement("script");
+        script.src = scriptUrl;
+        script.type = "text/javascript";
+        script.onError = reject;
+        script.async = true;
+        script.onload = resolve;
+        script.addEventListener("error", reject);
+        script.addEventListener("load", resolve);
+        document.head.appendChild(script);
+      });
+    }
+
+    /**
      * Create the user interface of the dialog box.
      * @private
      */
@@ -129,7 +173,7 @@
      */
     function renderGoogleSignInButton() {
       gapi.signin2.render("google-sign-in-button", {
-        scope: "profile email",
+        scope: "profile",
         prompt: "select_account",
         width: 231,
         height: 46,
@@ -144,7 +188,6 @@
      * @private
      */
     function onGoogleSignInSuccess(googleUserObj) {
-      var profile = googleUserObj.getBasicProfile();
       $guestButton.hide();
       $googleSignOutButton.show();
       $helloText.show();
@@ -227,7 +270,7 @@
         }
       } else {
         gapi.load("auth2", function () {
-          // gapi.auth2.init() will automatically sign in a user to the application if previously signed in
+          // The gapi.auth2.init() function will automatically sign in a user if previously signed in
           gapi.auth2.init().then(function () {
             if (typeof done === "function") {
               var auth2 = gapi.auth2.getAuthInstance();
@@ -277,6 +320,28 @@
     };
 
     /**
+     * Load and initialize the Google Sign-In API.
+     * @private
+     */
+    function loadGoogleSignInAPI() {
+      // The resolve function of the Promise
+      var resolve = function () {
+        initUI();
+      };
+      // The reject function of the Promise
+      var reject = function () {
+        console.error("Error when loading the Google Sign-In API script.");
+      };
+      // Load the Google Sign-In API script
+      // The resolve functino will be called when the script is loaded successfully
+      // The reject function will be called when the script fails to load
+      var src = "https://apis.google.com/js/platform.js";
+      $("head").append('<meta name="google-signin-scope" content="profile">');
+      $("head").append('<meta name="google-signin-client_id" content="' + getGoogleSignInClientId() + '">');
+      loaderScript(src).then(resolve).catch(reject);
+    }
+
+    /**
      * Class constructor.
      * @constructor
      * @private
@@ -285,7 +350,7 @@
       if (noUI) {
         return;
       } else {
-        initUI();
+        loadGoogleSignInAPI();
       }
     }
     Account();
