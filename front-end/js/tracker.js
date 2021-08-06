@@ -27,7 +27,6 @@
     /**
      * Get the measurement ID of the Google Analytics tracker.
      * @private
-     * @todo Add the production GA ID (currently all of them are staging GA ID).
      * @returns {string} - the measurement ID of the Google Analytics tracker.
      */
     function getGoogleAnalyticsId() {
@@ -38,7 +37,7 @@
         gid = "G-RLW6E1SGDN";
       } else if (urlHostName.indexOf("periscope.io.tudelft.nl") !== -1) {
         // production back-end
-        gid = "G-RLW6E1SGDN";
+        gid = "G-6TZ8N6L48K";
       } else if (urlHostName.indexOf("localhost") !== -1) {
         // developement back-end
         gid = "G-RLW6E1SGDN";
@@ -184,6 +183,8 @@
 
     /**
      * Send a Google Analytics tracker event.
+     * (https://developers.google.com/gtagjs/reference/event)
+     * (https://developers.google.com/analytics/devguides/collection/gtagjs/events)
      * @public
      * @param {string} action - the action of the tracker (e.g., "page_view").
      * @param {Object.<string, string>} [data] - the data of the tracker (e.g., {"user_id": "1"}).

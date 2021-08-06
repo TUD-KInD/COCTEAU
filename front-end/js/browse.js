@@ -1,6 +1,9 @@
 (function () {
   "use strict";
 
+  var wantToReportScrollBottom = true;
+  var previousScroll = 0;
+
   /**
    * The object for the "Media" database table.
    * @typedef {Object} Media
@@ -24,7 +27,7 @@
   /**
    * Load and display visions.
    * @private
-   * @param {Vision[]} visions - environment object (in environment.js).
+   * @param {Vision[]} visions - a list of vision objects to load.
    */
   function loadVision(visions) {
     var $browse = $("#browse").empty();
@@ -109,6 +112,8 @@
         if (typeof data !== "undefined" && data.length > 0) {
           $(window).scrollTop(0);
           loadVision(data);
+          wantToReportScrollBottom = true;
+          previousScroll = 0;
         } else {
           console.error("No data during pagination.");
         }
@@ -145,6 +150,28 @@
   }
 
   /**
+   * Add the event to detect if the user scrolls the page to the end.
+   * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   */
+  function addScrollEndEvent(envObj) {
+    var $window = $(window);
+    $window.on("scroll", function () {
+      if (wantToReportScrollBottom && $window.scrollTop() + $window.height() == $(document).height()) {
+        var currentScroll = $window.scrollTop();
+        if (currentScroll > previousScroll) {
+          envObj.sendTrackerEvent("scroll", {
+            "value": 100
+          });
+          // Send a GA event with vision items
+          wantToReportScrollBottom = false;
+        }
+        previousScroll = currentScroll;
+      }
+    });
+  }
+
+  /**
    * Initialize the user interface.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
@@ -161,6 +188,7 @@
           $("#scenario-title").text(scenario["title"]);
           $("#scenario-description").html(scenario["description"]);
           initPagination(envObj, scenarioId);
+          addScrollEndEvent(envObj);
           envObj.showPage();
         }
       });
