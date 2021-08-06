@@ -207,6 +207,10 @@ cat /etc/group
 sudo chown -R root periscope-public-engagement-tool/
 sudo chmod -R 775 periscope-public-engagement-tool/
 sudo chgrp -R periscope-dev periscope-public-engagement-tool/
+
+# Ignore permission changes in this repository
+cd periscope-public-engagement-tool/
+git config core.fileMode false
 ```
 Create three text files to store the database urls in the "back-end/secret/" directory for the staging, production, and testing environments. For the url format, refer to [the flask-sqlalchemy documentation](http://flask-sqlalchemy.pocoo.org/2.3/config/#connection-uri-format). Replace [DATABASE_PASSWORD] with the database password. IMPORTANT: never push the database urls to the repository.
 ```sh
