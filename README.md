@@ -1,5 +1,5 @@
 # periscope-public-engagement-tool
-Demo: http://periscope.io.tudelft.nl/ (restricted access with user name and password)
+Demo: http://periscope.io.tudelft.nl/
 
 This repository hosts code of a tool to engage citizens in participatory decision-making, developed by the Knowledge and Intelligence Design (KInD) research group in the Department of Sustainable Design Engineering, Faculty of Industrial Design Engineering, [Technische Universiteit Delft](https://www.tudelft.nl/en/).
 
@@ -186,7 +186,7 @@ source ~/.bash_profile
 ```
 Clone this repository
 ```sh
-git clone https://github.com/TUD-KInD/periscope-public-engagement-tool.git
+git clone https://github.com/TUD-KInD/COCTEAU-TUD.git periscope-public-engagement-tool
 ```
 Set the permission of the folder (for Ubuntu server setup only, not Mac OS).
 ```sh
