@@ -167,7 +167,7 @@ h2 {
   word-wrap: break-word;
   overflow-y: visible;
   overflow-x: hidden;
-  min-height: 100px;
+  min-height: 130px;
 }
 
 .custom-survey input[readonly].custom-textbox-survey,

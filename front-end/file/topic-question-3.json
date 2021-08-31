@@ -1,0 +1,49 @@
+[{
+  "text": "Nationality:",
+  "choices": [{
+    "text": "Netherlands",
+    "value": 1
+  }, {
+    "text": "Europe (not Netherlands)",
+    "value": 2
+  }, {
+    "text": "Africa",
+    "value": 3
+  }, {
+    "text": "Asia",
+    "value": 4
+  }, {
+    "text": "Oceania",
+    "value": 5
+  }, {
+    "text": "North America",
+    "value": 6
+  }, {
+    "text": "South America",
+    "value": 7
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
+}, {
+  "text": "Gender Identity:",
+  "choices": [{
+    "text": "Female",
+    "value": 1
+  }, {
+    "text": "Male",
+    "value": 2
+  }, {
+    "text": "Non-binary/non-conforming",
+    "value": 3
+  }, {
+    "text": "Transgender",
+    "value": 4
+  }, {
+    "text": "Others",
+    "value": 0
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
+}]
