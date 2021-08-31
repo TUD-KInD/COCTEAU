@@ -116,6 +116,8 @@
           previousScroll = 0;
         } else {
           console.error("No data during pagination.");
+          $("#page-control").hide();
+          $("#prompt-text").text("Currently, there are no visions created by people. Please come back later.");
         }
         // Handle pagination UI
         var totalPage = $pageNav.pagination("getTotalPage");

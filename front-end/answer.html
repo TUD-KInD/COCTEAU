@@ -25,7 +25,7 @@
   <script src="js/account.js"></script>
   <script src="js/tracker.js"></script>
   <script src="js/environment.js"></script>
-  <script src="js/browse.js"></script>
+  <script src="js/answer.js"></script>
 </head>
 
 <body>
@@ -42,21 +42,12 @@
               <span id="scenario-description"></span>
             </p>
             <hr>
-            <p class="text highlight-text" id="prompt-text">
-              Browse the visions created by people to express thoughts about the scenario!
+            <p class="text highlight-text">
+              Browse the opinions created by people to express thoughts about the scenario!
             </p>
           </div>
-          <!-- The visions will be loaded by using the back-end API -->
-          <div class="masonry add-top-margin-small add-bottom-margin-small" id="browse"></div>
-        </div>
-        <div class="flex-row">
-          <div class="flex-item flex-column full-width">
-            <div id="page-control" class="control-group add-top-margin force-hidden">
-              <button id="page-back" class="custom-button-flat large stretch-on-mobile" disabled><img src="img/back.png"><span>Back</span></button>
-              <button id="page-next" class="custom-button-flat large stretch-on-mobile"><img src="img/next.png"><span>Next</span></button>
-              <div id="page-navigator" class="stretch-on-mobile"></div>
-            </div>
-          </div>
+          <!-- The opinions will be loaded by using the back-end API -->
+          <div class="flex-item flex-column-no-wrap full-width" id="answer"></div>
         </div>
       </div>
     </div>
