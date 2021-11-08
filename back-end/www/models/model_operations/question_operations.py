@@ -6,6 +6,50 @@ from models.model import QuestionTypeEnum
 from models.model import Choice
 
 
+def create_description(text, topic_id=None, scenario_id=None):
+    """
+    Create only the description for either a topic *or* a scenario.
+
+    The client will treat this as a text description rather than a question.
+
+    Parameters
+    ----------
+    text : str
+        Body of the question.
+    topic_id : int
+        ID of the topic the question is related to.
+    scenario_id : int
+        ID of the topic the question is related to.
+
+    Returns
+    -------
+    question : Question
+        The created question as a Question object.
+
+    Raises
+    ------
+    exception : Exception
+        In case both topic ID and scenario ID are None.
+    exception : Exception
+        In case both topic ID and scenario ID are passed to the function.
+    """
+    # TODO: need a testing case
+    # Raise an error if both scenario and topic are specified.
+    # (or if neither of them are specified)
+    if topic_id is None and scenario_id is None:
+        raise Exception("Topic ID and Scenario ID cannot be both None.")
+
+    if topic_id is not None and scenario_id is not None:
+        raise Exception("Specify only the Topic ID or the Scenario ID (not both).")
+
+    question = Question(text=text, topic_id=topic_id, scenario_id=scenario_id)
+
+    db.session.add(question)
+    db.session.commit()
+
+    return question
+
+
 def create_free_text_question(text, topic_id=None, scenario_id=None):
     """
     Create a free text question for either a topic *or* a scenario.
@@ -255,6 +299,8 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
     exception : Exception
        In case you attempt to add Choices to a FREE_TEXT question.
     exception : Exception
+       In case you attempt to add Choices to a question with question_type None.
+    exception : Exception
         In case that the choices parameter is not a list.
     exception : Exception
         In case that the length of old and new choices are not the same.
@@ -291,21 +337,23 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
     if choices is not None:
         if type(choices) != list:
             raise Exception("Choices need to be a list.")
-        if question.question_type != QuestionTypeEnum.FREE_TEXT:
-            if len(question.choices) != len(choices):
-                raise Exception("The length of old and new choices must be the same.")
-            else:
-                # Update existing choices
-                for i in range(len(choices)):
-                    c = choices[i]
-                    if "value" not in c or "text" not in c:
-                        raise Exception("Each choice must have both the 'text' and 'value' fields.")
-                    question.choices[i].value = c["value"]
-                    question.choices[i].text = c["text"]
+        if question.question_type is None:
+            raise Exception("Question with type None does not support choices.")
         else:
-            # You cannot add choices to a FREE_TEXT answer
-            raise Exception(QuestionTypeEnum.FREE_TEXT,
-                    " does not support choices")
+            if question.question_type != QuestionTypeEnum.FREE_TEXT:
+                if len(question.choices) != len(choices):
+                    raise Exception("The length of old and new choices must be the same.")
+                else:
+                    # Update existing choices
+                    for i in range(len(choices)):
+                        c = choices[i]
+                        if "value" not in c or "text" not in c:
+                            raise Exception("Each choice must have both the 'text' and 'value' fields.")
+                        question.choices[i].value = c["value"]
+                        question.choices[i].text = c["text"]
+            else:
+                # You cannot add choices to a FREE_TEXT answer
+                raise Exception(QuestionTypeEnum.FREE_TEXT, " does not support choices")
 
     db.session.commit()
 

@@ -446,10 +446,11 @@
      * @param {string} [topicId] - topic ID that the question is in (for demographic questions).
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {boolean} [isMulitpleChoice] - indicate if the question allows multiple choices.
+     * @param {boolean} [isJustDescription] - indicate if the question is just a description but not a question.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, success, error) {
+    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, success, error) {
       var data = {
         "text": text
       };
@@ -464,6 +465,9 @@
       }
       if (typeof isMulitpleChoice !== "undefined") {
         data["is_mulitple_choice"] = isMulitpleChoice;
+      }
+      if (typeof isJustDescription !== "undefined") {
+        data["is_just_description"] = isJustDescription;
       }
       generalPost("/question/", data, success, error);
     };

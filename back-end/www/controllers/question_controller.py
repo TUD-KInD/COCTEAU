@@ -10,6 +10,7 @@ from util.util import decode_user_token
 from util.util import try_wrap_response
 from config.config import config
 from models.model_operations.question_operations import create_free_text_question
+from models.model_operations.question_operations import create_description
 from models.model_operations.question_operations import create_single_choice_question
 from models.model_operations.question_operations import create_multi_choice_question
 from models.model_operations.question_operations import get_question_by_id
@@ -57,6 +58,9 @@ def question():
     is_mulitple_choice : bool
         Indicate if the question allows multiple choices.
         (optional for POST)
+    is_just_description : bool
+        Indicate if the question is just a description (but not a question).
+        (optional for POST)
 
     Returns
     -------
@@ -103,7 +107,11 @@ def question():
             e = InvalidUsage("Must have 'text'.", status_code=400)
             return handle_invalid_usage(e)
         choices = rj.get("choices")
-        f = try_create_free_text_question
+        is_just_description = rj.get("is_just_description")
+        if is_just_description is True:
+            f = try_create_description
+        else:
+            f = try_create_free_text_question
         if choices is not None:
             is_mulitple_choice = rj.get("is_mulitple_choice")
             if is_mulitple_choice is True:
@@ -195,6 +203,13 @@ def try_create_single_choice_question(text, choices, topic_id=None, scenario_id=
 def try_create_free_text_question(text, choices, topic_id=None, scenario_id=None):
     # IMPORTANT: choices is a dummy parameter for formatting, do not remove it
     data = create_free_text_question(text, topic_id=topic_id, scenario_id=scenario_id)
+    return jsonify({"data": question_schema.dump(data)})
+
+
+@try_wrap_response
+def try_create_description(text, choices, topic_id=None, scenario_id=None):
+    # IMPORTANT: choices is a dummy parameter for formatting, do not remove it
+    data = create_description(text, topic_id=topic_id, scenario_id=scenario_id)
     return jsonify({"data": question_schema.dump(data)})
 
 

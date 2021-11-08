@@ -88,9 +88,27 @@
       html += '  </div>';
     }
     html += '  </div>';
-    html += '  <textarea class="custom-textbox-survey add-top-margin" placeholder="Your opinion (max 500 characters)" maxlength="500"></textarea>';
+    if (option.length == 0) {
+      html += '  <textarea class="custom-textbox-survey add-top-margin" placeholder="Your opinion (max 500 characters)" maxlength="500"></textarea>';
+    }
     html += '</div>';
     return $(html);
+  }
+
+  /**
+   * Create the html elements for a text description.
+   * @private
+   * @param {string} text - the text description.
+   * @returns {Object} - a jQuery DOM object.
+   */
+  function createTextHTML(text) {
+    var $html;
+    try {
+      $html = $(text);
+    } catch (error) {
+      $html = $('<p class="text">' + text + '</p>');
+    }
+    return $html;
   }
 
   /**
@@ -247,8 +265,13 @@
           var $scenarioQuestions = $("#scenario-questions");
           for (var i = 0; i < scenarioQuestions.length; i++) {
             var q = scenarioQuestions[i];
-            var $q = createScenarioQuestionHTML("sq" + i, q);
-            $q.data("raw", q);
+            console.log(q["question_type"]);
+            if (q["question_type"] == null) {
+              var $q = createTextHTML(q["text"]);
+            } else {
+              var $q = createScenarioQuestionHTML("sq" + i, q);
+              $q.data("raw", q);
+            }
             $scenarioQuestions.append($q);
           }
           initDemographicsDialog(envObj, scenario["topic_id"]);

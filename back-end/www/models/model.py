@@ -133,12 +133,13 @@ class Question(db.Model):
     question_type : enum.Enum
         Type of the question.
         It can be SINGLE_CHOICE, MULTI_CHOICE or FREE_TEXT.
+        NULL means that the question is a description, not a question.
     scenario_id : int
         ID of the Scenario the question belongs to.
         Either the scenario_id or topic_id must be set, not both.
     topic_id : int
         ID of the Scenario the question belongs to.
-        Either the scenario_id or topic_id must be set. not both.
+        Either the scenario_id or topic_id must be set, not both.
     choices : relationship
         List of possible choices (only of SINGLE_CHOICE and MULTI_CHOICE questions).
     answers : relationship

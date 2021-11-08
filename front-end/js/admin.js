@@ -199,6 +199,8 @@
       });
       var $isMultipleChoice = $("#want-multiple-choice");
       var mc = $isMultipleChoice.is(":checked");
+      var $isJustDescription = $("#want-just-description");
+      var jd = $isJustDescription.is(":checked");
       if (choices.length == 0) choices = undefined;
       var t = $questionText.val().trim();
       if (t == "") t = undefined;
@@ -206,7 +208,7 @@
       if (ti == "") ti = undefined;
       var si = $questionScenarioId.val();
       if (si == "") si = undefined;
-      envObj.createQuestion(t, choices, ti, si, mc, function (returnData) {
+      envObj.createQuestion(t, choices, ti, si, mc, jd, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
@@ -592,7 +594,7 @@
           });
         }
       });
-    }, 250);
+    }, 500);
     // Delete all visions
     window.setTimeout(function () {
       envObj.getAllVision(function (returnData) {
@@ -603,7 +605,7 @@
           });
         }
       });
-    }, 500);
+    }, 1000);
     // Delete all questions
     window.setTimeout(function () {
       envObj.getAllQuestion(function (returnData) {
@@ -614,7 +616,7 @@
           });
         }
       });
-    }, 750);
+    }, 1500);
     // Delete all scenarios
     window.setTimeout(function () {
       envObj.getAllScenario(function (returnData) {
@@ -625,7 +627,7 @@
           });
         }
       });
-    }, 1000);
+    }, 2000);
     // Delete all topics
     window.setTimeout(function () {
       envObj.getAllTopic(function (returnData) {
@@ -636,7 +638,7 @@
           });
         }
       });
-    }, 1250);
+    }, 2500);
     // Delete all moods
     window.setTimeout(function () {
       envObj.getAllMood(function (returnData) {
@@ -647,7 +649,7 @@
           });
         }
       });
-    }, 1500);
+    }, 3000);
   }
 
   /**
@@ -770,7 +772,7 @@
       return true;
     } else {
       var q = questions[0];
-      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, false, function (questionData) {
+      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], function (questionData) {
         console.log("Question created.");
         console.log(questionData);
         questionList.push(questionData["data"]);
@@ -790,9 +792,10 @@
   function setInitialData(envObj) {
     addMood(envObj, "file/mood.json", function (moodList) {
       var moodId = moodList[(moodList.length - 1) / 2]["id"]; // ID of the "Neutral" mood
-      addDataSet(envObj, "file/topic-1.json", "file/scenario-1.json", "file/topic-question-1.json", "file/scenario-question-1.json", moodId, "file/vision-1.json");
-      addDataSet(envObj, "file/topic-2.json", "file/scenario-2.json", "file/topic-question-2.json", "file/scenario-question-2.json", moodId, "file/vision-2.json");
-      addDataSet(envObj, "file/topic-3.json", "file/scenario-3.json", "file/topic-question-3.json", "file/scenario-question-3.json", moodId, "file/vision-3.json");
+      addDataSet(envObj, "file/topic_1.json", "file/scenario_1.json", "file/topic_question_1.json", "file/scenario_question_1.json", moodId, "file/vision_1.json");
+      addDataSet(envObj, "file/topic_2.json", "file/scenario_2.json", "file/topic_question_2.json", "file/scenario_question_2.json", moodId, "file/vision_2.json");
+      //addDataSet(envObj, "file/topic_3.json", "file/scenario_3.json", "file/topic_question_3.json", "file/scenario_question_3.json", moodId, "file/vision_3.json");
+      addDataSet(envObj, "file/topic_4.json", "file/scenario_4.json", "file/topic_question_4.json", "file/scenario_question_4.json", moodId, "file/vision_4.json");
     });
   }
 
