@@ -151,6 +151,29 @@ h2 {
   border-radius: 0;
 }
 
+.custom-survey p.custom-answer-survey {
+  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  margin-top: 15px;
+  margin-bottom: 0;
+  margin-right: 0;
+  margin-left: 0;
+  background: rgb(255, 255, 255);
+  border: 1px solid #7d7d7d;
+  font-size: 18px;
+  outline: none;
+  border-radius: 0;
+  width: 100%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-y: visible;
+  overflow-x: hidden;
+  min-height: 40px;
+  word-break: break-word;
+  hyphens: auto;
+}
+
 .custom-survey input.custom-textbox-survey,
 .custom-survey textarea.custom-textbox-survey {
   font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
@@ -167,7 +190,7 @@ h2 {
   word-wrap: break-word;
   overflow-y: visible;
   overflow-x: hidden;
-  min-height: 100px;
+  min-height: 130px;
 }
 
 .custom-survey input[readonly].custom-textbox-survey,
@@ -901,6 +924,24 @@ hr {
 
 .dialog-container-submit-vision {
   max-width: 500px;
+}
+
+#dialog-data .custom-button {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif !important;
+  font-size: 16px !important;
+  height: 46px !important;
+  border-radius: 0 !important;
+  width: 231px !important;
+  margin-top: 17px !important;
+  background-color: #7d7d7d !important;
+  border-color: #7d7d7d !important;
+  color: white !important;
+  line-height: 25px;
+}
+
+#dialog-data .custom-button-primary {
+  background-color: #007bff !important;
+  border-color: #007bff !important;
 }
 
 @media screen and (min-width: 900px) {

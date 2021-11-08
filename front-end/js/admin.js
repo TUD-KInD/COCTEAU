@@ -792,6 +792,7 @@
       var moodId = moodList[(moodList.length - 1) / 2]["id"]; // ID of the "Neutral" mood
       addDataSet(envObj, "file/topic-1.json", "file/scenario-1.json", "file/topic-question-1.json", "file/scenario-question-1.json", moodId, "file/vision-1.json");
       addDataSet(envObj, "file/topic-2.json", "file/scenario-2.json", "file/topic-question-2.json", "file/scenario-question-2.json", moodId, "file/vision-2.json");
+      addDataSet(envObj, "file/topic-3.json", "file/scenario-3.json", "file/topic-question-3.json", "file/scenario-question-3.json", moodId, "file/vision-3.json");
     });
   }
 

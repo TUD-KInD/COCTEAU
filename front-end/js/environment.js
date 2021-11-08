@@ -73,6 +73,9 @@
       if (urlHostName.indexOf("145.38.198.35") !== -1) {
         // staging back-end
         url = "http://145.38.198.35/api";
+      } else if (urlHostName.indexOf("staging") !== -1) {
+        // staging back-end
+        url = "https://staging.api.periscope.io.tudelft.nl";
       } else if (urlHostName.indexOf("periscope.io.tudelft.nl") !== -1) {
         // production back-end
         url = "https://api.periscope.io.tudelft.nl";

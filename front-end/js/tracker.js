@@ -35,6 +35,9 @@
       if (urlHostName.indexOf("145.38.198.35") !== -1) {
         // staging back-end
         gid = "G-RLW6E1SGDN";
+      } else if (urlHostName.indexOf("staging") !== -1) {
+        // staging back-end
+        gid = "G-RLW6E1SGDN";
       } else if (urlHostName.indexOf("periscope.io.tudelft.nl") !== -1) {
         // production back-end
         gid = "G-6TZ8N6L48K";
