@@ -575,6 +575,7 @@
    * @param {Object} envObj - environment object (in environment.js).
    */
   function deleteAllData(envObj) {
+    console.log("Start deleting data...");
     // Delete all games
     envObj.getAllGame(function (returnData) {
       var data = returnData["data"];
@@ -594,7 +595,7 @@
           });
         }
       });
-    }, 500);
+    }, 800);
     // Delete all visions
     window.setTimeout(function () {
       envObj.getAllVision(function (returnData) {
@@ -605,7 +606,7 @@
           });
         }
       });
-    }, 1000);
+    }, 1600);
     // Delete all questions
     window.setTimeout(function () {
       envObj.getAllQuestion(function (returnData) {
@@ -616,7 +617,7 @@
           });
         }
       });
-    }, 1500);
+    }, 2400);
     // Delete all scenarios
     window.setTimeout(function () {
       envObj.getAllScenario(function (returnData) {
@@ -627,7 +628,7 @@
           });
         }
       });
-    }, 2000);
+    }, 4000);
     // Delete all topics
     window.setTimeout(function () {
       envObj.getAllTopic(function (returnData) {
@@ -638,7 +639,7 @@
           });
         }
       });
-    }, 2500);
+    }, 4800);
     // Delete all moods
     window.setTimeout(function () {
       envObj.getAllMood(function (returnData) {
@@ -649,7 +650,7 @@
           });
         }
       });
-    }, 3000);
+    }, 5600);
   }
 
   /**

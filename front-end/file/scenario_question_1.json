@@ -1,4 +1,13 @@
 [{
+  "text": "<h2>Pre-Survey: Surveillance Cameras</h2>",
+  "is_just_description": true
+}, {
+  "text": "CCTV cameras are widely used in the city of Amsterdam for different purposes, such as safety, crowd monitoring, and - more recently during the COVID pandemic - making sure the 1.5 meters distance is respected. In addition, this stream of videos and pictures is analysed by artificial intelligence algorithms, together with human agents, to spot problematic situations and react accordingly.",
+  "is_just_description": true
+}, {
+  "text": "<h3>Part 1: would you mind providing opinions on the following questions?</h3>",
+  "is_just_description": true
+}, {
   "text": "1. The fact that a human looks at the surveilance video is a problem about my privacy.",
   "choices": [{
     "text": "Strongly Agree",
@@ -72,4 +81,85 @@
   }]
 }, {
   "text": "5. Do you have other comments about deploying surveillance cameras?"
+}, {
+  "text": "<h3>Part 2: would you mind helping us understand the diversity?</h3>",
+  "is_just_description": true
+}, {
+  "text": "6. What is your gender identity?",
+  "choices": [{
+    "text": "Female",
+    "value": 1
+  }, {
+    "text": "Male",
+    "value": 2
+  }, {
+    "text": "Non-binary/non-conforming",
+    "value": 3
+  }, {
+    "text": "Transgender",
+    "value": 4
+  }, {
+    "text": "Others",
+    "value": 0
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
+}, {
+  "text": "7. What is your age range?",
+  "choices": [{
+    "text": "18-24 years old",
+    "value": 1
+  }, {
+    "text": "25-34 years old",
+    "value": 2
+  }, {
+    "text": "35-44 years old",
+    "value": 3
+  }, {
+    "text": "45-54 years old",
+    "value": 4
+  }, {
+    "text": "55-64 years old",
+    "value": 5
+  }, {
+    "text": "65-74 years old",
+    "value": 6
+  }, {
+    "text": "75 years or older",
+    "value": 7
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
+}, {
+  "text": "8. What is your education level?",
+  "choices": [{
+    "text": "No formal educational credential",
+    "value": 1
+  }, {
+    "text": "High school diploma or equivalent",
+    "value": 2
+  }, {
+    "text": "Some college, no degree",
+    "value": 3
+  }, {
+    "text": "Postsecondary nondegree award",
+    "value": 4
+  }, {
+    "text": "Associate's degree",
+    "value": 5
+  }, {
+    "text": "Bachelor's degree",
+    "value": 6
+  }, {
+    "text": "Master's degree",
+    "value": 7
+  }, {
+    "text": "Doctoral or professional degree",
+    "value": 8
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
 }]

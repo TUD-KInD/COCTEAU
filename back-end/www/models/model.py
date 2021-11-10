@@ -134,6 +134,8 @@ class Question(db.Model):
         Type of the question.
         It can be SINGLE_CHOICE, MULTI_CHOICE or FREE_TEXT.
         NULL means that the question is a description, not a question.
+    order : int
+        Position of the Question with respect to the others.
     scenario_id : int
         ID of the Scenario the question belongs to.
         Either the scenario_id or topic_id must be set, not both.
@@ -148,6 +150,7 @@ class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String, nullable=False)
     question_type = db.Column(db.Enum(QuestionTypeEnum))
+    order = db.Column(db.Integer, nullable=False, default=0)
     scenario_id = db.Column(db.Integer, db.ForeignKey("scenario.id"))
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"))
     choices = db.relationship("Choice", backref=db.backref("question", lazy=True), lazy=True)
@@ -268,10 +271,13 @@ class Mood(db.Model):
         Name of the mood.
     image : str
         Image URL of the mood.
+    order : int
+        Position of the Mood with respect to the others.
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=True)
+    order = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):
         return "<Mood id=%r name=%r image=%r>" % (

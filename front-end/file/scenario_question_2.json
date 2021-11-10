@@ -1,4 +1,13 @@
 [{
+  "text": "<h2>Pre-Survey: Back to Campus from COVID</h2>",
+  "is_just_description": true
+}, {
+  "text": "COVID-19 situation is getting better. Schools have decided to keep in place agile working approaches. Therefore, students and employees chose to continue to work from their households or come back to the shared workplace.",
+  "is_just_description": true
+}, {
+  "text": "<h3>Part 1: would you mind providing opinions on the following questions?</h3>",
+  "is_just_description": true
+}, {
   "text": "1. If I was not obliged to stay home, I would go to my workplace.",
   "choices": [{
     "text": "Strongly Agree",
@@ -90,4 +99,76 @@
   }]
 }, {
   "text": "6. Do you have other comments about returning the the shared workspace?"
+}, {
+  "text": "<h3>Part 2: would you mind helping us understand the diversity?</h3>",
+  "is_just_description": true
+}, {
+  "text": "7. What is your gender identity?",
+  "choices": [{
+    "text": "Female",
+    "value": 1
+  }, {
+    "text": "Male",
+    "value": 2
+  }, {
+    "text": "Non-binary/non-conforming",
+    "value": 3
+  }, {
+    "text": "Transgender",
+    "value": 4
+  }, {
+    "text": "Others",
+    "value": 0
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
+}, {
+  "text": "8. What is your age range?",
+  "choices": [{
+    "text": "18-24 years old",
+    "value": 1
+  }, {
+    "text": "25-34 years old",
+    "value": 2
+  }, {
+    "text": "35-44 years old",
+    "value": 3
+  }, {
+    "text": "45-54 years old",
+    "value": 4
+  }, {
+    "text": "55-64 years old",
+    "value": 5
+  }, {
+    "text": "65-74 years old",
+    "value": 6
+  }, {
+    "text": "75 years or older",
+    "value": 7
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
+}, {
+  "text": "9. What is your job category?",
+  "choices": [{
+    "text": "Student (e.g., PhD student)",
+    "value": 1
+  }, {
+    "text": "Staff (e.g., secretary)",
+    "value": 2
+  }, {
+    "text": "Researcher (e.g., postdoc)",
+    "value": 3
+  }, {
+    "text": "Faculty (e.g., lecturer, professor)",
+    "value": 4
+  }, {
+    "text": "Other",
+    "value": 5
+  }, {
+    "text": "Prefer not to say",
+    "value": -1
+  }]
 }]

@@ -15,8 +15,12 @@
       var $demographicsQuestions = $("#demographics-questions");
       for (var i = 0; i < demographicsQuestions.length; i++) {
         var q = demographicsQuestions[i];
-        var $q = createDemographicsQuestionHTML("dq" + i, q);
-        $q.data("raw", q);
+        if (q["question_type"] == null) {
+          var $q = createTextHTML(q["text"]);
+        } else {
+          var $q = createDemographicsQuestionHTML("dq" + i, q);
+          $q.data("raw", q);
+        }
         $demographicsQuestions.append($q);
       }
       var widgets = new edaplotjs.Widgets();
@@ -265,7 +269,6 @@
           var $scenarioQuestions = $("#scenario-questions");
           for (var i = 0; i < scenarioQuestions.length; i++) {
             var q = scenarioQuestions[i];
-            console.log(q["question_type"]);
             if (q["question_type"] == null) {
               var $q = createTextHTML(q["text"]);
             } else {

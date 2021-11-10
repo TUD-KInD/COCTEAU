@@ -32,19 +32,6 @@
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row">
-          <div class="flex-item flex-column">
-            <!-- The scenario title will be loaded by using the back-end API -->
-            <h2 id="scenario-title" class="add-top-margin"></h2>
-            <p class="text">
-              <!-- The scenario description will be loaded by using the back-end API -->
-              <span id="scenario-description"></span>
-            </p>
-            <hr>
-            <p class="text highlight-text">
-              Would you mind providing opinions on this scenario?
-              Please let us know by answering the questions below.
-            </p>
-          </div>
           <!-- The questions will be loaded by using the back-end API -->
           <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
           <div class="flex-item flex-column">
@@ -58,14 +45,12 @@
               </a>
             </div>
           </div>
-          <div id="dialog-demographics" title="Demographics" data-role="none" style="display: none;">
+          <div id="dialog-demographics" title="Consent" data-role="none" style="display: none;">
+            <div id="demographics-questions" class="add-top-margin"></div>
             <p>
-              Would you mind helping us understand the diversity of opinions?
-              Your data will only be used in anonymous and aggregated form.
-              Thank you!
+              Thank you! Please click the button below to submit the consent.
               <span class="custom-text-danger" id="submit-demographics-error-message" style="display: none;"></span>
             </p>
-            <div id="demographics-questions" class="add-top-margin"></div>
           </div>
         </div>
       </div>

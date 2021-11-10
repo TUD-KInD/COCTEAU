@@ -6,7 +6,7 @@ from models.model import QuestionTypeEnum
 from models.model import Choice
 
 
-def create_description(text, topic_id=None, scenario_id=None):
+def create_description(text, topic_id=None, scenario_id=None, order=0):
     """
     Create only the description for either a topic *or* a scenario.
 
@@ -20,6 +20,8 @@ def create_description(text, topic_id=None, scenario_id=None):
         ID of the topic the question is related to.
     scenario_id : int
         ID of the topic the question is related to.
+    order : int
+        Order of the question relative to others.
 
     Returns
     -------
@@ -32,6 +34,10 @@ def create_description(text, topic_id=None, scenario_id=None):
         In case both topic ID and scenario ID are None.
     exception : Exception
         In case both topic ID and scenario ID are passed to the function.
+    exception : Exception
+        In case that the order parameter is None.
+    exception : Exception
+        In case that the order parameter is not None and not an integer.
     """
     # TODO: need a testing case
     # Raise an error if both scenario and topic are specified.
@@ -42,6 +48,12 @@ def create_description(text, topic_id=None, scenario_id=None):
     if topic_id is not None and scenario_id is not None:
         raise Exception("Specify only the Topic ID or the Scenario ID (not both).")
 
+    if order is None:
+        raise Exception("Order cannot be None.")
+    else:
+        if type(order) != int:
+            raise Exception("Order needs to be an integer.")
+
     question = Question(text=text, topic_id=topic_id, scenario_id=scenario_id)
 
     db.session.add(question)
@@ -50,7 +62,7 @@ def create_description(text, topic_id=None, scenario_id=None):
     return question
 
 
-def create_free_text_question(text, topic_id=None, scenario_id=None):
+def create_free_text_question(text, topic_id=None, scenario_id=None, order=0):
     """
     Create a free text question for either a topic *or* a scenario.
 
@@ -65,6 +77,8 @@ def create_free_text_question(text, topic_id=None, scenario_id=None):
         ID of the topic the question is related to.
     scenario_id : int
         ID of the topic the question is related to.
+    order : int
+        Order of the question relative to others.
 
     Returns
     -------
@@ -77,6 +91,10 @@ def create_free_text_question(text, topic_id=None, scenario_id=None):
         In case both topic ID and scenario ID are None.
     exception : Exception
         In case both topic ID and scenario ID are passed to the function.
+    exception : Exception
+        In case that the order parameter is None.
+    exception : Exception
+        In case that the order parameter is not None and not an integer.
     """
     # Raise an error if both scenario and topic are specified.
     # (or if neither of them are specified)
@@ -85,6 +103,12 @@ def create_free_text_question(text, topic_id=None, scenario_id=None):
 
     if topic_id is not None and scenario_id is not None:
         raise Exception("Specify only the Topic ID or the Scenario ID (not both).")
+
+    if order is None:
+        raise Exception("Order cannot be None.")
+    else:
+        if type(order) != int:
+            raise Exception("Order needs to be an integer.")
 
     question = Question(text=text, question_type=QuestionTypeEnum.FREE_TEXT,
             topic_id=topic_id, scenario_id=scenario_id)
@@ -95,7 +119,7 @@ def create_free_text_question(text, topic_id=None, scenario_id=None):
     return question
 
 
-def create_single_choice_question(text, choices, topic_id=None, scenario_id=None):
+def create_single_choice_question(text, choices, topic_id=None, scenario_id=None, order=0):
     """
     Create a single choice question for either a topic *or* a scenario.
 
@@ -110,6 +134,8 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
         ID of the topic the question is related to.
     scenario_id : int
         ID of the topic the question is related to.
+    order : int
+        Order of the question relative to others.
 
     Returns
     -------
@@ -124,6 +150,10 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
         In case both topic ID and scenario ID are passed to the function.
     exception : Exception
         In case that the choices parameter is not a list.
+    exception : Exception
+        In case that the order parameter is None.
+    exception : Exception
+        In case that the order parameter is not None and not an integer.
     """
     # Raise an error if both scenario and topic are specified.
     # (or if neither of them are specified)
@@ -132,6 +162,12 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
 
     if topic_id is not None and scenario_id is not None:
         raise Exception("Specify only the Topic ID or the Scenario ID.")
+
+    if order is None:
+        raise Exception("Order cannot be None.")
+    else:
+        if type(order) != int:
+            raise Exception("Order needs to be an integer.")
 
     if type(choices) != list:
         raise Exception("Choices need to be a list.")
@@ -148,7 +184,7 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
     return question
 
 
-def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None):
+def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None, order=0):
 
     """
     Create a single choice question for either a topic *or* a scenario.
@@ -164,6 +200,8 @@ def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None)
         ID of the topic the question is related to.
     scenario_id : str
         ID of the topic the question is related to.
+    order : int
+        Order of the question relative to others.
 
     Returns
     -------
@@ -178,12 +216,22 @@ def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None)
         In case both topic ID and scenario ID are passed to the function.
     exception : Exception
         In case that the choices parameter is not a list.
+    exception : Exception
+        In case that the order parameter is None.
+    exception : Exception
+        In case that the order parameter is not None and not an integer.
     """
     if topic_id is None and scenario_id is None:
         raise Exception("Topic ID and Scenario ID cannot be both None.")
 
     if topic_id is not None and scenario_id is not None:
         raise Exception("Specify only the Topic ID or the Scenario ID.")
+
+    if order is None:
+        raise Exception("Order cannot be None.")
+    else:
+        if type(order) != int:
+            raise Exception("Order needs to be an integer.")
 
     if type(choices) != list:
         raise Exception("Choices need to be a list.")
@@ -272,7 +320,7 @@ def get_all_questions():
     return questions
 
 
-def update_question(question_id, text=None, choices=None, topic_id=None, scenario_id=None):
+def update_question(question_id, text=None, choices=None, topic_id=None, scenario_id=None, order=None):
     """
     Modify a question text or choices.
 
@@ -286,6 +334,8 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
         ID of the topic the question is related to.
     scenario_id : str
         ID of the topic the question is related to.
+    order : int
+        Order of the question relative to others.
 
     Returns
     -------
@@ -310,6 +360,8 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
         In case of updating the topic ID when the original one is None.
     exception : Exception
         In case of updating the scenario ID when the original one is None.
+    exception : Exception
+        In case that the order parameter is not None and not an integer.
     """
     question = get_question_by_id(question_id)
 
@@ -318,6 +370,12 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
 
     if text is not None:
         question.text = text
+
+    if order is not None:
+        if type(order) is int:
+            question.order = order
+        else:
+            raise Exception("Order needs to be an integer.")
 
     if topic_id is not None:
         if scenario_id is not None:

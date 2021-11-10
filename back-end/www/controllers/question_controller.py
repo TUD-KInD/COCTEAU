@@ -52,6 +52,9 @@ def question():
         The text of a question.
         (required for POST)
         (optional for PATCH)
+    order : int
+        The order of a question relative to others.
+        (optional for POST and PATCH)
     choices : list of dict
         The choices of a question, in the format [{"text:"option label","value":option_value}].
         (optional for POST and PATCH)
@@ -120,17 +123,18 @@ def question():
                 f = try_create_single_choice_question
         topic_id = rj.get("topic_id")
         scenario_id = rj.get("scenario_id")
+        order = rj.get("order", 0)
         if topic_id is None:
             if scenario_id is None:
                 e = InvalidUsage("Must have either 'topic_id' or 'scenario_id'.", status_code=400)
                 return handle_invalid_usage(e)
             else:
                 # This means that it is a scenario question
-                return f(text, choices, scenario_id=scenario_id)
+                return f(text, choices, scenario_id=scenario_id, order=order)
         else:
             if scenario_id is None:
                 # This means that it is a demographic question
-                return f(text, choices, topic_id=topic_id)
+                return f(text, choices, topic_id=topic_id, order=order)
             else:
                 e = InvalidUsage("Cannot have both 'topic_id' and 'scenario_id'.", status_code=400)
                 return handle_invalid_usage(e)
@@ -188,28 +192,28 @@ def try_get_questions_by_topic(topic_id):
 
 
 @try_wrap_response
-def try_create_multi_choice_question(text, choices, topic_id=None, scenario_id=None):
-    data = create_multi_choice_question(text, choices, topic_id=topic_id, scenario_id=scenario_id)
+def try_create_multi_choice_question(text, choices, topic_id=None, scenario_id=None, order=0):
+    data = create_multi_choice_question(text, choices, topic_id=topic_id, scenario_id=scenario_id, order=order)
     return jsonify({"data": question_schema.dump(data)})
 
 
 @try_wrap_response
-def try_create_single_choice_question(text, choices, topic_id=None, scenario_id=None):
-    data = create_single_choice_question(text, choices, topic_id=topic_id, scenario_id=scenario_id)
+def try_create_single_choice_question(text, choices, topic_id=None, scenario_id=None, order=0):
+    data = create_single_choice_question(text, choices, topic_id=topic_id, scenario_id=scenario_id, order=order)
     return jsonify({"data": question_schema.dump(data)})
 
 
 @try_wrap_response
-def try_create_free_text_question(text, choices, topic_id=None, scenario_id=None):
+def try_create_free_text_question(text, choices, topic_id=None, scenario_id=None, order=0):
     # IMPORTANT: choices is a dummy parameter for formatting, do not remove it
-    data = create_free_text_question(text, topic_id=topic_id, scenario_id=scenario_id)
+    data = create_free_text_question(text, topic_id=topic_id, scenario_id=scenario_id, order=order)
     return jsonify({"data": question_schema.dump(data)})
 
 
 @try_wrap_response
-def try_create_description(text, choices, topic_id=None, scenario_id=None):
+def try_create_description(text, choices, topic_id=None, scenario_id=None, order=0):
     # IMPORTANT: choices is a dummy parameter for formatting, do not remove it
-    data = create_description(text, topic_id=topic_id, scenario_id=scenario_id)
+    data = create_description(text, topic_id=topic_id, scenario_id=scenario_id, order=order)
     return jsonify({"data": question_schema.dump(data)})
 
 

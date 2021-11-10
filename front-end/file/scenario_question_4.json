@@ -2,10 +2,10 @@
   "text": "<h2>Pre-Survey</h2>",
   "is_just_description": true
 }, {
-  "text": "We will conduct an anonymous user study of our web-based tool for design brainstorming through crowdsourcing opinions of scenarios on pressing societal issues, such as COVID-19 measures. We aim to understand how to effectively design system features to engage stakeholders in discussions of societal issues at scale. The results of this study will be used to derive empirical design implications and published in research papers.",
+  "text": "We invite you to an anonymous user study of our web-based tool for design brainstorming on pressing societal issues. We aim to understand how to effectively design system features to engage stakeholders in discussions of societal issues at scale. The results of this study will be used to derive empirical design implications and published in research papers.",
   "is_just_description": true
 }, {
-  "text": "<h3>Part 1: please answer the following questions:</h3>",
+  "text": "<h3>Part 1: please answer the following questions about empathy level:</h3>",
   "is_just_description": true
 }, {
   "text": "Before criticizing somebody, I try to imagine how I would feel if I were in their place.",
@@ -260,7 +260,7 @@
     "value": 5
   }]
 }, {
-  "text": "<h3>Part 2: please answer the following questions:</h3>",
+  "text": "<h3>Part 2: please answer the following questions about self-efficacy:</h3>",
   "is_just_description": true
 }, {
   "text": "I feel confident in my ability to contribute ideas in combating COVID-19.",
@@ -407,7 +407,7 @@
     "value": 5
   }]
 }, {
-  "text": "<h3>Part 3: please answer the following questions:</h3>",
+  "text": "<h3>Part 3: would you mind helping us understand the diversity?</h3>",
   "is_just_description": true
 }, {
   "text": "What is your gender identity?",
