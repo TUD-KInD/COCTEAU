@@ -112,6 +112,22 @@
     this.isChrome = function () {
       return isChromeUserAgent;
     };
+
+    /**
+     * Sort an array of dictionary objects by one key in place.
+     * @public
+     * @param {Object[]} array - array of dictionary objects.
+     * @param {string} keyName - the key in the dictionary object to sort the array.
+     */
+    this.sortArrayOfDictByKeyInPlace = function (array, keyName) {
+      array.sort(function (a, b) {
+        var keyA = a[keyName];
+        var keyB = b[keyName];
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      });
+    };
   };
 
   // Create the object and register it to window

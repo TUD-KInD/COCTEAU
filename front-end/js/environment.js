@@ -447,10 +447,11 @@
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {boolean} [isMulitpleChoice] - indicate if the question allows multiple choices.
      * @param {boolean} [isJustDescription] - indicate if the question is just a description but not a question.
+     * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, success, error) {
+    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, success, error) {
       var data = {
         "text": text
       };
@@ -468,6 +469,9 @@
       }
       if (typeof isJustDescription !== "undefined") {
         data["is_just_description"] = isJustDescription;
+      }
+      if (typeof order !== "undefined") {
+        data["order"] = order;
       }
       generalPost("/question/", data, success, error);
     };
@@ -542,15 +546,19 @@
      * @public
      * @param {string} name - name of the mood.
      * @param {string} [image] - image of the mood.
+     * @param {number} [order] - indicate the order of the mood relative to the others.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createMood = function (name, image, success, error) {
+    this.createMood = function (name, image, order, success, error) {
       var data = {
         "name": name
       };
       if (typeof image !== "undefined") {
         data["image"] = image;
+      }
+      if (typeof order !== "undefined") {
+        data["order"] = order;
       }
       generalPost("/mood/", data, success, error);
     };

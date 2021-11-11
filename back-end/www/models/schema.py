@@ -36,7 +36,7 @@ class QuestionSchema(ma.Schema):
     choices = ma.Nested(choices_schema)
     class Meta:
         model = Question
-        fields = ("id", "text", "question_type", "scenario_id", "topic_id", "choices")
+        fields = ("id", "text", "question_type", "scenario_id", "topic_id", "choices", "order")
 question_schema = QuestionSchema()
 questions_schema = QuestionSchema(many=True)
 
@@ -74,7 +74,7 @@ class MoodSchema(ma.Schema):
     """The schema for the Mood table, used for jsonify."""
     class Meta:
         model = Mood
-        fields = ("id", "name", "image")
+        fields = ("id", "name", "image", "order")
 mood_schema = MoodSchema()
 moods_schema = MoodSchema(many=True)
 

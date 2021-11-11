@@ -201,6 +201,7 @@
       var mc = $isMultipleChoice.is(":checked");
       var $isJustDescription = $("#want-just-description");
       var jd = $isJustDescription.is(":checked");
+      var $questionOrder = $("#want-question-order");
       if (choices.length == 0) choices = undefined;
       var t = $questionText.val().trim();
       if (t == "") t = undefined;
@@ -208,7 +209,9 @@
       if (ti == "") ti = undefined;
       var si = $questionScenarioId.val();
       if (si == "") si = undefined;
-      envObj.createQuestion(t, choices, ti, si, mc, jd, function (returnData) {
+      var order = $questionOrder.val();
+      if (order == "") order = undefined;
+      envObj.createQuestion(t, choices, ti, si, mc, jd, order, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
@@ -299,11 +302,14 @@
     $("#create-mood").on("click", function () {
       var $moodName = $("#want-mood-name");
       var $moodImage = $("#want-mood-image");
+      var $moodOrder = $("#want-mood-order");
       var n = $moodName.val().trim();
       if (n == "") n = undefined;
       var i = $moodImage.val().trim();
       if (i == "") i = undefined;
-      envObj.createMood(n, i, function (returnData) {
+      var order = $moodOrder.val().trim();
+      if (order == "") order = undefined;
+      envObj.createMood(n, i, order, function (returnData) {
         console.log(returnData);
         $moodName.val("");
         $moodImage.val("");
@@ -739,7 +745,7 @@
       return true;
     } else {
       var m = moods[0];
-      envObj.createMood(m["name"], m["image"], function (moodData) {
+      envObj.createMood(m["name"], m["image"], moodList.length, function (moodData) {
         console.log("Mood created.");
         console.log(moodData);
         moodList.push(moodData["data"]);
@@ -773,7 +779,7 @@
       return true;
     } else {
       var q = questions[0];
-      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], function (questionData) {
+      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], questionList.length, function (questionData) {
         console.log("Question created.");
         console.log(questionData);
         questionList.push(questionData["data"]);

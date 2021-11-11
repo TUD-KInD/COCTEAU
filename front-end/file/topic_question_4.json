@@ -1,8 +1,8 @@
 [{
-  "text": "<h2>Informed Consent</h2>",
+  "text": "<h3>Researchers</h3>",
   "is_just_description": true
 }, {
-  "text": "Researchers: Andrea Mauri <a.mauri@tudelft.nl>, Yen-Chia Hsu <y.hsu-1@tudelft.nl>, Alessandro Bozzon <a.bozzon@tudelft.nl>, Himanshu Verma <H.Verma@tudelft.nl>, Achilleas Psyllidis <a.psyllidis@tudelft.nl>",
+  "text": "Andrea Mauri (a.mauri@tudelft.nl), Yen-Chia Hsu (y.hsu-1@tudelft.nl), Alessandro Bozzon (a.bozzon@tudelft.nl), Himanshu Verma (H.Verma@tudelft.nl), Achilleas Psyllidis (a.psyllidis@tudelft.nl)",
   "is_just_description": true
 }, {
   "text": "<h3>Purpose of the study</h3>",
@@ -45,6 +45,12 @@
   "is_just_description": true
 }, {
   "text": "If you have concerns or questions about this research study, or if you believe that you have been harmed due to participation in this study, please contact the researchers, listed at the beginning of this informed consent form.",
+  "is_just_description": true
+}, {
+  "text": "<h3>Provide your consent</h3>",
+  "is_just_description": true
+}, {
+  "text": "Please answer the following questions.",
   "is_just_description": true
 }, {
   "text": "I have read and understood the study information.",
@@ -100,4 +106,10 @@
     "text": "Yes",
     "value": 1
   }]
+}, {
+  "text": "<h3>Submit your consent</h3>",
+  "is_just_description": true
+}, {
+  "text": "Please click the button below to submit the consent. We will only proceed if you answer YES to all the above.",
+  "is_just_description": true
 }]

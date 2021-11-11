@@ -12,6 +12,7 @@
     envObj.getQuestionByTopicId(topicId, function (data) {
       // Add demographic questions
       var demographicsQuestions = data["data"];
+      periscope.util.sortArrayOfDictByKeyInPlace(demographicsQuestions, "order");
       var $demographicsQuestions = $("#demographics-questions");
       for (var i = 0; i < demographicsQuestions.length; i++) {
         var q = demographicsQuestions[i];
@@ -33,6 +34,7 @@
         "class": "dialog-container-demographics",
         "show_cancel_btn": false,
         "close_dialog_on_action": false,
+        "show_close_button": false,
         "action_callback": function () {
           $demographicsDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
           submitDemographicsAnswer(envObj, function () {
@@ -46,6 +48,9 @@
       });
       $demographicsDialog.on("dialogclose", function () {
         window.location.replace("vision.html" + window.location.search);
+      });
+      $demographicsDialog.on("dialogopen", function (event, ui) {
+        $demographicsDialog.scrollTop(0);
       });
       $(window).resize(function () {
         periscope.util.fitDialogToScreen($demographicsDialog);
@@ -172,6 +177,7 @@
       var errorMessage = "(Would you please select an answer for all questions?)";
       console.error(errorMessage);
       $("#submit-demographics-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
+      $("#dialog-demographics").scrollTop($("#demographics-questions").height() + 30);
       if (typeof error === "function") error();
     }
   }
@@ -266,6 +272,7 @@
           $("#scenario-title").text(scenario["title"]);
           $("#scenario-description").html(scenario["description"]);
           var scenarioQuestions = scenario["questions"];
+          periscope.util.sortArrayOfDictByKeyInPlace(scenarioQuestions, "order");
           var $scenarioQuestions = $("#scenario-questions");
           for (var i = 0; i < scenarioQuestions.length; i++) {
             var q = scenarioQuestions[i];

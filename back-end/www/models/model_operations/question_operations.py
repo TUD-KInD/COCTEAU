@@ -6,7 +6,7 @@ from models.model import QuestionTypeEnum
 from models.model import Choice
 
 
-def create_description(text, topic_id=None, scenario_id=None, order=0):
+def create_description(text, topic_id=None, scenario_id=None, order=None):
     """
     Create only the description for either a topic *or* a scenario.
 
@@ -35,8 +35,6 @@ def create_description(text, topic_id=None, scenario_id=None, order=0):
     exception : Exception
         In case both topic ID and scenario ID are passed to the function.
     exception : Exception
-        In case that the order parameter is None.
-    exception : Exception
         In case that the order parameter is not None and not an integer.
     """
     # TODO: need a testing case
@@ -48,13 +46,11 @@ def create_description(text, topic_id=None, scenario_id=None, order=0):
     if topic_id is not None and scenario_id is not None:
         raise Exception("Specify only the Topic ID or the Scenario ID (not both).")
 
-    if order is None:
-        raise Exception("Order cannot be None.")
-    else:
-        if type(order) != int:
-            raise Exception("Order needs to be an integer.")
+    order = 0 if order is None else order
+    if type(order) != int:
+        raise Exception("Order needs to be an integer.")
 
-    question = Question(text=text, topic_id=topic_id, scenario_id=scenario_id)
+    question = Question(text=text, topic_id=topic_id, scenario_id=scenario_id, order=order)
 
     db.session.add(question)
     db.session.commit()
@@ -62,7 +58,7 @@ def create_description(text, topic_id=None, scenario_id=None, order=0):
     return question
 
 
-def create_free_text_question(text, topic_id=None, scenario_id=None, order=0):
+def create_free_text_question(text, topic_id=None, scenario_id=None, order=None):
     """
     Create a free text question for either a topic *or* a scenario.
 
@@ -92,8 +88,6 @@ def create_free_text_question(text, topic_id=None, scenario_id=None, order=0):
     exception : Exception
         In case both topic ID and scenario ID are passed to the function.
     exception : Exception
-        In case that the order parameter is None.
-    exception : Exception
         In case that the order parameter is not None and not an integer.
     """
     # Raise an error if both scenario and topic are specified.
@@ -104,14 +98,12 @@ def create_free_text_question(text, topic_id=None, scenario_id=None, order=0):
     if topic_id is not None and scenario_id is not None:
         raise Exception("Specify only the Topic ID or the Scenario ID (not both).")
 
-    if order is None:
-        raise Exception("Order cannot be None.")
-    else:
-        if type(order) != int:
-            raise Exception("Order needs to be an integer.")
+    order = 0 if order is None else order
+    if type(order) != int:
+        raise Exception("Order needs to be an integer.")
 
     question = Question(text=text, question_type=QuestionTypeEnum.FREE_TEXT,
-            topic_id=topic_id, scenario_id=scenario_id)
+            topic_id=topic_id, scenario_id=scenario_id, order=order)
 
     db.session.add(question)
     db.session.commit()
@@ -119,7 +111,7 @@ def create_free_text_question(text, topic_id=None, scenario_id=None, order=0):
     return question
 
 
-def create_single_choice_question(text, choices, topic_id=None, scenario_id=None, order=0):
+def create_single_choice_question(text, choices, topic_id=None, scenario_id=None, order=None):
     """
     Create a single choice question for either a topic *or* a scenario.
 
@@ -151,8 +143,6 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
     exception : Exception
         In case that the choices parameter is not a list.
     exception : Exception
-        In case that the order parameter is None.
-    exception : Exception
         In case that the order parameter is not None and not an integer.
     """
     # Raise an error if both scenario and topic are specified.
@@ -163,17 +153,15 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
     if topic_id is not None and scenario_id is not None:
         raise Exception("Specify only the Topic ID or the Scenario ID.")
 
-    if order is None:
-        raise Exception("Order cannot be None.")
-    else:
-        if type(order) != int:
-            raise Exception("Order needs to be an integer.")
+    order = 0 if order is None else order
+    if type(order) != int:
+        raise Exception("Order needs to be an integer.")
 
     if type(choices) != list:
         raise Exception("Choices need to be a list.")
 
     question = Question(text=text, question_type=QuestionTypeEnum.SINGLE_CHOICE,
-            topic_id=topic_id, scenario_id=scenario_id)
+            topic_id=topic_id, scenario_id=scenario_id, order=order)
 
     for c in choices:
         question.choices.append(create_choice(c))
@@ -184,7 +172,7 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
     return question
 
 
-def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None, order=0):
+def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None, order=None):
 
     """
     Create a single choice question for either a topic *or* a scenario.
@@ -217,8 +205,6 @@ def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None,
     exception : Exception
         In case that the choices parameter is not a list.
     exception : Exception
-        In case that the order parameter is None.
-    exception : Exception
         In case that the order parameter is not None and not an integer.
     """
     if topic_id is None and scenario_id is None:
@@ -227,17 +213,15 @@ def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None,
     if topic_id is not None and scenario_id is not None:
         raise Exception("Specify only the Topic ID or the Scenario ID.")
 
-    if order is None:
-        raise Exception("Order cannot be None.")
-    else:
-        if type(order) != int:
-            raise Exception("Order needs to be an integer.")
+    order = 0 if order is None else order
+    if type(order) != int:
+        raise Exception("Order needs to be an integer.")
 
     if type(choices) != list:
         raise Exception("Choices need to be a list.")
 
     question = Question(text=text, question_type=QuestionTypeEnum.MULTI_CHOICE,
-            topic_id=topic_id, scenario_id=scenario_id)
+            topic_id=topic_id, scenario_id=scenario_id, order=order)
 
     for c in choices:
         question.choices.append(create_choice(c))
@@ -371,11 +355,11 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
     if text is not None:
         question.text = text
 
-    if order is not None:
-        if type(order) is int:
-            question.order = order
-        else:
-            raise Exception("Order needs to be an integer.")
+    order = 0 if order is None else order
+    if type(order) is int:
+        question.order = order
+    else:
+        raise Exception("Order needs to be an integer.")
 
     if topic_id is not None:
         if scenario_id is not None:

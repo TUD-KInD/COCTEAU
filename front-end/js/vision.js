@@ -9,6 +9,7 @@
   function loadMood(envObj) {
     envObj.getAllMood(function (data) {
       var moods = data["data"];
+      periscope.util.sortArrayOfDictByKeyInPlace(moods, "order");
       var $moodOptionContainer = $("#mood-option-container");
       for (var i = 0; i < moods.length; i++) {
         var m = moods[i];

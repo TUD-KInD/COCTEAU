@@ -1,26 +1,29 @@
 [{
-  "text": "<h2>Informed Consent</h2>",
-  "is_just_description": true
-}, {
   "text": "You will use a web-based tool to provide opinions about predefined scenarios and interact with other people’s opinions. At the beginning and the end, you may be asked to fill out surveys. Please avoid putting personal identifiers in the web-based tool and survey.",
   "is_just_description": true
 }, {
   "text": "<h3>Procedures for withdrawal</h3>",
   "is_just_description": true
 }, {
-  "text": "Your participation in this study is entirely voluntary and you can withdraw at any time. You are free to omit any question.",
+  "text": "Your participation is entirely voluntary and you can withdraw at any time. You are free to omit any question.",
   "is_just_description": true
 }, {
   "text": "<h3>Data collection and processing</h3>",
   "is_just_description": true
 }, {
-  "text": "We will not collect personal identifiers. When you interact with our tool, it will collect system usage data anonymously. We will process the anonymous data you contribute to the web-based tool and surveys. The raw demographic data that you provide will be deleted after the research is done. Only the aggregated demographic data will be kept. Since all data are anonymized, it is impossible to retract your data after the study is done.",
+  "text": "We will not collect personal identifiers. When you interact with our tool, it will collect system usage data anonymously. We will process the anonymous data you contribute to the web-based tool and surveys. The raw demographic data that you provide will be deleted after the research is done. Only the aggregated demographic data will be kept. Since all data are anonymized, it is impossible to retract your data.",
   "is_just_description": true
 }, {
   "text": "<h3>Data usage and privacy</h3>",
   "is_just_description": true
 }, {
   "text": "The analysis results and the data collection methodology may be published in research papers or technical reports. We will aim for open access publication. Sharing of data with others will only be done in such a manner that subjects will not be identified.",
+  "is_just_description": true
+}, {
+  "text": "<h3>Provide your consent</h3>",
+  "is_just_description": true
+}, {
+  "text": "Please answer the following questions.",
   "is_just_description": true
 }, {
   "text": "I have read and understood the above information.",
@@ -59,7 +62,7 @@
     "value": 1
   }]
 }, {
-  "text": "I agree that the data I provided in the study can be quoted in research outputs.",
+  "text": "I agree that the data I provided can be quoted in research outputs.",
   "choices": [{
     "text": "No",
     "value": 0
@@ -76,4 +79,10 @@
     "text": "Yes",
     "value": 1
   }]
+}, {
+  "text": "<h3>Submit your consent</h3>",
+  "is_just_description": true
+}, {
+  "text": "Please click the button below to submit the consent. We will only proceed if you answer YES to all the above.",
+  "is_just_description": true
 }]

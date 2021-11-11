@@ -9,7 +9,7 @@ from models.model import MediaTypeEnum
 from models.model import Mood
 
 
-def create_mood(name, image=None):
+def create_mood(name, image=None, order=None):
     """
     Create a Mood object.
 
@@ -19,13 +19,24 @@ def create_mood(name, image=None):
         Label of the mood.
     image : str
         Image URL of the mood.
+    order : int
+        Order of the mood relative to others.
 
     Returns
     -------
     mood : Mood
         The newly created mood object.
+
+    Raises
+    ------
+    exception : Exception
+        In case that the order parameter is not None and not an integer.
     """
-    mood = Mood(name=name, image=image)
+    order = 0 if order is None else order
+    if type(order) != int:
+        raise Exception("Order needs to be an integer.")
+
+    mood = Mood(name=name, image=image, order=order)
 
     db.session.add(mood)
     db.session.commit()
@@ -80,7 +91,7 @@ def remove_mood(mood_id):
     db.session.commit()
 
 
-def update_mood(mood_id, name=None, image=None):
+def update_mood(mood_id, name=None, image=None, order=None):
     """
     Modify a mood.
 
@@ -92,6 +103,8 @@ def update_mood(mood_id, name=None, image=None):
         New name of the mood.
     image : str
         Image URL of the mood.
+    order : int
+        Order of the mood relative to others.
 
     Returns
     -------
@@ -102,6 +115,8 @@ def update_mood(mood_id, name=None, image=None):
     ------
     exception : Exception
         When no mood is found.
+    exception : Exception
+        In case that the order parameter is not None and not an integer.
     """
     # TODO: need a testing case
     mood = get_mood_by_id(mood_id)
@@ -114,6 +129,12 @@ def update_mood(mood_id, name=None, image=None):
 
     if image is not None:
         mood.image = image
+
+    order = 0 if order is None else order
+    if type(order) is int:
+        mood.order = order
+    else:
+        raise Exception("Order needs to be an integer.")
 
     db.session.commit()
 
