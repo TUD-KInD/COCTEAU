@@ -2,62 +2,62 @@
   "use strict";
 
   /**
-   * Create and display the demographics dialog.
+   * Create and display the topic question dialog.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} topicId - the ID of the topic.
    * @param {function} [callback] - callback function after creating the dialog.
    */
-  function createDemographicsDialog(envObj, topicId, callback) {
+  function createTopicQuestionDialog(envObj, topicId, callback) {
     envObj.getQuestionByTopicId(topicId, function (data) {
-      // Add demographic questions
-      var demographicsQuestions = data["data"];
-      periscope.util.sortArrayOfDictByKeyInPlace(demographicsQuestions, "order");
-      var $demographicsQuestions = $("#demographics-questions");
-      for (var i = 0; i < demographicsQuestions.length; i++) {
-        var q = demographicsQuestions[i];
+      // Add topic questions
+      var topicQuestions = data["data"];
+      periscope.util.sortArrayOfDictByKeyInPlace(topicQuestions, "order");
+      var $topicQuestions = $("#topic-questions");
+      for (var i = 0; i < topicQuestions.length; i++) {
+        var q = topicQuestions[i];
         if (q["question_type"] == null) {
           var $q = createTextHTML(q["text"]);
         } else {
-          var $q = createDemographicsQuestionHTML("dq" + i, q);
+          var $q = createTopicQuestionHTML("dq" + i, q);
           $q.data("raw", q);
         }
-        $demographicsQuestions.append($q);
+        $topicQuestions.append($q);
       }
       var widgets = new edaplotjs.Widgets();
-      // Set the demographics dialog
+      // Set the topic question dialog
       // We need to give the parent element so that on small screens, the dialog can be scrollable
-      var $demographicsDialog = widgets.createCustomDialog({
-        "selector": "#dialog-demographics",
+      var $topicQuestionDialog = widgets.createCustomDialog({
+        "selector": "#dialog-topic-question",
         "action_text": "Submit",
         "width": 290,
-        "class": "dialog-container-demographics",
+        "class": "dialog-container-topic-question",
         "show_cancel_btn": false,
         "close_dialog_on_action": false,
         "show_close_button": false,
         "action_callback": function () {
-          $demographicsDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
-          submitDemographicsAnswer(envObj, function () {
+          $topicQuestionDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
+          submitTopicQuestionAnswer(envObj, function () {
             // Success condition
             window.location.replace("vision.html" + window.location.search);
           }, function () {
             // Error condition
-            $demographicsDialog.dialog("widget").find("button.ui-action-button").prop("disabled", false);
+            $topicQuestionDialog.dialog("widget").find("button.ui-action-button").prop("disabled", false);
           });
         }
       });
-      $demographicsDialog.on("dialogclose", function () {
+      $topicQuestionDialog.on("dialogclose", function () {
         window.location.replace("vision.html" + window.location.search);
       });
-      $demographicsDialog.on("dialogopen", function (event, ui) {
-        $demographicsDialog.scrollTop(0);
+      $topicQuestionDialog.on("dialogopen", function (event, ui) {
+        $topicQuestionDialog.scrollTop(0);
       });
       $(window).resize(function () {
-        periscope.util.fitDialogToScreen($demographicsDialog);
+        periscope.util.fitDialogToScreen($topicQuestionDialog);
       });
-      periscope.util.fitDialogToScreen($demographicsDialog);
+      periscope.util.fitDialogToScreen($topicQuestionDialog);
       if (typeof callback === "function") {
-        callback($demographicsDialog);
+        callback($topicQuestionDialog);
       }
     });
   }
@@ -121,18 +121,18 @@
   }
 
   /**
-   * Create the html elements for a demographic question.
+   * Create the html elements for a topic question.
    * @private
-   * @param {string} uniqueId - a unique ID for the demographic question.
-   * @param {Question} question - the demographic question object.
+   * @param {string} uniqueId - a unique ID for the topic question.
+   * @param {Question} question - the topic question object.
    * @returns {Object} - a jQuery DOM object.
    */
-  function createDemographicsQuestionHTML(uniqueId, question) {
+  function createTopicQuestionHTML(uniqueId, question) {
     var option = question["choices"];
     var html = '';
-    html += '<div class="demographic-item">';
+    html += '<div class="topic-question-item">';
     html += '  <ul class="small-left-padding"><li><b>' + question["text"] + '</b></li></ul>';
-    html += '  <select id="demographic-select-' + uniqueId + '" data-role="none">';
+    html += '  <select id="topic-question-select-' + uniqueId + '" data-role="none">';
     html += '    <option selected="" value="none">Select...</option>';
     for (var i = 0; i < option.length; i++) {
       html += '    <option value="' + option[i]["id"] + '">' + option[i]["text"] + '</option>';
@@ -143,14 +143,14 @@
   }
 
   /**
-   * Submit the demographics answer to the back-end.
+   * Submit the answers to topic questions to the back-end.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    */
-  function submitDemographicsAnswer(envObj, success, error) {
+  function submitTopicQuestionAnswer(envObj, success, error) {
     var answers = [];
     var areAllQuestionsAnswered = true;
-    $(".demographic-item").each(function () {
+    $(".topic-question-item").each(function () {
       var $this = $(this);
       var $allChoices = $this.find("option");
       var $checkedChoices = $this.find("option:selected");
@@ -176,8 +176,8 @@
     } else {
       var errorMessage = "(Would you please select an answer for all questions?)";
       console.error(errorMessage);
-      $("#submit-demographics-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
-      $("#dialog-demographics").scrollTop($("#demographics-questions").height() + 30);
+      $("#submit-topic-question-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
+      $("#dialog-topic-question").scrollTop($("#topic-questions").height() + 30);
       if (typeof error === "function") error();
     }
   }
@@ -226,28 +226,28 @@
   }
 
   /**
-   * Initialize the demographic dialog and the next steps buttons.
+   * Initialize the topic question dialog and the next steps buttons.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} topicId - the ID of the topic.
    */
-  function initDemographicsDialog(envObj, topicId) {
-    // Get the demographic answers
+  function initTopicQuestionDialog(envObj, topicId) {
+    // Get the answers to topic questions
     envObj.getAnswerOfCurrentUserByTopicId(topicId, function (data) {
       var answer = data["data"];
       if (typeof answer !== "undefined" && answer.length > 0) {
-        // Go to the vision page when there are demographic answers
+        // Go to the vision page when there are answers to topic questions
         $("#next-button").on("click", function () {
           submitScenarioAnswer(envObj, function () {
             window.location.replace("vision.html" + window.location.search);
           });
         });
       } else {
-        // Create the demographic dialog when there are no demographic answers
-        createDemographicsDialog(envObj, topicId, function ($demographicsDialog) {
+        // Create the topic question dialog when there are no answers to topic questions
+        createTopicQuestionDialog(envObj, topicId, function ($topicQuestionDialog) {
           $("#next-button").on("click", function () {
             submitScenarioAnswer(envObj, function () {
-              $demographicsDialog.dialog("open");
+              $topicQuestionDialog.dialog("open");
             });
           });
         });
@@ -284,7 +284,7 @@
             }
             $scenarioQuestions.append($q);
           }
-          initDemographicsDialog(envObj, scenario["topic_id"]);
+          initTopicQuestionDialog(envObj, scenario["topic_id"]);
           envObj.showPage();
         }
       });

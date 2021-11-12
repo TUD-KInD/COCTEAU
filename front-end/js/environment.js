@@ -443,7 +443,7 @@
      * @private
      * @param {string} text - text of the question.
      * @param {Choice[]} [choices] - choices of the question.
-     * @param {string} [topicId] - topic ID that the question is in (for demographic questions).
+     * @param {string} [topicId] - topic ID that the question is in (for topic questions).
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {boolean} [isMulitpleChoice] - indicate if the question allows multiple choices.
      * @param {boolean} [isJustDescription] - indicate if the question is just a description but not a question.
@@ -482,7 +482,7 @@
      * @param {number} questionId - ID of the question.
      * @param {string} [text] - text of the question.
      * @param {Choice[]} [choices] - choices of the question.
-     * @param {string} [topicId] - topic ID that the question is in (for demographic questions).
+     * @param {string} [topicId] - topic ID that the question is in (for topic questions).
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
