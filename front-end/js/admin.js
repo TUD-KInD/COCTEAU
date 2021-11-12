@@ -660,26 +660,17 @@
   }
 
   /**
-   * Add a set of topic, scenario, question, and vision.
+   * Add a set of scenario, question, and vision.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    */
-  function addDataSet(envObj, topicPath, scenarioPath, topicQuestionPath, scenarioQuestionPath, moodId, visionPath) {
-    $.getJSON(topicPath, function (t) {
-      envObj.createTopic(t["title"], t["description"], function (topicData) {
-        console.log("Topic created.");
-        console.log(topicData);
-        var topicId = topicData["data"]["id"];
-        addQuestion(envObj, topicQuestionPath, topicId, undefined); // demographic questions
-        $.getJSON(scenarioPath, function (s) {
-          envObj.createScenario(s["title"], s["description"], s["image"], topicId, function (scenarioData) {
-            console.log("Scenario created.");
-            console.log(scenarioData);
-            var scenarioId = scenarioData["data"]["id"];
-            addQuestion(envObj, scenarioQuestionPath, undefined, scenarioId); // scenario questions
-            addVision(envObj, moodId, scenarioId, visionPath);
-          });
-        });
+  function addDataSet(envObj, topicId, scenarioPath, scenarioQuestionPath, moodId, visionPath) {
+    $.getJSON(scenarioPath, function (s) {
+      envObj.createScenario(s["title"], s["description"], s["image"], topicId, function (scenarioData) {
+        console.log("Scenario created", scenarioData);
+        var scenarioId = scenarioData["data"]["id"];
+        addQuestion(envObj, scenarioQuestionPath, undefined, scenarioId); // scenario questions
+        addVision(envObj, moodId, scenarioId, visionPath);
       });
     });
   }
@@ -712,8 +703,7 @@
       var cn = v["unsplash_creator_name"];
       var cu = v["unsplash_creator_url"];
       envObj.createVision(moodId, scenarioId, d, url, iid, cn, cu, function (visionData) {
-        console.log("Vision created.");
-        console.log(visionData);
+        console.log("Vision created", visionData);
         visionList.push(visionData["data"]);
         addVisionInOrder(envObj, moodId, scenarioId, visions.slice(1), visionList, success, error);
       }, function () {
@@ -746,8 +736,7 @@
     } else {
       var m = moods[0];
       envObj.createMood(m["name"], m["image"], moodList.length, function (moodData) {
-        console.log("Mood created.");
-        console.log(moodData);
+        console.log("Mood created", moodData);
         moodList.push(moodData["data"]);
         addMoodInOrder(envObj, moods.slice(1), moodList, success, error);
       }, function () {
@@ -780,8 +769,7 @@
     } else {
       var q = questions[0];
       envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], questionList.length, function (questionData) {
-        console.log("Question created.");
-        console.log(questionData);
+        console.log("Question created", questionData);
         questionList.push(questionData["data"]);
         addQuestionInOrder(envObj, questions.slice(1), questionList, topicId, scenarioId, success, error);
       }, function () {
@@ -799,10 +787,26 @@
   function setInitialData(envObj) {
     addMood(envObj, "file/mood.json", function (moodList) {
       var moodId = moodList[(moodList.length - 1) / 2]["id"]; // ID of the "Neutral" mood
-      addDataSet(envObj, "file/topic_1.json", "file/scenario_1.json", "file/topic_question_1.json", "file/scenario_question_1.json", moodId, "file/vision_1.json");
-      addDataSet(envObj, "file/topic_2.json", "file/scenario_2.json", "file/topic_question_2.json", "file/scenario_question_2.json", moodId, "file/vision_2.json");
-      //addDataSet(envObj, "file/topic_3.json", "file/scenario_3.json", "file/topic_question_3.json", "file/scenario_question_3.json", moodId, "file/vision_3.json");
-      addDataSet(envObj, "file/topic_4.json", "file/scenario_4.json", "file/topic_question_4.json", "file/scenario_question_4.json", moodId, "file/vision_4.json");
+      // Add the deployement studies
+      $.getJSON("file/topic_1.json", function (t) {
+        envObj.createTopic(t["title"], t["description"], function (topicData) {
+          console.log("Topic created", topicData);
+          var topicId = topicData["data"]["id"];
+          addQuestion(envObj, "file/topic_question_1.json", topicId, undefined); // topic questions
+          addDataSet(envObj, topicId, "file/scenario_1_1.json", "file/scenario_question_1_1.json", moodId, "file/vision_1_1.json");
+          addDataSet(envObj, topicId, "file/scenario_1_2.json", "file/scenario_question_1_2.json", moodId, "file/vision_1_2.json");
+          //addDataSet(envObj, topicId, "file/scenario_1_3.json", "file/scenario_question_1_3.json", moodId, "file/vision_1_3.json");
+        });
+      });
+      // Add the crowdscouring experiments
+      $.getJSON("file/topic_2.json", function (t) {
+        envObj.createTopic(t["title"], t["description"], function (topicData) {
+          console.log("Topic created", topicData);
+          var topicId = topicData["data"]["id"];
+          addQuestion(envObj, "file/topic_question_2.json", topicId, undefined); // topic questions
+          addDataSet(envObj, topicId, "file/scenario_2_1.json", "file/scenario_question_2_1.json", moodId, "file/vision_2_1.json");
+        });
+      });
     });
   }
 
