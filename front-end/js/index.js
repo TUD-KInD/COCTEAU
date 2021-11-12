@@ -33,15 +33,17 @@
           $t.on("click", function () {
             var d = $(this).data("raw");
             var scenarioId = d["id"];
+            var topicId = d["topic_id"];
+            var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId;
             // Get the scenario answers
             envObj.getAnswerOfCurrentUserByScenarioId(scenarioId, function (data) {
               var answer = data["data"];
               if (typeof answer !== "undefined" && answer.length > 0) {
                 // Go to the vision page when there are scenario answers
-                window.location.href = "vision.html?&scenario_id=" + scenarioId;
+                window.location.href = "vision.html" + queryString;
               } else {
                 // Go to the opinion page when there are no scenario answers
-                window.location.href = "opinion.html?&scenario_id=" + scenarioId;
+                window.location.href = "opinion.html" + queryString;
               }
             });
           });

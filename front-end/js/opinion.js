@@ -6,9 +6,10 @@
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} topicId - the ID of the topic.
+   * @param {number} scenarioId - the ID of the scenario.
    * @param {function} [callback] - callback function after creating the dialog.
    */
-  function createTopicQuestionDialog(envObj, topicId, callback) {
+  function createTopicQuestionDialog(envObj, topicId, scenarioId, callback) {
     envObj.getQuestionByTopicId(topicId, function (data) {
       // Add topic questions
       var topicQuestions = data["data"];
@@ -39,15 +40,14 @@
           $topicQuestionDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
           submitTopicQuestionAnswer(envObj, function () {
             // Success condition
-            window.location.replace("vision.html" + window.location.search);
+            console.log("Topic answers submitted.");
+            loadPageContent(envObj, scenarioId);
+            $topicQuestionDialog.dialog("close");
           }, function () {
             // Error condition
             $topicQuestionDialog.dialog("widget").find("button.ui-action-button").prop("disabled", false);
           });
         }
-      });
-      $topicQuestionDialog.on("dialogclose", function () {
-        window.location.replace("vision.html" + window.location.search);
       });
       $topicQuestionDialog.on("dialogopen", function (event, ui) {
         $topicQuestionDialog.scrollTop(0);
@@ -172,7 +172,16 @@
       }
     });
     if (areAllQuestionsAnswered) {
-      envObj.createAnswersInOrder(envObj, answers, [], success, error);
+      envObj.createAnswersInOrder(envObj, answers, [], function () {
+        /**
+         * @todo Check if answers to the YES/NO questions are all YES (for consent).
+         * @todo If not, redirect the user to another page.
+         * @todo If yes, call the success function.
+         */
+        if (typeof success === "function") {
+          success();
+        }
+      }, error);
     } else {
       var errorMessage = "(Would you please select an answer for all questions?)";
       console.error(errorMessage);
@@ -230,27 +239,57 @@
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} topicId - the ID of the topic.
+   * @param {number} scenarioId - the ID of the scenario.
    */
-  function initTopicQuestionDialog(envObj, topicId) {
+  function initTopicQuestionDialog(envObj, topicId, scenarioId) {
     // Get the answers to topic questions
     envObj.getAnswerOfCurrentUserByTopicId(topicId, function (data) {
       var answer = data["data"];
-      if (typeof answer !== "undefined" && answer.length > 0) {
-        // Go to the vision page when there are answers to topic questions
+      if (typeof answer === "undefined" || answer.length == 0) {
+        // Create the topic question dialog when there are no answers to topic questions
+        createTopicQuestionDialog(envObj, topicId, scenarioId, function ($topicQuestionDialog) {
+          $topicQuestionDialog.dialog("open");
+        });
+      } else {
+        // Show the page when there are answers to topic questions
+        loadPageContent(envObj, scenarioId);
+      }
+    });
+  }
+
+  /**
+   * Load the content of the page.
+   * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   * @param {number} scenarioId - the ID of the scenario.
+   */
+  function loadPageContent(envObj, scenarioId) {
+    envObj.getScenarioById(scenarioId, function (data) {
+      var scenario = data["data"];
+      if ($.isEmptyObject(scenario)) {
+        envObj.showErrorPage();
+      } else {
+        $("#scenario-title").text(scenario["title"]);
+        $("#scenario-description").html(scenario["description"]);
+        var scenarioQuestions = scenario["questions"];
+        periscope.util.sortArrayOfDictByKeyInPlace(scenarioQuestions, "order");
+        var $scenarioQuestions = $("#scenario-questions");
+        for (var i = 0; i < scenarioQuestions.length; i++) {
+          var q = scenarioQuestions[i];
+          if (q["question_type"] == null) {
+            var $q = createTextHTML(q["text"]);
+          } else {
+            var $q = createScenarioQuestionHTML("sq" + i, q);
+            $q.data("raw", q);
+          }
+          $scenarioQuestions.append($q);
+        }
         $("#next-button").on("click", function () {
           submitScenarioAnswer(envObj, function () {
             window.location.replace("vision.html" + window.location.search);
           });
         });
-      } else {
-        // Create the topic question dialog when there are no answers to topic questions
-        createTopicQuestionDialog(envObj, topicId, function ($topicQuestionDialog) {
-          $("#next-button").on("click", function () {
-            submitScenarioAnswer(envObj, function () {
-              $topicQuestionDialog.dialog("open");
-            });
-          });
-        });
+        envObj.showPage();
       }
     });
   }
@@ -263,31 +302,9 @@
   function initUI(envObj) {
     var queryParas = periscope.util.parseVars(window.location.search);
     var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
-    if (typeof scenarioId !== "undefined") {
-      envObj.getScenarioById(scenarioId, function (data) {
-        var scenario = data["data"];
-        if ($.isEmptyObject(scenario)) {
-          envObj.showErrorPage();
-        } else {
-          $("#scenario-title").text(scenario["title"]);
-          $("#scenario-description").html(scenario["description"]);
-          var scenarioQuestions = scenario["questions"];
-          periscope.util.sortArrayOfDictByKeyInPlace(scenarioQuestions, "order");
-          var $scenarioQuestions = $("#scenario-questions");
-          for (var i = 0; i < scenarioQuestions.length; i++) {
-            var q = scenarioQuestions[i];
-            if (q["question_type"] == null) {
-              var $q = createTextHTML(q["text"]);
-            } else {
-              var $q = createScenarioQuestionHTML("sq" + i, q);
-              $q.data("raw", q);
-            }
-            $scenarioQuestions.append($q);
-          }
-          initTopicQuestionDialog(envObj, scenario["topic_id"]);
-          envObj.showPage();
-        }
-      });
+    var topicId = "topic_id" in queryParas ? queryParas["topic_id"] : undefined;
+    if (typeof scenarioId !== "undefined" && topicId !== "undefined") {
+      initTopicQuestionDialog(envObj, topicId, scenarioId);
     } else {
       envObj.showErrorPage();
     }
