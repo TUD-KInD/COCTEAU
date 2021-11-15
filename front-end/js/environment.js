@@ -123,14 +123,10 @@
       generalRequest("POST", "/login/", data, function (returnData) {
         userToken = returnData["user_token"];
         userData = getJwtPayload(userToken);
-        if (typeof success === "function") {
-          success(returnData);
-        }
+        if (typeof success === "function") success(returnData);
       }, function () {
         console.error("ERROR when getting user token.");
-        if (typeof error === "function") {
-          error();
-        }
+        if (typeof error === "function") error();
       });
     }
 
@@ -149,15 +145,11 @@
         "type": requestType,
         "dataType": "json",
         "success": function (returnData) {
-          if (typeof success === "function") {
-            success(returnData);
-          }
+          if (typeof success === "function") success(returnData);
         },
         "error": function (xhr) {
           console.error(xhr);
-          if (typeof error === "function") {
-            error();
-          }
+          if (typeof error === "function") error();
           showErrorPage();
         }
       };
@@ -405,9 +397,10 @@
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getQuestionByTopicId = function (topicId, success, error) {
+    var getQuestionByTopicId = function (topicId, success, error) {
       generalGet("/question/?topic_id=" + topicId, success, error);
     };
+    this.getQuestionByTopicId = getQuestionByTopicId;
 
     /**
      * Get a list of questions by scenario ID.
@@ -786,9 +779,10 @@
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getAnswerOfCurrentUserByTopicId = function (topicId, success, error) {
+    var getAnswerOfCurrentUserByTopicId = function (topicId, success, error) {
       generalGet("/answer/?topic_id=" + topicId + "&user_id=" + userData["user_id"], success, error);
     };
+    this.getAnswerOfCurrentUserByTopicId = getAnswerOfCurrentUserByTopicId;
 
     /**
      * Get a list of answers by user ID.
@@ -832,22 +826,21 @@
 
     /**
      * Create answers in the specified order.
-     * @private
-     * @param {Object} envObj - environment object (in environment.js).
+     * @public
      * @param {Answer[]} answers - list of answers that we want to create.
      * @param {Object[]} answerList - a list to collect the answer objects returned from the server.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    var createAnswersInOrder = function (envObj, answers, answerList, success, error) {
+    var createAnswersInOrder = function (answers, answerList, success, error) {
       if (answers.length == 0) {
         if (typeof success === "function") success(answerList);
         return true;
       } else {
         var a = answers[0];
-        envObj.createAnswer(a["questionId"], a["text"], a["choiceIdList"], function (data) {
+        createAnswer(a["questionId"], a["text"], a["choiceIdList"], function (data) {
           answerList.push(data["data"]);
-          createAnswersInOrder(envObj, answers.slice(1), answerList, success, error);
+          createAnswersInOrder(answers.slice(1), answerList, success, error);
         }, function () {
           if (typeof error === "function") error();
           return false;
@@ -858,14 +851,14 @@
 
     /**
      * Create an answer.
-     * @private
+     * @public
      * @param {number} questionId - ID of the question that we want to fill in the answer.
      * @param {string} [text] - text of the answer.
      * @param {number[]} [choiceIdList] - array of the IDs of the selected choice objects.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createAnswer = function (questionId, text, choiceIdList, success, error) {
+    var createAnswer = function (questionId, text, choiceIdList, success, error) {
       var data = {
         "question_id": questionId
       };
@@ -877,6 +870,7 @@
       }
       generalPost("/answer/", data, success, error);
     };
+    this.createAnswer = createAnswer;
 
     /**
      * Delete an answer by ID.
@@ -1161,6 +1155,218 @@
       $("#main-content-container").show();
     };
     this.showPage = showPage;
+
+    /**
+     * Submit the answers to topic questions from the UI to the back-end.
+     * @private
+     * @param {function} [success] - callback function when the operation is successful.
+     * @param {function} [error] - callback function when the operation is failing.
+     * @param {function} [abandon] - callback function when the operation is abandoned.
+     */
+    function submitTopicQuestionAnswer(success, error, abandon) {
+      var answers = [];
+      var areAllQuestionsAnswered = true;
+      $(".topic-question-item").each(function () {
+        var $this = $(this);
+        var $allChoices = $this.find("option");
+        var $checkedChoices = $this.find("option:selected");
+        var answer = {
+          "questionId": $this.data("raw")["id"]
+        };
+        if ($allChoices.length > 0) {
+          // This condition means that this is a single or multiple choice question
+          if ($checkedChoices.length > 0 && $checkedChoices.val() != "none") {
+            // This condition means that user provides the answer
+            answer["choiceIdList"] = $checkedChoices.map(function () {
+              return parseInt($(this).val());
+            }).get();
+            answers.push(answer);
+          } else {
+            // This condition means that there are no answers to this question
+            areAllQuestionsAnswered = false;
+          }
+        }
+      });
+      if (areAllQuestionsAnswered) {
+        console.log(answers);
+        /** @todo The answers array does not contain the correct information, need to fix this */
+        // Check if the YES/NO quesions are all answered as YES (i.e., having value 1)
+        var doesUserAgree = function (answers) {
+          var consent = true;
+          for (var i = 0; i < answers.length; i++) {
+            var choices = answers[i]["choices"];
+            if (typeof choices === "undefined" || choices.length != 1) {
+              consent = false;
+              break;
+            } else {
+              var value = choices[0]["value"];
+              if (typeof value === "undefined" || value != 1) {
+                consent = false;
+                break;
+              }
+            }
+          }
+          return consent;
+        }
+        if (doesUserAgree(answers)) {
+          // Create the answers when the user provides consent and agrees with our policy
+          createAnswersInOrder(answers, [], success, error);
+        } else {
+          // Abandon the operation when the user disagrees with our policy
+          if (typeof abandon === "function") abandon();
+        }
+      } else {
+        // Error when some questions are not answered
+        var errorMessage = "(Would you please select an answer for all questions?)";
+        console.error(errorMessage);
+        $("#submit-topic-question-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
+        $("#dialog-topic-question").scrollTop($("#topic-questions").height() + 30);
+        if (typeof error === "function") error();
+      }
+    }
+
+    /**
+     * Create the html elements for a topic question.
+     * @private
+     * @param {string} uniqueId - a unique ID for the topic question.
+     * @param {Question} question - the topic question object.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createTopicQuestionHTML(uniqueId, question) {
+      var option = question["choices"];
+      var html = '';
+      html += '<div class="topic-question-item">';
+      html += '  <ul class="small-left-padding"><li><b>' + question["text"] + '</b></li></ul>';
+      html += '  <select id="topic-question-select-' + uniqueId + '" data-role="none">';
+      html += '    <option selected="" value="none">Select...</option>';
+      for (var i = 0; i < option.length; i++) {
+        html += '    <option value="' + option[i]["id"] + '">' + option[i]["text"] + '</option>';
+      }
+      html += '  </select>';
+      html += '</div>';
+      return $(html);
+    }
+
+    /**
+     * Create the html elements for a topic question as a text description.
+     * @public
+     * @param {string} text - the text description.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    var createTopicTextHTML = function (text) {
+      var $html;
+      try {
+        $html = $(text);
+      } catch (error) {
+        $html = $('<p class="text">' + text + '</p>');
+      }
+      return $html;
+    };
+    this.createTopicTextHTML = createTopicTextHTML;
+
+    /**
+     * Create and display the topic question dialog.
+     * @private
+     * @param {number} topicId - the ID of the topic.
+     * @param {function} [create] - callback function after creating the dialog.
+     * @param {function} [submit] - callback function after answers are submitted successfully.
+     * @param {function} [abandon] - callback function when the answer submission is abandoned.
+     */
+    function createTopicQuestionDialog(topicId, create, submit, abandon) {
+      getQuestionByTopicId(topicId, function (data) {
+        // Add topic questions
+        var topicQuestions = data["data"];
+        periscope.util.sortArrayOfDictByKeyInPlace(topicQuestions, "order");
+        var $topicQuestions = $("#topic-questions");
+        for (var i = 0; i < topicQuestions.length; i++) {
+          var q = topicQuestions[i];
+          if (q["question_type"] == null) {
+            var $q = createTopicTextHTML(q["text"]);
+          } else {
+            var $q = createTopicQuestionHTML("dq" + i, q);
+            $q.data("raw", q);
+          }
+          $topicQuestions.append($q);
+        }
+        var widgets = new edaplotjs.Widgets();
+        // Set the topic question dialog
+        // We need to give the parent element so that on small screens, the dialog can be scrollable
+        var $topicQuestionDialog = widgets.createCustomDialog({
+          "selector": "#dialog-topic-question",
+          "action_text": "Submit",
+          "width": 290,
+          "class": "dialog-container-topic-question",
+          "show_cancel_btn": false,
+          "close_dialog_on_action": false,
+          "show_close_button": false,
+          "action_callback": function () {
+            $topicQuestionDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
+            submitTopicQuestionAnswer(function (answerList) {
+              // Success condition
+              if (typeof submit === "function") submit(answerList);
+              $topicQuestionDialog.dialog("close");
+            }, function () {
+              // Error condition
+              $topicQuestionDialog.dialog("widget").find("button.ui-action-button").prop("disabled", false);
+            }, function () {
+              // Abandon consition
+              // This means that the user disagrees with our policy
+              if (typeof abandon === "function") abandon();
+              $topicQuestionDialog.dialog("close");
+            });
+          }
+        });
+        $topicQuestionDialog.on("dialogopen", function (event, ui) {
+          $topicQuestionDialog.scrollTop(0);
+        });
+        $(window).resize(function () {
+          periscope.util.fitDialogToScreen($topicQuestionDialog);
+        });
+        periscope.util.fitDialogToScreen($topicQuestionDialog);
+        if (typeof create === "function") create($topicQuestionDialog);
+      });
+    }
+
+    /**
+     * Check if the user provided consent.
+     * @public
+     * @param {number} topicId - the ID of the topic.
+     * @param {function} [pass] - callback function when the user has provided consent.
+     */
+    var checkUserConsent = function (topicId, pass) {
+      // Get the answers to topic questions (i.e., the consent questions with binary YES/NO options)
+      // The logic ensures that only the YES answers will be entered into the database
+      getAnswerOfCurrentUserByTopicId(topicId, function (data) {
+        var answerList = data["data"];
+        if (typeof answerList === "undefined" || answerList.length == 0) {
+          // This means that the user has not provided consent yet
+          createTopicQuestionDialog(topicId, function ($topicQuestionDialog) {
+            // This means that the topic question dialog is created
+            $topicQuestionDialog.dialog("open");
+          }, function () {
+            // This means that the answers to the questions are submitted successfully
+            // And also that the user has provided consent
+            if (typeof pass === "function") pass();
+          }, function () {
+            // This means that the user just disagrees with our policy
+            // So that the answer submission is abandoned
+            showConsentDisagreePage();
+          });
+        } else {
+          // This means that the user has provided consent
+          if (typeof pass === "function") pass();
+        }
+      });
+    };
+    this.checkUserConsent = checkUserConsent;
+
+    /**
+     * Show a page when the user refuses to provide consent.
+     * @private
+     */
+    function showConsentDisagreePage() {
+      console.log("consent refused");
+    }
 
     /**
      * Class constructor.
