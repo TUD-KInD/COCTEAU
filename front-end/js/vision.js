@@ -57,7 +57,6 @@
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {function} [callback] - callback function after creating the dialog.
-   * @todo Make createPhotoPickerDialog a reusable function in the website template.
    */
   function createPhotoPickerDialog(envObj, callback) {
     var widgets = new edaplotjs.Widgets();

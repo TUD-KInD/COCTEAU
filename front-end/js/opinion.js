@@ -82,7 +82,6 @@
    * @param {string} uniqueId - a unique ID for the scenario question.
    * @param {Question} question - the scenario question object.
    * @returns {Object} - a jQuery DOM object.
-   * @todo Add checkbox (instead of radio) for a multiple-choice question.
    */
   function createScenarioQuestionHTML(uniqueId, question) {
     var option = question["choices"];
@@ -173,11 +172,6 @@
     });
     if (areAllQuestionsAnswered) {
       envObj.createAnswersInOrder(envObj, answers, [], function () {
-        /**
-         * @todo Check if answers to the YES/NO questions are all YES (for consent).
-         * @todo If not, redirect the user to another page.
-         * @todo If yes, call the success function.
-         */
         if (typeof success === "function") {
           success();
         }

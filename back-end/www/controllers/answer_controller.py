@@ -65,7 +65,6 @@ def answer():
         The retrieved answer object.
         Or a list of retrieved answer objects.
     """
-    # TODO: implement the PATCH method
     rj = request.json
 
     # Sanity and permission check

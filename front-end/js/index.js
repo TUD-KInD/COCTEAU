@@ -56,7 +56,6 @@
   /**
    * Initialize the page.
    * @private
-   * @todo Check if user logged in, if not, show the login dialog.
    */
   function init() {
     var env = new periscope.Environment({
