@@ -1166,6 +1166,7 @@
     function submitTopicQuestionAnswer(success, error, abandon) {
       var answers = [];
       var areAllQuestionsAnswered = true;
+      var valueOfCheckedChoices = [];
       $(".topic-question-item").each(function () {
         var $this = $(this);
         var $allChoices = $this.find("option");
@@ -1181,26 +1182,33 @@
               return parseInt($(this).val());
             }).get();
             answers.push(answer);
+            // Only record the values of answers to YES/NO questions
+            // The length should be 3 since there should be "Select", "Yes", and "No" options
+            if ($allChoices.length == 3) {
+              valueOfCheckedChoices.push($checkedChoices.map(function () {
+                return parseInt($(this).data("value"));
+              }).get());
+            }
           } else {
             // This condition means that there are no answers to this question
             areAllQuestionsAnswered = false;
           }
         }
       });
+      // Check if all the questions are answered
       if (areAllQuestionsAnswered) {
-        console.log(answers);
-        /** @todo The answers array does not contain the correct information, need to fix this */
         // Check if the YES/NO quesions are all answered as YES (i.e., having value 1)
-        var doesUserAgree = function (answers) {
+        var doesUserAgree = function (valueOfCheckedChoices) {
           var consent = true;
-          for (var i = 0; i < answers.length; i++) {
-            var choices = answers[i]["choices"];
-            if (typeof choices === "undefined" || choices.length != 1) {
+          for (var i = 0; i < valueOfCheckedChoices.length; i++) {
+            var choices = valueOfCheckedChoices[i];
+            // Must choose only one option, cannot be more than one
+            if (choices.length != 1) {
               consent = false;
               break;
             } else {
-              var value = choices[0]["value"];
-              if (typeof value === "undefined" || value != 1) {
+              // Must choose the "Yes" option with value 1, cannot be others
+              if (choices[0] != 1) {
                 consent = false;
                 break;
               }
@@ -1208,7 +1216,7 @@
           }
           return consent;
         }
-        if (doesUserAgree(answers)) {
+        if (doesUserAgree(valueOfCheckedChoices)) {
           // Create the answers when the user provides consent and agrees with our policy
           createAnswersInOrder(answers, [], success, error);
         } else {
@@ -1240,7 +1248,7 @@
       html += '  <select id="topic-question-select-' + uniqueId + '" data-role="none">';
       html += '    <option selected="" value="none">Select...</option>';
       for (var i = 0; i < option.length; i++) {
-        html += '    <option value="' + option[i]["id"] + '">' + option[i]["text"] + '</option>';
+        html += '    <option value="' + option[i]["id"] + '" data-value="' + option[i]["value"] + '">' + option[i]["text"] + '</option>';
       }
       html += '  </select>';
       html += '</div>';
