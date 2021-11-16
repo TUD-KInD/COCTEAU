@@ -1369,11 +1369,28 @@
     this.checkUserConsent = checkUserConsent;
 
     /**
+     * Create the html elements when the user refuses to provide consent.
+     * @private
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createConsentDisagreeHTML() {
+      var html = "";
+      html += '<img src="https://images.unsplash.com/photo-1598885408331-7d189bcb9717?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1471&q=80" />';
+      html += '<p class="server-error-text">';
+      html += '  Sorry to know that you are not happy to provide consent. Hope to see you next time.';
+      html += '</p>';
+      return $(html);
+    }
+
+    /**
      * Show a page when the user refuses to provide consent.
      * @private
      */
     function showConsentDisagreePage() {
-      console.log("consent refused");
+      var $container = $("#main-content-container");
+      if (!$container.hasClass("error")) {
+        $("#main-content-container").addClass("error").empty().append(createConsentDisagreeHTML()).show();
+      }
     }
 
     /**

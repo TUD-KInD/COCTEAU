@@ -50,10 +50,10 @@
   "text": "<h3>Provide your consent</h3>",
   "is_just_description": true
 }, {
-  "text": "Please answer the following questions.",
+  "text": "I have read and understood the study information. I consent voluntarily to participate in this study and understand that I can refuse to answer questions and I can withdraw from the study at any time, without having to give a reason. I understand that taking part in the study involves using a web-based tool and taking surveys. I understand that information I provide will be used for data analysis, and the anonymous data and the results may be released publicly in research papers or technical reports. I agree that the data I provided in the study can be quoted in research outputs. I give permission for the non-identifiable data that I provide to be archived into an anonymized dataset so it can be used for future research and learning.",
   "is_just_description": true
 }, {
-  "text": "I have read and understood the study information.",
+  "text": "Please kindly let us know if you agree with all the above statements. We will only proceed if you answer YES.",
   "choices": [{
     "text": "No",
     "value": 0
@@ -61,55 +61,4 @@
     "text": "Yes",
     "value": 1
   }]
-}, {
-  "text": "I consent voluntarily to participate in this study and understand that I can refuse to answer questions and I can withdraw from the study at any time, without having to give a reason.",
-  "choices": [{
-    "text": "No",
-    "value": 0
-  }, {
-    "text": "Yes",
-    "value": 1
-  }]
-}, {
-  "text": "I understand that taking part in the study involves using a web-based tool and taking surveys.",
-  "choices": [{
-    "text": "No",
-    "value": 0
-  }, {
-    "text": "Yes",
-    "value": 1
-  }]
-}, {
-  "text": "I understand that information I provide will be used for data analysis, and the anonymous data and the results may be released publicly in research papers or technical reports.",
-  "choices": [{
-    "text": "No",
-    "value": 0
-  }, {
-    "text": "Yes",
-    "value": 1
-  }]
-}, {
-  "text": "I agree that the data I provided in the study can be quoted in research outputs.",
-  "choices": [{
-    "text": "No",
-    "value": 0
-  }, {
-    "text": "Yes",
-    "value": 1
-  }]
-}, {
-  "text": "I give permission for the non-identifiable data that I provide to be archived into an anonymized dataset so it can be used for future research and learning.",
-  "choices": [{
-    "text": "No",
-    "value": 0
-  }, {
-    "text": "Yes",
-    "value": 1
-  }]
-}, {
-  "text": "<h3>Submit your consent</h3>",
-  "is_just_description": true
-}, {
-  "text": "Please click the button below to submit the consent. We will only proceed if you answer YES to all the above.",
-  "is_just_description": true
 }]
