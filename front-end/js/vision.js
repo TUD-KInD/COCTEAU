@@ -255,6 +255,45 @@
   }
 
   /**
+   * Load the content of the page.
+   * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   * @param {number} scenarioId - the ID of the scenario.
+   */
+  function loadPageContent(envObj, scenarioId) {
+    envObj.getScenarioById(scenarioId, function (data) {
+      var scenario = data["data"];
+      if ($.isEmptyObject(scenario)) {
+        envObj.showErrorPage();
+      } else {
+        $("#scenario-title").text(scenario["title"]);
+        $("#scenario-description").html(scenario["description"]);
+        loadMood(envObj);
+        createPhotoPickerDialog(envObj, function ($dialog) {
+          $("#vision-image-frame").on("click", function () {
+            $dialog.dialog("open");
+            $("#photo-search-query").focus();
+          });
+        });
+        createSubmitVisionDialog(envObj, scenarioId, function ($dialog) {
+          $("#submit-vision-button").on("click", function () {
+            if (submitVisionSanityCheck()) {
+              $dialog.dialog("open");
+            }
+          });
+        });
+        $("#game-button").on("click", function () {
+          window.location.replace("game.html" + window.location.search);
+        });
+        $("#browse-button").on("click", function () {
+          window.location.replace("browse.html" + window.location.search);
+        });
+        envObj.showPage();
+      }
+    });
+  }
+
+  /**
    * Initialize the user interface.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
@@ -262,36 +301,11 @@
   function initUI(envObj) {
     var queryParas = periscope.util.parseVars(window.location.search);
     var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
+    var topicId = "topic_id" in queryParas ? queryParas["topic_id"] : undefined;
     if (typeof scenarioId !== "undefined") {
-      envObj.getScenarioById(scenarioId, function (data) {
-        var scenario = data["data"];
-        if ($.isEmptyObject(scenario)) {
-          envObj.showErrorPage();
-        } else {
-          $("#scenario-title").text(scenario["title"]);
-          $("#scenario-description").html(scenario["description"]);
-          loadMood(envObj);
-          createPhotoPickerDialog(envObj, function ($dialog) {
-            $("#vision-image-frame").on("click", function () {
-              $dialog.dialog("open");
-              $("#photo-search-query").focus();
-            });
-          });
-          createSubmitVisionDialog(envObj, scenarioId, function ($dialog) {
-            $("#submit-vision-button").on("click", function () {
-              if (submitVisionSanityCheck()) {
-                $dialog.dialog("open");
-              }
-            });
-          });
-          $("#game-button").on("click", function () {
-            window.location.replace("game.html" + window.location.search);
-          });
-          $("#browse-button").on("click", function () {
-            window.location.replace("browse.html" + window.location.search);
-          });
-          envObj.showPage();
-        }
+      envObj.checkUserConsent(topicId, function () {
+        // The user has provided consent
+        loadPageContent(envObj, scenarioId);
       });
     } else {
       envObj.showErrorPage();
