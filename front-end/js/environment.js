@@ -1161,12 +1161,18 @@
      * @private
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
-     * @param {function} [abandon] - callback function when the operation is abandoned.
      */
-    function submitTopicQuestionAnswer(success, error, abandon) {
+    function submitTopicQuestionAnswer(success, error) {
       var answers = [];
       var areAllQuestionsAnswered = true;
       var valueOfCheckedChoices = [];
+      var handleError = function (errorMessage) {
+        // Error when the user disagree with our consent
+        console.error(errorMessage);
+        $("#submit-topic-question-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
+        $("#dialog-topic-question").scrollTop($("#topic-questions").height() + 30);
+        if (typeof error === "function") error();
+      };
       $(".topic-question-item").each(function () {
         var $this = $(this);
         var $allChoices = $this.find("option");
@@ -1220,16 +1226,12 @@
           // Create the answers when the user provides consent and agrees with our policy
           createAnswersInOrder(answers, [], success, error);
         } else {
-          // Abandon the operation when the user disagrees with our policy
-          if (typeof abandon === "function") abandon();
+          // Error when the user disagree with our consent
+          handleError("(Sorry that we are unable to proceed since you did not provide consent.)");
         }
       } else {
         // Error when some questions are not answered
-        var errorMessage = "(Would you please select an answer for all questions?)";
-        console.error(errorMessage);
-        $("#submit-topic-question-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
-        $("#dialog-topic-question").scrollTop($("#topic-questions").height() + 30);
-        if (typeof error === "function") error();
+        handleError("(Would you please select an answer for all questions?)");
       }
     }
 
@@ -1278,9 +1280,8 @@
      * @param {number} topicId - the ID of the topic.
      * @param {function} [create] - callback function after creating the dialog.
      * @param {function} [submit] - callback function after answers are submitted successfully.
-     * @param {function} [abandon] - callback function when the answer submission is abandoned.
      */
-    function createTopicQuestionDialog(topicId, create, submit, abandon) {
+    function createTopicQuestionDialog(topicId, create, submit) {
       getQuestionByTopicId(topicId, function (data) {
         // Add topic questions
         var topicQuestions = data["data"];
@@ -1316,11 +1317,6 @@
             }, function () {
               // Error condition
               $topicQuestionDialog.dialog("widget").find("button.ui-action-button").prop("disabled", false);
-            }, function () {
-              // Abandon consition
-              // This means that the user disagrees with our policy
-              if (typeof abandon === "function") abandon();
-              $topicQuestionDialog.dialog("close");
             });
           }
         });
@@ -1355,10 +1351,6 @@
             // This means that the answers to the questions are submitted successfully
             // And also that the user has provided consent
             if (typeof pass === "function") pass();
-          }, function () {
-            // This means that the user just disagrees with our policy
-            // So that the answer submission is abandoned
-            showConsentDisagreePage();
           });
         } else {
           // This means that the user has provided consent
@@ -1367,31 +1359,6 @@
       });
     };
     this.checkUserConsent = checkUserConsent;
-
-    /**
-     * Create the html elements when the user refuses to provide consent.
-     * @private
-     * @returns {Object} - a jQuery DOM object.
-     */
-    function createConsentDisagreeHTML() {
-      var html = "";
-      html += '<img src="https://images.unsplash.com/photo-1598885408331-7d189bcb9717?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1471&q=80" />';
-      html += '<p class="server-error-text">';
-      html += '  Sorry to know that you are not happy to provide consent. Hope to see you next time.';
-      html += '</p>';
-      return $(html);
-    }
-
-    /**
-     * Show a page when the user refuses to provide consent.
-     * @private
-     */
-    function showConsentDisagreePage() {
-      var $container = $("#main-content-container");
-      if (!$container.hasClass("error")) {
-        $("#main-content-container").addClass("error").empty().append(createConsentDisagreeHTML()).show();
-      }
-    }
 
     /**
      * Class constructor.
