@@ -226,6 +226,32 @@ cd periscope-public-engagement-tool/back-end/secret/
 echo "[GOOGLE_SIGNIN_API_CLIENT_ID_STAGING]" > google_signin_client_id_staging
 echo "[GOOGLE_SIGNIN_API_CLIENT_ID_PRODUCTION]" > google_signin_client_id_production
 ```
+Also notice that you need to change the gid in the getGoogleSignInClientId() function in the [account.js](front-end/js/account.js).
+```JavaScript
+/**
+ * Get the client ID for the Google Sign-In API.
+ * @private
+ * @returns {string} - the client ID for the Google Sign-In API.
+ */
+function getGoogleSignInClientId() {
+  var urlHostName = window.location.hostname;
+  var gid;
+  if (urlHostName.indexOf("[REPLACE_TO_YOUR_CUSTOM_STAGING_URL]") !== -1) {
+    // staging back-end
+    gid = "[REPLACE_TO_YOUR_STAGING_GID]";
+  } else if (urlHostName.indexOf("staging") !== -1) {
+    // staging back-end
+    gid = "[REPLACE_TO_YOUR_STAGING_GID]"";
+  } else if (urlHostName.indexOf("periscope.io.tudelft.nl") !== -1) {
+    // production back-end
+    gid = "[REPLACE_TO_YOUR_PRODUCTION_GID]";
+  } else if (urlHostName.indexOf("localhost") !== -1) {
+    // developement back-end
+    gid = "[REPLACE_TO_YOUR_DEVELOPEMENT_GID]";
+  }
+  return gid;
+}
+```
 Create a private key for the server to encode the JSON Web Tokens for user login:
 ```sh
 cd periscope-public-engagement-tool/back-end/www/
@@ -242,6 +268,8 @@ echo "[YOUR_UNSPLASH_PRODUCTION_APP_ACCESS_KEY]" > unsplash_access_key_productio
 Notice that you will need to later [upgrade the application](https://help.unsplash.com/en/articles/2511245-unsplash-api-guidelines) (no cost) to the actural "production" version so that you can make more requests using the Unsplash API. The Unsplash API documentation is [here](https://unsplash.com/documentation).
 
 # <a name="setup-ga"></a>Setup Google Analytics (administrator only)
+IMPORTANT: do not use the gid in the getGoogleAnalyticsId() function in the [tracker.js](front-end/js/tracker.js).
+
 This web-based application uses the [Google Analytics tracker API](https://developers.google.com/analytics/devguides/collection/gtagjs). First, follow [the steps](https://support.google.com/analytics/answer/9304153?hl=en) to set up a Google Analytics property and a data stream. After that, [get the Measurement ID](https://support.google.com/analytics/answer/9539598) and paste it into the "getGoogleAnalyticsId()" function in the tracker script [tracker.js](front-end/js/tracker.js). Then the tracker script will load Google's global site tag (gtag.js), set custom dimensions, and send the initial page view to the Google Analytics property. You can use the "sendEvent()" function in the tracker script to send events to the property. Note that it is better to have different data steams for development, staging, and production environments, where you can put different Measurement IDs in the "getGoogleAnalyticsId()" function in the tracker script.
 
 # <a name="setup-dev-env"></a>Setup development environment
