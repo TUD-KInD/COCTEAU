@@ -106,8 +106,9 @@
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} scenarioId - the ID of the scenario.
+   * @param {number} [page] - page of the scenario questions that we want to load.
    */
-  function loadPageContent(envObj, scenarioId) {
+  function loadPageContent(envObj, scenarioId, page) {
     envObj.getScenarioById(scenarioId, function (data) {
       var scenario = data["data"];
       if ($.isEmptyObject(scenario)) {
@@ -120,6 +121,7 @@
         var $scenarioQuestions = $("#scenario-questions");
         for (var i = 0; i < scenarioQuestions.length; i++) {
           var q = scenarioQuestions[i];
+          if (typeof page !== "undefined" && q["page"] != page) continue;
           if (q["question_type"] == null) {
             var $q = createScenarioTextHTML(q["text"]);
           } else {
@@ -147,10 +149,11 @@
     var queryParas = periscope.util.parseVars(window.location.search);
     var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
     var topicId = "topic_id" in queryParas ? queryParas["topic_id"] : undefined;
+    var page = "page" in queryParas ? queryParas["page"] : 0;
     if (typeof scenarioId !== "undefined" && topicId !== "undefined") {
       envObj.checkUserConsent(topicId, function () {
         // The user has provided consent
-        loadPageContent(envObj, scenarioId);
+        loadPageContent(envObj, scenarioId, page);
       });
     } else {
       envObj.showErrorPage();

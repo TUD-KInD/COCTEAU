@@ -55,6 +55,9 @@ def question():
     order : int
         The order of a question relative to others.
         (optional for POST and PATCH)
+    page : int
+        The page number that the question belongs to.
+        (for creating questions on different pages on the front-end)
     choices : list of dict
         The choices of a question, in the format [{"text:"option label","value":option_value}].
         (optional for POST and PATCH)
@@ -89,17 +92,18 @@ def question():
         question_id = request.args.get("question_id")
         scenario_id = request.args.get("scenario_id")
         topic_id = request.args.get("topic_id")
+        page = request.args.get("page")
         qn = question_id is None
         sn = scenario_id is None
         tn = topic_id is None
         if qn and sn and tn:
-            return try_get_all_questions()
+            return try_get_all_questions(page=page)
         elif not qn and sn and tn:
-            return try_get_question_by_id(question_id)
+            return try_get_question_by_id(question_id, page=page)
         elif qn and not sn and tn:
-            return try_get_questions_by_scenario(scenario_id)
+            return try_get_questions_by_scenario(scenario_id, page=page)
         elif qn and sn and not tn:
-            return try_get_questions_by_topic(topic_id)
+            return try_get_questions_by_topic(topic_id, page=page)
         else:
             e = InvalidUsage("Too many query parameters.", status_code=400)
             return handle_invalid_usage(e)
@@ -124,17 +128,18 @@ def question():
         topic_id = rj.get("topic_id")
         scenario_id = rj.get("scenario_id")
         order = rj.get("order")
+        page = rj.get("page")
         if topic_id is None:
             if scenario_id is None:
                 e = InvalidUsage("Must have either 'topic_id' or 'scenario_id'.", status_code=400)
                 return handle_invalid_usage(e)
             else:
                 # This means that it is a scenario question
-                return f(text, choices, scenario_id=scenario_id, order=order)
+                return f(text, choices, scenario_id=scenario_id, order=order, page=page)
         else:
             if scenario_id is None:
                 # This means that it is a demographic question
-                return f(text, choices, topic_id=topic_id, order=order)
+                return f(text, choices, topic_id=topic_id, order=order, page=page)
             else:
                 e = InvalidUsage("Cannot have both 'topic_id' and 'scenario_id'.", status_code=400)
                 return handle_invalid_usage(e)
@@ -149,11 +154,13 @@ def question():
         si = rj.get("scenario_id")
         ti = rj.get("topic_id")
         order = rj.get("order")
-        if t is None and c is None and si is None and ti is None and order is None:
+        page = rj.get("page")
+        if t is None and c is None and si is None and ti is None and order is None and page is None:
             e = InvalidUsage("Must have at least one field to update.", status_code=400)
             return handle_invalid_usage(e)
         else:
-            return try_update_question(question_id, text=t, choices=c, topic_id=ti, scenario_id=si, order=order)
+            return try_update_question(question_id, text=t, choices=c,
+                    topic_id=ti, scenario_id=si, order=order, page=page)
     elif request.method == "DELETE":
         # Delete a question (admin only)
         question_id = rj.get("question_id")
@@ -169,52 +176,56 @@ def question():
 
 
 @try_wrap_response
-def try_get_all_questions():
-    data = get_all_questions()
+def try_get_all_questions(page=None):
+    data = get_all_questions(page=page)
     return jsonify({"data": questions_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_question_by_id(question_id):
-    data = get_question_by_id(question_id)
+def try_get_question_by_id(question_id, page=None):
+    data = get_question_by_id(question_id, page=page)
     return jsonify({"data": question_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_questions_by_scenario(scenario_id):
-    data = get_questions_by_scenario(scenario_id)
+def try_get_questions_by_scenario(scenario_id, page=None):
+    data = get_questions_by_scenario(scenario_id, page=page)
     return jsonify({"data": questions_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_questions_by_topic(topic_id):
-    data = get_questions_by_topic(topic_id)
+def try_get_questions_by_topic(topic_id, page=None):
+    data = get_questions_by_topic(topic_id, page=page)
     return jsonify({"data": questions_schema.dump(data)})
 
 
 @try_wrap_response
-def try_create_multi_choice_question(text, choices, topic_id=None, scenario_id=None, order=None):
-    data = create_multi_choice_question(text, choices, topic_id=topic_id, scenario_id=scenario_id, order=order)
+def try_create_multi_choice_question(text, choices, topic_id=None, scenario_id=None, order=None, page=None):
+    data = create_multi_choice_question(text, choices,
+            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
     return jsonify({"data": question_schema.dump(data)})
 
 
 @try_wrap_response
-def try_create_single_choice_question(text, choices, topic_id=None, scenario_id=None, order=None):
-    data = create_single_choice_question(text, choices, topic_id=topic_id, scenario_id=scenario_id, order=order)
+def try_create_single_choice_question(text, choices, topic_id=None, scenario_id=None, order=None, page=None):
+    data = create_single_choice_question(text, choices,
+            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
     return jsonify({"data": question_schema.dump(data)})
 
 
 @try_wrap_response
-def try_create_free_text_question(text, choices, topic_id=None, scenario_id=None, order=None):
+def try_create_free_text_question(text, choices, topic_id=None, scenario_id=None, order=None, page=None):
     # IMPORTANT: choices is a dummy parameter for formatting, do not remove it
-    data = create_free_text_question(text, topic_id=topic_id, scenario_id=scenario_id, order=order)
+    data = create_free_text_question(text,
+            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
     return jsonify({"data": question_schema.dump(data)})
 
 
 @try_wrap_response
-def try_create_description(text, choices, topic_id=None, scenario_id=None, order=None):
+def try_create_description(text, choices, topic_id=None, scenario_id=None, order=None, page=None):
     # IMPORTANT: choices is a dummy parameter for formatting, do not remove it
-    data = create_description(text, topic_id=topic_id, scenario_id=scenario_id, order=order)
+    data = create_description(text,
+            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
     return jsonify({"data": question_schema.dump(data)})
 
 
@@ -225,7 +236,7 @@ def try_remove_question(question_id):
 
 
 @try_wrap_response
-def try_update_question(question_id, text=None, choices=None, topic_id=None, scenario_id=None, order=None):
+def try_update_question(question_id, text=None, choices=None, topic_id=None, scenario_id=None, order=None, page=None):
     data = update_question(question_id, text=text, choices=choices,
-            topic_id=topic_id, scenario_id=scenario_id, order=order)
+            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
     return jsonify({"data": question_schema.dump(data)})
