@@ -1,5 +1,6 @@
 {
-  "title": "Back to Campus from COVID (Prolific)",
+  "title": "Back to Campus from COVID (Prolific Mode 1)",
   "description": "COVID-19 situation is getting better. Schools have decided to keep in place agile working approaches. Therefore, students and employees chose to continue to work from their households or come back to the shared workplace.",
-  "image": "scenario_2.jpg"
+  "image": "scenario_2.jpg",
+  "mode": 1
 }

@@ -323,16 +323,20 @@
      * @param {string} description - description of the scenario.
      * @param {string} image - image URL of the scenario.
      * @param {number} topicId - topic ID that the scenario is in.
+     * @param {number} [mode] - system configuration of the scenario.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createScenario = function (title, description, image, topicId, success, error) {
+    this.createScenario = function (title, description, image, topicId, mode, success, error) {
       var data = {
         "title": title,
         "description": description,
         "image": image,
         "topic_id": topicId
       };
+      if (typeof mode !== "undefined") {
+        data["mode"] = mode;
+      }
       generalPost("/scenario/", data, success, error);
     };
 
@@ -343,11 +347,12 @@
      * @param {string} [title] - title of the scenario.
      * @param {string} [description] - description of the scenario.
      * @param {string} [image] - image URL of the scenario.
-     * @param {string} [topicId] - topic ID that the scenario is in.
+     * @param {number} [topicId] - topic ID that the scenario is in.
+     * @param {number} [mode] - system configuration of the scenario.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.updateScenario = function (scenarioId, title, description, image, topicId, success, error) {
+    this.updateScenario = function (scenarioId, title, description, image, topicId, mode, success, error) {
       var data = {
         "scenario_id": scenarioId
       };
@@ -362,6 +367,9 @@
       }
       if (typeof topicId !== "undefined") {
         data["topic_id"] = topicId;
+      }
+      if (typeof mode !== "undefined") {
+        data["mode"] = mode;
       }
       generalPatch("/scenario/", data, success, error);
     };
@@ -456,7 +464,7 @@
      * @private
      * @param {string} text - text of the question.
      * @param {Choice[]} [choices] - choices of the question.
-     * @param {string} [topicId] - topic ID that the question is in (for topic questions).
+     * @param {number} [topicId] - topic ID that the question is in (for topic questions).
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {boolean} [isMulitpleChoice] - indicate if the question allows multiple choices.
      * @param {boolean} [isJustDescription] - indicate if the question is just a description but not a question.
@@ -499,7 +507,7 @@
      * @param {number} questionId - ID of the question.
      * @param {string} [text] - text of the question.
      * @param {Choice[]} [choices] - choices of the question.
-     * @param {string} [topicId] - topic ID that the question is in (for topic questions).
+     * @param {number} [topicId] - topic ID that the question is in (for topic questions).
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {number} [page] - page of the questions that we want to get.

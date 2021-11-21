@@ -88,48 +88,56 @@
     });
     $("#create-scenario").on("click", function () {
       var $scenarioTitle = $("#want-scenario-title");
-      var $scenarioDescription = $("#want-scenario-description");
-      var $scenarioImage = $("#want-scenario-image");
-      var $scenarioTopicId = $("#want-scenario-topic-id");
       var t = $scenarioTitle.val().trim();
       if (t == "") t = undefined;
+      var $scenarioDescription = $("#want-scenario-description");
       var d = $scenarioDescription.val().trim();
       if (d == "") d = undefined;
+      var $scenarioImage = $("#want-scenario-image");
       var i = $scenarioImage.val().trim();
       if (i == "") i = undefined;
+      var $scenarioTopicId = $("#want-scenario-topic-id");
       var ti = $scenarioTopicId.val();
       if (ti == "") ti = undefined;
-      envObj.createScenario(t, d, i, ti, function (returnData) {
+      var $scenarioMode = $("#want-scenario-mode");
+      var m = $scenarioMode.val();
+      if (m == "") m = undefined;
+      envObj.createScenario(t, d, i, ti, m, function (returnData) {
         console.log(returnData);
         $scenarioTitle.val("");
         $scenarioDescription.val("");
         $scenarioImage.val("");
         $scenarioTopicId.val("");
+        $scenarioMode.val("");
       });
     });
     $("#update-scenario").on("click", function () {
       var $scenarioTitle = $("#want-scenario-title");
-      var $scenarioDescription = $("#want-scenario-description");
-      var $scenarioImage = $("#want-scenario-image");
-      var $scenarioTopicId = $("#want-scenario-topic-id");
-      var $scenarioId = $("#want-scenario-update-id");
       var t = $scenarioTitle.val().trim();
       if (t == "") t = undefined;
+      var $scenarioDescription = $("#want-scenario-description");
       var d = $scenarioDescription.val().trim();
       if (d == "") d = undefined;
+      var $scenarioImage = $("#want-scenario-image");
       var i = $scenarioImage.val().trim();
       if (i == "") i = undefined;
+      var $scenarioTopicId = $("#want-scenario-topic-id");
       var ti = $scenarioTopicId.val();
       if (ti == "") ti = undefined;
+      var $scenarioId = $("#want-scenario-update-id");
       var si = $scenarioId.val();
       if (si == "") si = undefined;
-      envObj.updateScenario(si, t, d, i, ti, function (returnData) {
+      var $scenarioMode = $("#want-scenario-mode");
+      var m = $scenarioMode.val();
+      if (m == "") m = undefined;
+      envObj.updateScenario(si, t, d, i, ti, m, function (returnData) {
         console.log(returnData);
         $scenarioTitle.val("");
         $scenarioDescription.val("");
         $scenarioImage.val("");
         $scenarioTopicId.val("");
         $scenarioId.val("");
+        $scenarioMode.val("");
       });
     });
     $("#delete-scenario").on("click", function () {
@@ -695,7 +703,7 @@
    */
   function addDataSet(envObj, topicId, scenarioPath, scenarioQuestionPath, moodId, visionPath) {
     $.getJSON(scenarioPath, function (s) {
-      envObj.createScenario(s["title"], s["description"], s["image"], topicId, function (scenarioData) {
+      envObj.createScenario(s["title"], s["description"], s["image"], topicId, s["mode"], function (scenarioData) {
         console.log("Scenario created", scenarioData);
         var scenarioId = scenarioData["data"]["id"];
         addQuestion(envObj, scenarioQuestionPath, undefined, scenarioId); // scenario questions
@@ -797,7 +805,6 @@
       return true;
     } else {
       var q = questions[0];
-      console.log(q);
       envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], questionList.length, q["page"], function (questionData) {
         console.log("Question created", questionData);
         questionList.push(questionData["data"]);

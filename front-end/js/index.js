@@ -34,7 +34,8 @@
             var d = $(this).data("raw");
             var scenarioId = d["id"];
             var topicId = d["topic_id"];
-            var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId;
+            var mode = d["mode"];
+            var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode;
             // Get the scenario answers
             envObj.getAnswerOfCurrentUserByScenarioId(scenarioId, function (data) {
               var answer = data["data"];

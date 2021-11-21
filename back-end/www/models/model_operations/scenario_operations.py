@@ -4,7 +4,7 @@ from models.model import db
 from models.model import Scenario
 
 
-def create_scenario(title, description, image, topic_id):
+def create_scenario(title, description, image, topic_id, mode=None):
     """
     Create a scenario object.
 
@@ -18,14 +18,20 @@ def create_scenario(title, description, image, topic_id):
         An URL to an image relevant to the scenario.
     topic_id : int
         ID of the topic the scenario is related to.
+    mode : int
+        The system configuration.
+        (0 means the normal deployment mode)
+        (other numbers mean different experiment modes)
 
     Returns
     ------
     scenario : Scenario
         The created scenario.
     """
+    mode = 0 if mode is None else mode
+
     scenario = Scenario(title=title, description=description,
-            image=image, topic_id=topic_id)
+            image=image, topic_id=topic_id, mode=mode)
 
     db.session.add(scenario)
     db.session.commit()
@@ -86,7 +92,7 @@ def get_all_scenarios():
     return scenarios
 
 
-def update_scenario(scenario_id, title=None, description=None, image=None, topic_id=None):
+def update_scenario(scenario_id, title=None, description=None, image=None, topic_id=None, mode=None):
     """
     Modify scenario's title, description or image.
 
@@ -100,6 +106,10 @@ def update_scenario(scenario_id, title=None, description=None, image=None, topic
         New scenario description.
     image : str
         New image URL for the scenario.
+    mode : int
+        The system configuration.
+        (0 means the normal deployment mode)
+        (other numbers mean different experiment modes)
 
     Returns
     -------
@@ -127,6 +137,9 @@ def update_scenario(scenario_id, title=None, description=None, image=None, topic
 
     if topic_id is not None:
         scenario.topic_id = topic_id
+
+    if mode is not None:
+        scenario.mode = mode
 
     db.session.commit()
 

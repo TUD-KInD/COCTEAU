@@ -58,6 +58,7 @@ def question():
     page : int
         The page number that the question belongs to.
         (for creating questions on different pages on the front-end)
+        (optional for POST and PATCH)
     choices : list of dict
         The choices of a question, in the format [{"text:"option label","value":option_value}].
         (optional for POST and PATCH)

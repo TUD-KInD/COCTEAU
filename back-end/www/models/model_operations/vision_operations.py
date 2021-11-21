@@ -26,15 +26,8 @@ def create_mood(name, image=None, order=None):
     -------
     mood : Mood
         The newly created mood object.
-
-    Raises
-    ------
-    exception : Exception
-        In case that the order parameter is not None and not an integer.
     """
     order = 0 if order is None else order
-    if type(order) != int:
-        raise Exception("Order needs to be an integer.")
 
     mood = Mood(name=name, image=image, order=order)
 
@@ -115,8 +108,6 @@ def update_mood(mood_id, name=None, image=None, order=None):
     ------
     exception : Exception
         When no mood is found.
-    exception : Exception
-        In case that the order parameter is not None and not an integer.
     """
     # TODO: need a testing case
     mood = get_mood_by_id(mood_id)
@@ -130,11 +121,8 @@ def update_mood(mood_id, name=None, image=None, order=None):
     if image is not None:
         mood.image = image
 
-    order = 0 if order is None else order
-    if type(order) is int:
+    if order is not None:
         mood.order = order
-    else:
-        raise Exception("Order needs to be an integer.")
 
     db.session.commit()
 
