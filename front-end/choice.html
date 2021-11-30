@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>COCTEAU.nl</title>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/frame.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/controls.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/widgets.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/account.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="css/custom.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/widgets.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/tracker.js"></script>
+  <script src="js/environment.js"></script>
+  <script src="js/choice.js"></script>
+</head>
+
+<body>
+  <div class="menu-container"></div>
+  <div class="content-container" id="main-content-container" style="display: none;">
+    <div class="content">
+      <div class="content-table flex-column">
+        <div class="flex-row">
+          <div class="flex-item flex-column">
+            <!-- The scenario title will be loaded by using the back-end API -->
+            <h2 id="scenario-title" class="add-top-margin"></h2>
+            <!-- The scenario description will be loaded by using the back-end API -->
+            <p class="text" id="scenario-description"></p>
+            <hr>
+            <p class="text highlight-text">
+              Choose and vote visions.
+            </p>
+            <p id="no-game-message" class="text custom-text-info" style="display: none;">
+              Thank you for playing all the games!
+              Currently, there are no games available.
+              Please come back in the future.
+            </p>
+          </div>
+          <div id="game-ui" class="flex-item flex-column-no-wrap full-width" style="display: none;">
+            <!-- The game meme will be loaded by using the back-end API -->
+            <div class="meme add-bottom-margin add-top-margin" id="game">
+              <figure>
+                <img id="vision-image" style="max-height: 500px;">
+                <figcaption id="vision-caption"></figcaption>
+                <div id="vision-credit"></div>
+              </figure>
+            </div>
+            <div class="custom-survey add-top-margin add-bottom-margin" id="express-emotion">
+              <span class="text">What do you think the meme creator's mood is? Choose TWO options.</span>
+              <!-- The moods will be loaded by using the back-end API -->
+              <div class="custom-radio-group-survey add-top-margin" id="mood-option-container"></div>
+            </div>
+            <div class="custom-survey add-top-margin add-bottom-margin" id="provide-feedback">
+              <span class="text">Would you be willing to share your thoughts about this meme (optional)?</span>
+              <textarea id="game-feedback" class="custom-textbox-survey add-top-margin" placeholder="Your thoughts (max 280 characters)" maxlength="280"></textarea>
+            </div>
+          </div>
+          <div class="flex-item flex-column full-width" id="show-game-result" style="display: none;">
+            <p class="text">
+              Click the button below to view the result.
+              <span class="custom-text-danger" id="submit-game-error-message" style="display: none;"></span>
+            </p>
+            <div class="control-group">
+              <button id="show-result-button" class="custom-button-flat large pulse-primary stretch-on-mobile">
+                <img src="img/book.png"><span>View Result</span>
+              </button>
+            </div>
+          </div>
+          <div class="flex-item flex-column" id="play-game" style="display: none;">
+            <p class="text">
+              Thank you for playing the game!
+              Please see the above highlighed answers.
+              How about playing another round?
+            </p>
+            <div class="control-group">
+              <a id="game-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
+                <img src="img/next.png"><span>Play more games</span>
+              </a>
+            </div>
+          </div>
+          <div class="flex-item flex-column" id="next-step-buttons">
+            <p class="text">
+              You can also express or browse visions.
+            </p>
+            <div class="control-group">
+              <a id="vision-button" class="custom-button-flat large stretch-on-mobile" href="javascript:void(0)">
+                <img src="img/next.png"><span>Express visions</span>
+              </a>
+              <a id="browse-button" class="custom-button-flat large stretch-on-mobile" href="javascript:void(0)">
+                <img src="img/next.png"><span>Browse visions</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="dialog-topic-question" title="Consent" data-role="none" style="display: none;">
+    <div id="topic-questions"></div>
+    <p class="add-top-margin">
+      <span class="custom-text-danger" id="submit-topic-question-error-message" style="display: none;"></span>
+    </p>
+  </div>
+</body>
+
+</html>

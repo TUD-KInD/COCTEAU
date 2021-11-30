@@ -33,7 +33,7 @@
    * @param {number} scenarioId - the scenario ID of the questions.
    */
   function loadAnswers(envObj, scenarioId) {
-    envObj.getQuestionByScenarioId(scenarioId, undefined, function (returnData) {
+    envObj.getQuestionByScenarioId(scenarioId, undefined, undefined, function (returnData) {
       var questions = returnData["data"];
       getAnswersInOrder(envObj, questions, [], function (answerList) {
         console.log(questions);

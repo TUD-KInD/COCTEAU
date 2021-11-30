@@ -155,7 +155,7 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      envObj.getAllQuestion(p, function (returnData) {
+      envObj.getAllQuestion(p, undefined, function (returnData) {
         console.log(returnData);
         $page.val("");
       });
@@ -167,7 +167,7 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      envObj.getQuestionByTopicId(ti, p, function (returnData) {
+      envObj.getQuestionByTopicId(ti, p, undefined, function (returnData) {
         console.log(returnData);
         $topicId.val("");
         $page.val("");
@@ -180,7 +180,7 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      envObj.getQuestionByScenarioId(si, p, function (returnData) {
+      envObj.getQuestionByScenarioId(si, p, undefined, function (returnData) {
         console.log(returnData);
         $scenarioId.val("");
         $page.val("");
@@ -193,7 +193,7 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      envObj.getQuestionById(qi, function (returnData) {
+      envObj.getQuestionById(qi, p, undefined, function (returnData) {
         console.log(returnData);
         $questionId.val("");
         $page.val("");
@@ -652,7 +652,7 @@
     }, 1600);
     // Delete all questions
     window.setTimeout(function () {
-      envObj.getAllQuestion(undefined, function (returnData) {
+      envObj.getAllQuestion(undefined, undefined, function (returnData) {
         var data = returnData["data"];
         for (var i = 0; i < data.length; i++) {
           envObj.deleteQuestion(data[i]["id"], function () {

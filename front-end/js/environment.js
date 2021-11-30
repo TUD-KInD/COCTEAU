@@ -392,13 +392,17 @@
      * Get a list of all questions.
      * @public
      * @param {number} [page] - page of the questions that we want to get.
+     * @param {number} [view] - view of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getAllQuestion = function (page, success, error) {
+    this.getAllQuestion = function (page, view, success, error) {
       var path = "/question/";
       if (typeof page !== "undefined") {
         path += "?page=" + page;
+      }
+      if (typeof view !== "undefined") {
+        view += "&view=" + view;
       }
       generalGet(path, success, error);
     };
@@ -408,13 +412,17 @@
      * @public
      * @param {number} topicId - topic ID of questions that we wish to get.
      * @param {number} [page] - page of the questions that we want to get.
+     * @param {number} [view] - view of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    var getQuestionByTopicId = function (topicId, page, success, error) {
+    var getQuestionByTopicId = function (topicId, page, view, success, error) {
       var path = "/question/?topic_id=" + topicId;
       if (typeof page !== "undefined") {
         path += "&page=" + page;
+      }
+      if (typeof view !== "undefined") {
+        view += "&view=" + view;
       }
       generalGet(path, success, error);
     };
@@ -425,13 +433,17 @@
      * @public
      * @param {number} scenarioId - scenario ID of questions that we wish to get.
      * @param {number} [page] - page of the questions that we want to get.
+     * @param {number} [view] - view of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getQuestionByScenarioId = function (scenarioId, page, success, error) {
+    this.getQuestionByScenarioId = function (scenarioId, page, view, success, error) {
       var path = "/question/?scenario_id=" + scenarioId;
       if (typeof page !== "undefined") {
         path += "&page=" + page;
+      }
+      if (typeof view !== "undefined") {
+        view += "&view=" + view;
       }
       generalGet(path, success, error);
     };
@@ -441,13 +453,17 @@
      * @public
      * @param {number} questionId - ID of the question that we wish to get.
      * @param {number} [page] - page of the questions that we want to get.
+     * @param {number} [view] - view of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getQuestionById = function (questionId, page, success, error) {
+    this.getQuestionById = function (questionId, page, view, success, error) {
       var path = "/question/?question_id=" + questionId;
       if (typeof page !== "undefined") {
         path += "&page=" + page;
+      }
+      if (typeof view !== "undefined") {
+        view += "&view=" + view;
       }
       generalGet(path, success, error);
     };
@@ -1322,7 +1338,7 @@
      * @param {function} [submit] - callback function after answers are submitted successfully.
      */
     function createTopicQuestionDialog(topicId, create, submit) {
-      getQuestionByTopicId(topicId, undefined, function (data) {
+      getQuestionByTopicId(topicId, undefined, undefined, function (data) {
         // Add topic questions
         var topicQuestions = data["data"];
         periscope.util.sortArrayOfDictByKeyInPlace(topicQuestions, "order");

@@ -36,17 +36,23 @@
             var topicId = d["topic_id"];
             var mode = d["mode"];
             var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode;
-            // Get the scenario answers
-            envObj.getAnswerOfCurrentUserByScenarioId(scenarioId, function (data) {
-              var answer = data["data"];
-              if (typeof answer !== "undefined" && answer.length > 0) {
-                // Go to the vision page when there are scenario answers
-                window.location.href = "vision.html" + queryString;
-              } else {
-                // Go to the opinion page when there are no scenario answers
-                window.location.href = "opinion.html" + queryString;
-              }
-            });
+            if (mode == 0) {
+              // Mode 0 means the deployment setting
+              // Get the scenario answers
+              envObj.getAnswerOfCurrentUserByScenarioId(scenarioId, function (data) {
+                var answer = data["data"];
+                if (typeof answer !== "undefined" && answer.length > 0) {
+                  // Go to the vision page when there are scenario answers
+                  window.location.href = "vision.html" + queryString;
+                } else {
+                  // Go to the opinion page when there are no scenario answers
+                  window.location.href = "opinion.html" + queryString;
+                }
+              });
+            } else {
+              // Other modes mean the experiment settings
+              window.location.href = "opinion.html" + queryString;
+            }
           });
         }
         envObj.showPage();

@@ -144,6 +144,9 @@ class Question(db.Model):
     page : int
         The page number for the question.
         (for creating questions on different pages on the front-end side)
+    view : int
+        The alternative views of the question.
+        (for creating a question on a page with alternative views on the front-end side)
     scenario_id : int
         ID of the Scenario the question belongs to.
         Either the scenario_id or topic_id must be set, not both.
@@ -160,6 +163,7 @@ class Question(db.Model):
     question_type = db.Column(db.Enum(QuestionTypeEnum))
     order = db.Column(db.Integer, nullable=False, default=0)
     page = db.Column(db.Integer, nullable=False, default=0)
+    view = db.Column(db.Integer, nullable=False, default=0)
     scenario_id = db.Column(db.Integer, db.ForeignKey("scenario.id"))
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"))
     choices = db.relationship("Choice", backref=db.backref("question", lazy=True), lazy=True)
