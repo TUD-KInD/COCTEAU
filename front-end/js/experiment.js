@@ -14,29 +14,21 @@
   }
 
   /**
-   * Add the clicking event to a scenario image (for the deployment mode).
+   * Add the clicking event to a scenario image (for the experiment mode).
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {Object} $element - the jQuery object of the scenario image.
    */
-  function addDeploymentScenarioClickEvent(envObj, $element) {
+  function addExperimentScenarioClickEvent(envObj, $element) {
     $element.on("click", function () {
       var d = $(this).data("raw");
       var scenarioId = d["id"];
       var topicId = d["topic_id"];
-      var mode = d["mode"];
-      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode;
-      // Get the scenario answers
-      envObj.getAnswerOfCurrentUserByScenarioId(scenarioId, function (data) {
-        var answer = data["data"];
-        if (typeof answer !== "undefined" && answer.length > 0) {
-          // Go to the vision page when there are scenario answers
-          window.location.href = "vision.html" + queryString;
-        } else {
-          // Go to the opinion page when there are no scenario answers
-          window.location.href = "opinion.html" + queryString;
-        }
-      });
+      var mode = d["mode"]; // deployment or experiment mode
+      var view = d["view"]; // view of the questions to show (e.g., different character background stories)
+      var config = d["config"]; // system configuration
+      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode + "&view=" + view + "&config=" + config;
+      window.location.href = "opinion.html" + queryString;
     });
   }
 
@@ -54,13 +46,22 @@
         var $scenario = $("#scenario");
         for (var i = 0; i < scenarios.length; i++) {
           var d = scenarios[i];
-          if (d["mode"] == 0) {
-            // Only show mode 0 for the index page
-            // Mode 0 means the deployment setting
-            var $t = createScenarioHTML(d["title"], "img/" + d["image"]);
-            $t.data("raw", d);
-            addDeploymentScenarioClickEvent(envObj, $t);
-            $scenario.append($t);
+          if (d["mode"] == 1) {
+            // Only show mode 1 for the experiment page
+            // Mode 1 means the experiment setting
+            var numberOfViews = 5;
+            var numberOfConfigs = 2;
+            for (var i = 0; i < numberOfViews; i++) {
+              for (var j = 0; j < numberOfConfigs; j++) {
+                var $t = createScenarioHTML(d["title"] + " (view " + i + ", config " + j + ")", "img/" + d["image"]);
+                var dCopy = JSON.parse(JSON.stringify(d));
+                dCopy["view"] = i;
+                dCopy["config"] = j;
+                $t.data("raw", dCopy);
+                addExperimentScenarioClickEvent(envObj, $t);
+                $scenario.append($t);
+              }
+            }
           }
         }
         envObj.showPage();

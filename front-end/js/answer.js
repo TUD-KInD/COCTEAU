@@ -35,12 +35,25 @@
   function loadAnswers(envObj, scenarioId) {
     envObj.getQuestionByScenarioId(scenarioId, undefined, undefined, function (returnData) {
       var questions = returnData["data"];
-      getAnswersInOrder(envObj, questions, [], function (answerList) {
-        console.log(questions);
-        console.log(answerList);
+      var filteredQuestions = [];
+      for (var j = 0; j < questions.length; j++) {
+        var q = questions[j];
+        if (q["question_type"] != null) {
+          filteredQuestions.push(q);
+        }
+      }
+      periscope.util.sortArrayOfDictByKeyInPlace(filteredQuestions, "order");
+      getAnswersInOrder(envObj, filteredQuestions, [], function (answerList) {
         var $answer = $("#answer");
-        for (var i = 0; i < questions.length; i++) {
-          var $a = createScenarioQuestionAnswerHTML("sqa" + i, questions[i], answerList[i]);
+        for (var i = 0; i < filteredQuestions.length; i++) {
+          var filteredAnswers = [];
+          for (var k = 0; k < answerList[i].length; k++) {
+            var answer = answerList[i][k];
+            if (answer["text"] != null) {
+              filteredAnswers.push(answer);
+            }
+          }
+          var $a = createScenarioQuestionAnswerHTML("sqa" + i, filteredQuestions[i], filteredAnswers);
           $answer.append($a);
         }
       });

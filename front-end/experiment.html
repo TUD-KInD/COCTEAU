@@ -23,9 +23,9 @@
   <script src="js/account.js"></script>
   <script src="js/tracker.js"></script>
   <script src="js/environment.js"></script>
-  <script src="js/data.js"></script>
+  <script src="js/experiment.js"></script>
   <style>
-    #menu-data {
+    #menu-index {
       color: rgb(255, 255, 255) !important;
       opacity: 1 !important;
       font-weight: 700 !important;
@@ -41,7 +41,7 @@
         <div class="flex-row-space-between">
           <div class="flex-item flex-column">
             <h2 class="add-top-margin">
-              Explore Data!
+              Experiment!
             </h2>
           </div>
           <div class="flex-item flex-column">
@@ -53,9 +53,7 @@
         <div class="flex-row">
           <div class="flex-item flex-column">
             <p class="text">
-              Thank you so much for your contributions!
-              Below are the scenarios.
-              Please click or tap on a scenario to explore its data (visions or opinions).
+              This is the page that shows the scenarios for the experiments.
             </p>
           </div>
         </div>
@@ -63,21 +61,12 @@
         <div class="gallery add-top-margin-small add-bottom-margin-small" id="scenario"></div>
         <div class="flex-row">
           <div class="flex-item flex-item-stretch flex-column">
-            <p class="text">
-              Please let us know which aspects are working well and which could be improved via the <a href="https://docs.google.com/forms/d/e/1FAIpQLSe5IyMm-lZGofVX6BPlnI6_fL_lxEXHtKV4HV_OLxrv4zWMJQ/viewform?usp=sf_link">Feedback Form</a>.
-              We really appreciate your input!
-            </p>
             <p class="text text-small text-italic">
               Credits: this tool is developed in <a href="https://www.tudelft.nl/en/ide/" target="_blank">TU Delft IDE</a> and is supported by the <a href="https://periscopeproject.eu/" target="_blank">PERISCOPE project</a>.
               The design is adopted from the <a href="http://trigger-game.eu/" target="_blank">COCTEAU tool</a> in the <a href="https://trigger-project.eu/" target="_blank">Trigger project</a>.
               Photos are obtained from <a href="https://unsplash.com/" target="_blank">Unsplash</a> and <a href="https://www.ams-institute.org/" target="_blank">AMS</a>.
             </p>
           </div>
-        </div>
-        <div id="dialog-data" title="Data" data-role="none" style="display: none;">
-          <p>Which data would you like to explore for this scenario?</p>
-          <a id="vision-button" class="custom-button custom-button-primary" href="javascript:void(0)">Visions</a>
-          <a id="opinion-button" class="custom-button custom-button-primary" href="javascript:void(0)">Opinions</a>
         </div>
       </div>
     </div>
