@@ -135,7 +135,7 @@ def question():
         scenario_id = rj.get("scenario_id")
         order = rj.get("order")
         page = rj.get("page")
-        view = rj.get("page")
+        view = rj.get("view")
         if topic_id is None:
             if scenario_id is None:
                 e = InvalidUsage("Must have either 'topic_id' or 'scenario_id'.", status_code=400)
@@ -184,26 +184,26 @@ def question():
 
 
 @try_wrap_response
-def try_get_all_questions(page=None):
-    data = get_all_questions(page=page)
+def try_get_all_questions(page=None, view=None):
+    data = get_all_questions(page=page, view=view)
     return jsonify({"data": questions_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_question_by_id(question_id, page=None):
-    data = get_question_by_id(question_id, page=page)
+def try_get_question_by_id(question_id, page=None, view=None):
+    data = get_question_by_id(question_id, page=page, view=view)
     return jsonify({"data": question_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_questions_by_scenario(scenario_id, page=None):
-    data = get_questions_by_scenario(scenario_id, page=page)
+def try_get_questions_by_scenario(scenario_id, page=None, view=None):
+    data = get_questions_by_scenario(scenario_id, page=page, view=view)
     return jsonify({"data": questions_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_questions_by_topic(topic_id, page=None):
-    data = get_questions_by_topic(topic_id, page=page)
+def try_get_questions_by_topic(topic_id, page=None, view=None):
+    data = get_questions_by_topic(topic_id, page=page, view=view)
     return jsonify({"data": questions_schema.dump(data)})
 
 

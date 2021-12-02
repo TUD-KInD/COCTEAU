@@ -14,6 +14,49 @@
    */
 
   /**
+   * The JavaScript implementation of the python collections.defaultdict data type
+   * Below are usage examples:
+   * var a = new DefaultDict(Array);
+   * a["banana"].push("ya");
+   * var b = new DefaultDict(new DefaultDict(Array));
+   * b["orange"]["apple"].push("yo");
+   * var c = new DefaultDict(Number);
+   * c["banana"] = 1;
+   * var d = new DefaultDict([2]);
+   * d["banana"].push(1);
+   * var e = new DefaultDict(new DefaultDict(2));
+   * e["orange"]["apple"] = 3;
+   * var f = new DefaultDict(1);
+   * f["banana"] = 2;
+   */
+  class DefaultDict {
+    constructor(defaultInit) {
+      this.original = defaultInit;
+      return new Proxy({}, {
+        get: function (target, name) {
+          if (name in target) {
+            return target[name];
+          } else {
+            if (typeof defaultInit === "function") {
+              target[name] = new defaultInit().valueOf();
+            } else if (typeof defaultInit === "object") {
+              if (typeof defaultInit.original !== "undefined") {
+                target[name] = new DefaultDict(defaultInit.original);
+              } else {
+                target[name] = JSON.parse(JSON.stringify(defaultInit));
+              }
+            } else {
+              target[name] = defaultInit;
+            }
+            return target[name];
+          }
+        }
+      });
+    }
+  }
+  window.DefaultDict = DefaultDict;
+
+  /**
    * Class for setting the environment.
    * This class is used for PERISCOPE tool specific settings.
    * @public
@@ -397,12 +440,12 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllQuestion = function (page, view, success, error) {
-      var path = "/question/";
+      var path = "/question/?";
       if (typeof page !== "undefined") {
-        path += "?page=" + page;
+        path += "&page=" + page;
       }
       if (typeof view !== "undefined") {
-        view += "&view=" + view;
+        path += "&view=" + view;
       }
       generalGet(path, success, error);
     };
@@ -422,7 +465,7 @@
         path += "&page=" + page;
       }
       if (typeof view !== "undefined") {
-        view += "&view=" + view;
+        path += "&view=" + view;
       }
       generalGet(path, success, error);
     };
@@ -443,7 +486,7 @@
         path += "&page=" + page;
       }
       if (typeof view !== "undefined") {
-        view += "&view=" + view;
+        path += "&view=" + view;
       }
       generalGet(path, success, error);
     };
@@ -463,7 +506,7 @@
         path += "&page=" + page;
       }
       if (typeof view !== "undefined") {
-        view += "&view=" + view;
+        path += "&view=" + view;
       }
       generalGet(path, success, error);
     };
@@ -486,10 +529,11 @@
      * @param {boolean} [isJustDescription] - indicate if the question is just a description but not a question.
      * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {number} [page] - page of the questions that we want to get.
+     * @param {number} [view] - view of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, page, success, error) {
+    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, page, view, success, error) {
       var data = {
         "text": text
       };
@@ -514,6 +558,9 @@
       if (typeof page !== "undefined") {
         data["page"] = page;
       }
+      if (typeof view !== "undefined") {
+        data["view"] = view;
+      }
       generalPost("/question/", data, success, error);
     };
 
@@ -527,10 +574,11 @@
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {number} [page] - page of the questions that we want to get.
+     * @param {number} [view] - view of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.updateQuestion = function (questionId, text, choices, topicId, scenarioId, order, page, success, error) {
+    this.updateQuestion = function (questionId, text, choices, topicId, scenarioId, order, page, view, success, error) {
       var data = {
         "question_id": questionId
       };
@@ -551,6 +599,9 @@
       }
       if (typeof page !== "undefined") {
         data["page"] = page;
+      }
+      if (typeof view !== "undefined") {
+        data["view"] = view;
       }
       generalPatch("/question/", data, success, error);
     };

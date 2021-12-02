@@ -155,9 +155,13 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      envObj.getAllQuestion(p, undefined, function (returnData) {
+      var $view = $("#want-question-get-view");
+      var v = $view.val();
+      if (v == "") v = undefined;
+      envObj.getAllQuestion(p, v, function (returnData) {
         console.log(returnData);
         $page.val("");
+        $view.val("");
       });
     });
     $("#get-question-by-topic-id").on("click", function () {
@@ -167,10 +171,14 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      envObj.getQuestionByTopicId(ti, p, undefined, function (returnData) {
+      var $view = $("#want-question-get-view");
+      var v = $view.val();
+      if (v == "") v = undefined;
+      envObj.getQuestionByTopicId(ti, p, v, function (returnData) {
         console.log(returnData);
         $topicId.val("");
         $page.val("");
+        $view.val("");
       });
     });
     $("#get-question-by-scenario-id").on("click", function () {
@@ -180,10 +188,14 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      envObj.getQuestionByScenarioId(si, p, undefined, function (returnData) {
+      var $view = $("#want-question-get-view");
+      var v = $view.val();
+      if (v == "") v = undefined;
+      envObj.getQuestionByScenarioId(si, p, v, function (returnData) {
         console.log(returnData);
         $scenarioId.val("");
         $page.val("");
+        $view.val("");
       });
     });
     $("#get-question-by-id").on("click", function () {
@@ -193,10 +205,14 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      envObj.getQuestionById(qi, p, undefined, function (returnData) {
+      var $view = $("#want-question-get-view");
+      var v = $view.val();
+      if (v == "") v = undefined;
+      envObj.getQuestionById(qi, p, v, function (returnData) {
         console.log(returnData);
         $questionId.val("");
         $page.val("");
+        $view.val("");
       });
     });
     $("#question-choices-add-row").on("click", function () {
@@ -238,13 +254,17 @@
       var $questionPage = $("#want-question-order");
       var page = $questionPage.val();
       if (page == "") page = undefined;
-      envObj.createQuestion(t, choices, ti, si, mc, jd, order, page, function (returnData) {
+      var $questionView = $("#want-question-view");
+      var view = $questionView.val();
+      if (view == "") view = undefined;
+      envObj.createQuestion(t, choices, ti, si, mc, jd, order, page, view, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
         $questionScenarioId.val("");
         $questionOrder.val("");
         $questionPage.val("");
+        $questionView.val("");
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -290,7 +310,10 @@
       var $questionPage = $("#want-question-order");
       var page = $questionPage.val();
       if (page == "") page = undefined;
-      envObj.updateQuestion(qi, t, choices, ti, si, order, page, function (returnData) {
+      var $questionView = $("#want-question-view");
+      var view = $questionView.val();
+      if (view == "") view = undefined;
+      envObj.updateQuestion(qi, t, choices, ti, si, order, page, view, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
@@ -298,6 +321,7 @@
         $questionId.val("");
         $questionOrder.val("");
         $questionPage.val("");
+        $questionView.val("");
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -671,7 +695,7 @@
           });
         }
       });
-    }, 4000);
+    }, 4800);
     // Delete all topics
     window.setTimeout(function () {
       envObj.getAllTopic(function (returnData) {
@@ -682,7 +706,7 @@
           });
         }
       });
-    }, 4800);
+    }, 5600);
     // Delete all moods
     window.setTimeout(function () {
       envObj.getAllMood(function (returnData) {
@@ -693,7 +717,7 @@
           });
         }
       });
-    }, 5600);
+    }, 6400);
   }
 
   /**
@@ -805,7 +829,7 @@
       return true;
     } else {
       var q = questions[0];
-      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], questionList.length, q["page"], function (questionData) {
+      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], questionList.length, q["page"], q["view"], function (questionData) {
         console.log("Question created", questionData);
         questionList.push(questionData["data"]);
         addQuestionInOrder(envObj, questions.slice(1), questionList, topicId, scenarioId, success, error);

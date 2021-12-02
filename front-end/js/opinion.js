@@ -105,13 +105,15 @@
 
   /**
    * Load the content of the page.
+   * If no questions are found for the desired view on that page, show the default view for that page (which is view=0).
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} scenarioId - the ID of the scenario.
-   * @param {number} [page] - page of the scenario questions that we want to load.
-   * @param {number} [mode] - the mode of the system configuration.
+   * @param {number} page - page of the scenario questions that we want to load.
+   * @param {number} view - view of the scenario questions that we want to load.
+   * @param {number} mode - the mode of the system configuration.
    */
-  function loadPageContent(envObj, scenarioId, page, mode) {
+  function loadPageContent(envObj, scenarioId, page, view, mode) {
     envObj.getScenarioById(scenarioId, function (data) {
       var scenario = data["data"];
       if ($.isEmptyObject(scenario)) {
@@ -121,14 +123,29 @@
         $("#scenario-description").html(scenario["description"]);
         var scenarioQuestions = scenario["questions"];
         periscope.util.sortArrayOfDictByKeyInPlace(scenarioQuestions, "order");
-        var $scenarioQuestions = $("#scenario-questions");
+        // Build a dictionary based on page and view
+        var questionDict = new DefaultDict(new DefaultDict(Array))
         for (var i = 0; i < scenarioQuestions.length; i++) {
-          var q = scenarioQuestions[i];
-          if (typeof page !== "undefined" && q["page"] != page) continue;
+          var sq = scenarioQuestions[i];
+          var p = sq["page"];
+          var v = sq["view"];
+          if (typeof p === "undefined" || typeof v === "undefined") continue;
+          questionDict[p][v].push(sq);
+        }
+        // Create HTML elements
+        var questions = questionDict[page][view];
+        var $scenarioQuestions = $("#scenario-questions");
+        if (view != 0 && questions.length == 0) {
+          // Use the default view if the desired view has no questions
+          // Default view is 0
+          questions = questionDict[page][0];
+        }
+        for (var j = 0; j < questions.length; j++) {
+          var q = questions[j]
           if (q["question_type"] == null) {
             var $q = createScenarioTextHTML(q["text"]);
           } else {
-            var $q = createScenarioQuestionHTML("sq" + i, q);
+            var $q = createScenarioQuestionHTML("sq-" + q["id"], q);
             $q.data("raw", q);
           }
           $scenarioQuestions.append($q);
@@ -159,11 +176,12 @@
     var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
     var topicId = "topic_id" in queryParas ? queryParas["topic_id"] : undefined;
     var page = "page" in queryParas ? parseInt(queryParas["page"]) : 0;
+    var view = "view" in queryParas ? parseInt(queryParas["view"]) : 0;
     var mode = "mode" in queryParas ? parseInt(queryParas["mode"]) : 0;
     if (typeof scenarioId !== "undefined" && topicId !== "undefined") {
       envObj.checkUserConsent(topicId, function () {
         // The user has provided consent
-        loadPageContent(envObj, scenarioId, page, mode);
+        loadPageContent(envObj, scenarioId, page, view, mode);
       });
     } else {
       envObj.showErrorPage();
