@@ -14,6 +14,27 @@
    */
 
   /**
+   * The object for the "Choice" database table.
+   * @typedef {Object} Choice
+   * @property {string} text - text of the choice.
+   * @property {number} value - value of the choice.
+   */
+
+  /**
+   * The object for the "Question" database table.
+   * @typedef {Object} Question
+   * @param {number} id - ID of the question.
+   * @param {string} text - text of the question.
+   * @param {number} page - page of the question.
+   * @param {number} view - view of the question.
+   * @param {number} order - order of the question.
+   * @param {number} topic_id - topic ID of the question.
+   * @param {number} scenario_id - scenario ID of the question.
+   * @param {sting|null} question_type - type of the question.
+   * @param {Choice[]} choices - choices of the question.
+   */
+
+  /**
    * The JavaScript implementation of the python collections.defaultdict data type
    * Below are usage examples:
    * var a = new DefaultDict(Array);
@@ -1436,6 +1457,133 @@
         periscope.util.fitDialogToScreen($topicQuestionDialog);
         if (typeof create === "function") create($topicQuestionDialog);
       });
+    }
+
+    /**
+     * Create the html elements for a scenario question.
+     * @private
+     * @param {string} uniqueId - a unique ID for the scenario question.
+     * @param {Question} question - the scenario question object.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createScenarioQuestionHTML(uniqueId, question) {
+      var option = question["choices"];
+      var html = '';
+      html += '<div class="custom-survey add-top-margin add-bottom-margin" id="scenario-question-' + uniqueId + '">';
+      html += '  <span class="text">' + question["text"] + '</span>';
+      html += '  <div class="custom-radio-group-survey add-top-margin">';
+      for (var i = 0; i < option.length; i++) {
+        html += '  <div>';
+        html += '    <input type="radio" name="scenario-question-' + uniqueId + '-scale" value="' + option[i]["id"] + '" id="scenario-question-' + uniqueId + '-item-' + i + '">'
+        html += '    <label for="scenario-question-' + uniqueId + '-item-' + i + '">' + option[i]["text"] + '</label>'
+        html += '  </div>';
+      }
+      html += '  </div>';
+      if (option.length == 0) {
+        html += '  <textarea class="custom-textbox-survey add-top-margin" placeholder="Your opinion (max 500 characters)" maxlength="500"></textarea>';
+      }
+      html += '</div>';
+      return $(html);
+    }
+
+    /**
+     * Create the html elements for a scenario question as a text description.
+     * @private
+     * @param {string} text - the text description.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createScenarioTextHTML(text) {
+      var $html;
+      try {
+        $html = $(text);
+      } catch (error) {
+        $html = $('<p class="text">' + text + '</p>');
+      }
+      return $html;
+    };
+
+    /**
+     * Add questions to the HTML container.
+     * @public
+     * @param {Object} $container - the jQuery object of the question container.
+     * @param {Question[]} questions - a list of the scenario question object.
+     * @param {number} page - page of the scenario questions that we want to load.
+     * @param {number} view - view of the scenario questions that we want to load.
+     */
+    this.addScenarioQuestionsToContainer = function ($container, questions, page, view) {
+      // Build a dictionary based on page and view
+      var questionDict = new DefaultDict(new DefaultDict(Array))
+      for (var i = 0; i < questions.length; i++) {
+        var sq = questions[i];
+        var p = sq["page"];
+        var v = sq["view"];
+        if (typeof p === "undefined" || typeof v === "undefined") continue;
+        questionDict[p][v].push(sq);
+      }
+      // Filter questions by page and view
+      var filteredQuestions = questionDict[page][view];
+      if (view != 0 && filteredQuestions.length == 0) {
+        // Use the default view if the desired view has no questions
+        // Default view is 0
+        filteredQuestions = questionDict[page][0];
+      }
+      // Sort questions
+      periscope.util.sortArrayOfDictByKeyInPlace(filteredQuestions, "order");
+      // Create HTML elements
+      for (var j = 0; j < filteredQuestions.length; j++) {
+        var q = filteredQuestions[j]
+        if (q["question_type"] == null) {
+          var $q = createScenarioTextHTML(q["text"]);
+        } else {
+          var $q = createScenarioQuestionHTML("sq-" + q["id"], q);
+          $q.data("raw", q);
+        }
+        $container.append($q);
+      }
+    };
+
+    /**
+     * Submit the scenario answers to the back-end.
+     * @public
+     * @param {Object} $container - the jQuery object of the container that have scenario questions.
+     * @param {function} [success] - callback function when the operation is successful.
+     * @param {function} [error] - callback function when the operation is failing.
+     */
+    this.submitScenarioAnswer = function ($container, success, error) {
+      var answers = [];
+      var areAllQuestionsAnswered = true;
+      $container.find(".custom-survey").each(function () {
+        var $this = $(this);
+        var $allChoices = $this.find("input[type='radio'], input[type='checkbox']");
+        var $checkedChoices = $this.find("input[type='radio']:checked, input[type='checkbox']:checked");
+        var answer = {
+          "questionId": $this.data("raw")["id"],
+          "text": $this.find(".custom-textbox-survey").val()
+        };
+        if ($allChoices.length > 0) {
+          // This condition means that this is a single or multiple choice question
+          if ($checkedChoices.length > 0) {
+            // This condition means that user provides the answer
+            answer["choiceIdList"] = $checkedChoices.map(function () {
+              return parseInt($(this).val());
+            }).get();
+            answers.push(answer);
+          } else {
+            // This condition means that there are no answers to this question
+            areAllQuestionsAnswered = false;
+          }
+        } else {
+          // This condition means that this is a free text question
+          answers.push(answer);
+        }
+      });
+      if (areAllQuestionsAnswered) {
+        createAnswersInOrder(answers, [], success, error);
+      } else {
+        var errorMessage = "(Would you please select an answer for all questions that have choices?)";
+        console.error(errorMessage);
+        if (typeof error === "function") error();
+      }
     }
 
     /**

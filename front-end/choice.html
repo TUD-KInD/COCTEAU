@@ -34,13 +34,9 @@
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row">
+          <!-- The questions will be loaded by using the back-end API -->
+          <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
           <div class="flex-item flex-column">
-            <!-- The scenario title will be loaded by using the back-end API -->
-            <h2 id="scenario-title"></h2>
-            <p class="text">
-              <!-- The scenario description will be loaded by using the back-end API -->
-              <span id="scenario-description"></span>
-            </p>
             <hr>
             <p class="text highlight-text" id="prompt-text">
               Browse the visions created by people to express thoughts about the scenario!
@@ -60,6 +56,12 @@
         </div>
       </div>
     </div>
+  </div>
+  <div id="dialog-topic-question" title="Consent" data-role="none" style="display: none;">
+    <div id="topic-questions"></div>
+    <p class="add-top-margin">
+      <span class="custom-text-danger" id="submit-topic-question-error-message" style="display: none;"></span>
+    </p>
   </div>
 </body>
 

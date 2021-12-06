@@ -174,6 +174,29 @@
   }
 
   /**
+   * Load the content of the page.
+   * If no questions are found for the desired view on that page, show the default view for that page (which is view=0).
+   * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   * @param {number} scenarioId - the ID of the scenario.
+   * @param {number} page - page of the scenario questions that we want to load.
+   * @param {number} view - view of the scenario questions that we want to load.
+   * @param {number} mode - the mode of the system configuration.
+   */
+  function loadPageContent(envObj, scenarioId, page, view, mode) {
+    envObj.getScenarioById(scenarioId, function (data) {
+      var scenario = data["data"];
+      if ($.isEmptyObject(scenario)) {
+        envObj.showErrorPage();
+      } else {
+        initPagination(envObj, scenarioId);
+        addScrollEndEvent(envObj);
+        envObj.showPage();
+      }
+    });
+  }
+
+  /**
    * Initialize the user interface.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
@@ -181,18 +204,14 @@
   function initUI(envObj) {
     var queryParas = periscope.util.parseVars(window.location.search);
     var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
-    if (typeof scenarioId !== "undefined") {
-      envObj.getScenarioById(scenarioId, function (data) {
-        var scenario = data["data"];
-        if ($.isEmptyObject(scenario)) {
-          envObj.showErrorPage();
-        } else {
-          $("#scenario-title").text(scenario["title"]);
-          $("#scenario-description").html(scenario["description"]);
-          initPagination(envObj, scenarioId);
-          addScrollEndEvent(envObj);
-          envObj.showPage();
-        }
+    var topicId = "topic_id" in queryParas ? queryParas["topic_id"] : undefined;
+    var page = "page" in queryParas ? parseInt(queryParas["page"]) : 0;
+    var view = "view" in queryParas ? parseInt(queryParas["view"]) : 0;
+    var mode = "mode" in queryParas ? parseInt(queryParas["mode"]) : 0;
+    if (typeof scenarioId !== "undefined" && topicId !== "undefined") {
+      envObj.checkUserConsent(topicId, function () {
+        // The user has provided consent
+        loadPageContent(envObj, scenarioId, page, view, mode);
       });
     } else {
       envObj.showErrorPage();

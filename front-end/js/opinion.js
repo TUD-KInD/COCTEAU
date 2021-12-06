@@ -2,108 +2,6 @@
   "use strict";
 
   /**
-   * The object for the "Choice" database table.
-   * @typedef {Object} Choice
-   * @property {string} text - text of the choice.
-   * @property {number} value - value of the choice.
-   */
-
-  /**
-   * The object for the "Question" database table.
-   * @typedef {Object} Question
-   * @param {string} text - text of the question.
-   * @param {Choice[]} choices - choices of the question.
-   */
-
-  /**
-   * Create the html elements for a scenario question.
-   * @private
-   * @param {string} uniqueId - a unique ID for the scenario question.
-   * @param {Question} question - the scenario question object.
-   * @returns {Object} - a jQuery DOM object.
-   */
-  function createScenarioQuestionHTML(uniqueId, question) {
-    var option = question["choices"];
-    var html = '';
-    html += '<div class="custom-survey add-top-margin add-bottom-margin" id="scenario-question-' + uniqueId + '">';
-    html += '  <span class="text">' + question["text"] + '</span>';
-    html += '  <div class="custom-radio-group-survey add-top-margin">';
-    for (var i = 0; i < option.length; i++) {
-      html += '  <div>';
-      html += '    <input type="radio" name="scenario-question-' + uniqueId + '-scale" value="' + option[i]["id"] + '" id="scenario-question-' + uniqueId + '-item-' + i + '">'
-      html += '    <label for="scenario-question-' + uniqueId + '-item-' + i + '">' + option[i]["text"] + '</label>'
-      html += '  </div>';
-    }
-    html += '  </div>';
-    if (option.length == 0) {
-      html += '  <textarea class="custom-textbox-survey add-top-margin" placeholder="Your opinion (max 500 characters)" maxlength="500"></textarea>';
-    }
-    html += '</div>';
-    return $(html);
-  }
-
-  /**
-   * Create the html elements for a scenario question as a text description.
-   * @public
-   * @param {string} text - the text description.
-   * @returns {Object} - a jQuery DOM object.
-   */
-  function createScenarioTextHTML(text) {
-    var $html;
-    try {
-      $html = $(text);
-    } catch (error) {
-      $html = $('<p class="text">' + text + '</p>');
-    }
-    return $html;
-  };
-
-  /**
-   * Submit the scenario answers to the back-end.
-   * @private
-   * @param {Object} envObj - environment object (in environment.js).
-   * @param {function} [success] - callback function when the operation is successful.
-   * @param {function} [error] - callback function when the operation is failing.
-   */
-  function submitScenarioAnswer(envObj, success, error) {
-    var answers = [];
-    var areAllQuestionsAnswered = true;
-    $(".custom-survey").each(function () {
-      var $this = $(this);
-      var $allChoices = $this.find("input[type='radio'], input[type='checkbox']");
-      var $checkedChoices = $this.find("input[type='radio']:checked, input[type='checkbox']:checked");
-      var answer = {
-        "questionId": $this.data("raw")["id"],
-        "text": $this.find(".custom-textbox-survey").val()
-      };
-      if ($allChoices.length > 0) {
-        // This condition means that this is a single or multiple choice question
-        if ($checkedChoices.length > 0) {
-          // This condition means that user provides the answer
-          answer["choiceIdList"] = $checkedChoices.map(function () {
-            return parseInt($(this).val());
-          }).get();
-          answers.push(answer);
-        } else {
-          // This condition means that there are no answers to this question
-          areAllQuestionsAnswered = false;
-        }
-      } else {
-        // This condition means that this is a free text question
-        answers.push(answer);
-      }
-    });
-    if (areAllQuestionsAnswered) {
-      envObj.createAnswersInOrder(answers, [], success, error);
-    } else {
-      var errorMessage = "(Would you please select an answer for all questions that have choices?)";
-      console.error(errorMessage);
-      $("#submit-survey-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
-      if (typeof error === "function") error();
-    }
-  }
-
-  /**
    * Load the content of the page.
    * If no questions are found for the desired view on that page, show the default view for that page (which is view=0).
    * @private
@@ -119,39 +17,10 @@
       if ($.isEmptyObject(scenario)) {
         envObj.showErrorPage();
       } else {
-        $("#scenario-title").text(scenario["title"]);
-        $("#scenario-description").html(scenario["description"]);
-        var scenarioQuestions = scenario["questions"];
-        periscope.util.sortArrayOfDictByKeyInPlace(scenarioQuestions, "order");
-        // Build a dictionary based on page and view
-        var questionDict = new DefaultDict(new DefaultDict(Array))
-        for (var i = 0; i < scenarioQuestions.length; i++) {
-          var sq = scenarioQuestions[i];
-          var p = sq["page"];
-          var v = sq["view"];
-          if (typeof p === "undefined" || typeof v === "undefined") continue;
-          questionDict[p][v].push(sq);
-        }
-        // Create HTML elements
-        var questions = questionDict[page][view];
-        var $scenarioQuestions = $("#scenario-questions");
-        if (view != 0 && questions.length == 0) {
-          // Use the default view if the desired view has no questions
-          // Default view is 0
-          questions = questionDict[page][0];
-        }
-        for (var j = 0; j < questions.length; j++) {
-          var q = questions[j]
-          if (q["question_type"] == null) {
-            var $q = createScenarioTextHTML(q["text"]);
-          } else {
-            var $q = createScenarioQuestionHTML("sq-" + q["id"], q);
-            $q.data("raw", q);
-          }
-          $scenarioQuestions.append($q);
-        }
+        var $questionContainer = $("#scenario-questions");
+        envObj.addScenarioQuestionsToContainer($questionContainer, scenario["questions"], page, view);
         $("#next-button").on("click", function () {
-          submitScenarioAnswer(envObj, function () {
+          envObj.submitScenarioAnswer($questionContainer, function () {
             if (mode == 0) {
               // Mode 0 means the deployment setting
               window.location.replace("vision.html" + window.location.search);
@@ -169,6 +38,8 @@
                 window.location.replace("opinion.html" + queryString);
               }
             }
+          }, function () {
+            $("#submit-survey-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
           });
         });
         envObj.showPage();
