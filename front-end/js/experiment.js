@@ -27,7 +27,7 @@
       var mode = d["mode"]; // deployment or experiment mode
       var view = d["view"]; // view of the questions to show (e.g., different character background stories)
       var config = d["config"]; // system configuration
-      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode + "&view=" + view + "&config=" + config;
+      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode + "&view=" + view + "&config=" + config + "&page=0";
       window.location.href = "opinion.html" + queryString;
     });
   }
@@ -50,7 +50,7 @@
             // Only show mode 1 for the experiment page
             // Mode 1 means the experiment setting
             var numberOfViews = 5;
-            var numberOfConfigs = 2;
+            var numberOfConfigs = 3;
             for (var i = 0; i < numberOfViews; i++) {
               for (var j = 0; j < numberOfConfigs; j++) {
                 var $t = createScenarioHTML(d["title"] + " (view " + i + ", config " + j + ")", "img/" + d["image"]);

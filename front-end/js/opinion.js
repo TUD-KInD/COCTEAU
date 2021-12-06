@@ -157,7 +157,17 @@
               window.location.replace("vision.html" + window.location.search);
             } else {
               // Other modes mean the experiment settings
-              window.location.replace("choice.html" + window.location.search);
+              var queryString = window.location.search;
+              if (queryString.indexOf("page=" + page) !== -1) {
+                // Increase the page number
+                queryString = queryString.replace("page=" + page, "page=" + (page + 1));
+              }
+              if (page == 1) {
+                // The second page needs to be the choice revision page
+                window.location.replace("choice.html" + queryString);
+              } else {
+                window.location.replace("opinion.html" + queryString);
+              }
             }
           });
         });

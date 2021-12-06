@@ -33,7 +33,7 @@ h3 {
 }
 
 .content-table {
-  padding-top: 10px !important;
+  padding-top: 15px !important;
 }
 
 .text {
@@ -228,10 +228,10 @@ h3 {
 .custom-survey .custom-radio-group-survey input[type="radio"]+label,
 .custom-survey .custom-radio-group-survey input[type="checkbox"]+label {
   position: relative;
-  padding: 7px 13px 7px 48px;
+  padding: 13px 13px 13px 48px;
   cursor: pointer;
   font-size: 16px;
-  line-height: 36px;
+  line-height: 30px;
   display: grid;
   color: black;
   border: 0;
@@ -291,7 +291,7 @@ h3 {
   content: '';
   position: absolute;
   left: 14px;
-  top: 14px;
+  top: 18px;
   width: 20px;
   height: 20px;
   border: 1px solid #aaa;
@@ -313,7 +313,7 @@ h3 {
   height: 14px;
   background: #005cbf;
   position: absolute;
-  top: 18px;
+  top: 22px;
   left: 18px;
   -webkit-transition: all 0.1s ease;
   transition: all 0.1s ease;

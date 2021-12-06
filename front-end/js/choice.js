@@ -1,181 +1,174 @@
 (function () {
   "use strict";
 
-  /**
-   * Set the limit of the number of checkbox selections.
-   * @private
-   * @param {Object} $container - jQuery object of the checkbox container.
-   * @param {number} limit - limit of the number of checkbox selections.
-   */
-  function setCheckboxNumberLimit($container, limit) {
-    $container.find("input[type='checkbox']").on("change", function () {
-      if ($container.find("input[type='checkbox']:checked").length > limit) {
-        this.checked = false;
-      }
-    });
-  }
+  var wantToReportScrollBottom = true;
+  var previousScroll = 0;
 
   /**
-   * Load the moods.
-   * @private
-   * @param {Object} envObj - environment object (in environment.js).
-   * @param {number} limit - limit of the number of checkbox selections.
+   * The object for the "Media" database table.
+   * @typedef {Object} Media
+   * @property {number} id - ID of the media.
+   * @property {string} description - description of the media.
+   * @property {string} unsplash_creator_name - the creator name of the unsplash photo.
+   * @property {string} unsplash_creator_url - the creator URL of the unsplash photo.
+   * @property {string} unsplash_image_id - the ID of the unsplash photo.
+   * @property {string} url - URL of the media (the unsplash photo URL).
+   * @property {number} vision_id - ID of the vision.
    */
-  function loadMood(envObj, limit) {
-    envObj.getAllMood(function (data) {
-      var moods = data["data"];
-      var $moodOptionContainer = $("#mood-option-container");
-      for (var i = 0; i < moods.length; i++) {
-        var m = moods[i];
-        $moodOptionContainer.append(createMoodHTML(m["id"], m["name"], "img/" + m["image"]));
-      }
-      setCheckboxNumberLimit($("#express-emotion .custom-radio-group-survey"), limit);
-    });
-  }
 
   /**
-   * Create the html elements for a mood.
-   * @private
-   * @param {number} moodId - the ID of the mood.
-   * @param {string} name - the name of the mood.
-   * @param {string} imageUrl - the source URL of an image for the mood.
-   * @returns {Object} - a jQuery DOM object.
+   * The object for the "Vision" database table.
+   * @typedef {Object} Vision
+   * @property {number} id - ID of the vision.
+   * @property {Media[]} medias - medias of the vision.
+   * @property {number} scenario_id - scenario ID of the vision.
    */
-  function createMoodHTML(moodId, name, imageUrl) {
-    var radioId = "express-emotion-item-" + moodId;
-    var html = '<div><input type="checkbox" name="express-emotion-scale" value="' + moodId + '" id="' + radioId + '"><label for="' + radioId + '">' + name + '<img src="' + imageUrl + '" /></label></div>';
-    return $(html);
-  }
 
   /**
-   * Load the game.
+   * Load and display visions.
    * @private
-   * @param {Object} envObj - environment object (in environment.js).
-   * @param {number} limit - limit of the number of checkbox selections.
-   * @param {number} scenarioId - the ID of the scenario.
+   * @param {Vision[]} visions - a list of vision objects to load.
    */
-  function loadGame(envObj, limit, scenarioId) {
-    envObj.createRandomGame(scenarioId, function (data) {
-      if (typeof data === "undefined") {
-        // This means no games are available for play
-        $("#no-game-message").show();
-      } else {
-        // This means the server returns a game object
-        $("#game-ui").show();
-        var game = data["data"];
-        var gameVisionMedia = game["vision"]["medias"];
-        for (var i = 0; i < gameVisionMedia.length; i++) {
-          var g = gameVisionMedia[i];
-          if (g["media_type"] == "IMAGE") {
-            $("#vision-image").attr("src", g["url"]);
-            $("#vision-caption").text(g["description"]);
-            $("#vision-credit").html('Credit: <a href="' + g["unsplash_creator_url"] + '" target="_blank">' + g["unsplash_creator_name"] + '</a>');
-          }
-        }
-        $("#show-game-result").show();
-        $("#show-result-button").on("click", function () {
-          loadAndShowGameResult(envObj, limit);
-        });
-        $("#game").data("raw", game);
-      }
-    });
-  }
-
-  /**
-   * Load the result of the game and show it.
-   * @private
-   * @param {Object} envObj - environment object (in environment.js).
-   * @param {number} limit - limit of the number of checkbox selections.
-   */
-  function loadAndShowGameResult(envObj, limit, success, error) {
-    var gameData = $("#game").data("raw");
-    if (typeof gameData === "undefined") {
-      console.error("Game is not loaded correctly.");
-      if (typeof error === "function") error();
-    } else {
-      var moods = $("#mood-option-container").find("input[type='checkbox']:checked").map(function () {
-        return parseInt($(this).val());
-      }).get();
-      var feedback = $("#game-feedback").val();
-      if (feedback == "") feedback = undefined;
-      if (moods.length != limit) {
-        var errorMessage = "(Would you please guess TWO options about the mood of the meme?)";
-        console.error(errorMessage);
-        $("#submit-game-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
-        if (typeof error === "function") error();
-      } else {
-        envObj.updateGame(gameData["id"], moods, feedback, function (data) {
-          var valuesOfCorrectAnswers = [data["data"]["vision"]["mood_id"].toString()];
-          showQuizResult($("#express-emotion"), valuesOfCorrectAnswers);
-          $("#play-game").show();
-          $("#show-game-result").hide();
-          $("#provide-feedback").addClass("answer-mode");
-          $("#game-feedback").attr("placeholder", "").attr("disabled", "disabled");
-          if (typeof success === "function") success(data);
-        }, error);
-      }
+  function loadVision(visions) {
+    var $browse = $("#browse").empty();
+    for (var i = 0; i < visions.length; i++) {
+      var v = visions[i];
+      var media = v["medias"][0];
+      var imageSrc = media["url"];
+      var caption = media["description"];
+      var credit = 'Credit: <a href="' + media["unsplash_creator_url"] + '" target="_blank">' + media["unsplash_creator_name"] + '</a>';
+      var $t = createVisionHTML(caption, imageSrc, credit);
+      $t.attr("id", "vision-id-" + v["id"]);
+      $browse.append($t);
     }
   }
 
   /**
-   * Show the result of the survery quiz.
+   * Create the html elements for a vision.
    * @private
-   * @param {Object} $quizContainer - the jQuery object of the quiz container.
-   * @param {string[]} valuesOfCorrectAnswers - the values (in the <input> tags) of the correct answers.
+   * @param {string} caption - the caption of the vision.
+   * @param {string} imageSrc - the source URL of an image for the vision.
+   * @param {string} credit - the credit of the photo.
+   * @returns {Object} - a jQuery DOM object.
    */
-  function showQuizResult($quizContainer, valuesOfCorrectAnswers) {
-    // Disable the UI
-    $quizContainer.find("input").attr("disabled", "disabled");
-    // Set the css of the UI
-    $quizContainer.addClass("answer-mode");
-    // Highlight the correct answers and wrong choices
-    $quizContainer.find("input").each(function () {
-      var $this = $(this);
-      var $label = $this.siblings("label");
-      if (valuesOfCorrectAnswers.indexOf($this.val()) !== -1) {
-        // Correct answer
-        $this.addClass("highlight");
-        var img_html = $label.find("img")[0].outerHTML;
-        $label.html($label.text() + "&nbsp;(&#10003;)" + img_html);
-      } else {
-        if (this.checked) {
-          // Wrong answer but selected
-          var img_html = $label.find("img")[0].outerHTML;
-          $label.html($label.text() + "&nbsp;(&#10007;)" + img_html);
-        }
-      }
+  function createVisionHTML(caption, imageSrc, credit) {
+    // This is a hack for Firefox, since Firefox does not respect the CSS "break-inside" and "page-break-inside"
+    // We have to set the CSS display to "inline-flex" to prevent Firefox from breaking the figure in the middle
+    // But, setting display to inline-flex will cause another problem in Chrome, where the columns will not be balanced
+    // So we want Chrome to use "display: flex", and we want Firefox to use "display: inline-flex"
+    var html = '<figure style="display: none;">';
+    if (periscope.util.isFirefox()) {
+      html = '<figure style="display: inline-flex">';
+    }
+    var figcaptionElement = '<figcaption>' + caption + '</figcaption>';
+    if (typeof caption === "undefined" || caption == "") {
+      figcaptionElement = "";
+    }
+    html += '<img src="' + imageSrc + '"><div>' + credit + '</div>' + figcaptionElement + '</figure>';
+    var $html = $(html);
+    $html.find("img").one("load", function () {
+      // Only show the figure when the image is loaded
+      $(this).parent().show();
     });
-    // Scroll to the quiz element
-    periscope.util.scrollTop($quizContainer, 30);
+    return $html;
   }
 
   /**
-   * Load the content of the page.
+   * Initialize the pagination UI.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
-   * @param {number} scenarioId - the ID of the scenario.
+   * @param {number} scenarioId - the scenario ID of the visions.
    */
-  function loadPageContent(envObj, scenarioId) {
-    envObj.getScenarioById(scenarioId, function (data) {
-      var limit = 2;
-      var scenario = data["data"];
-      if ($.isEmptyObject(scenario)) {
-        envObj.showErrorPage();
-      } else {
-        $("#scenario-title").text(scenario["title"]);
-        $("#scenario-description").html(scenario["description"]);
-        loadMood(envObj, limit);
-        loadGame(envObj, limit, scenarioId);
-        $("#vision-button").on("click", function () {
-          window.location.replace("vision.html" + window.location.search);
-        });
-        $("#game-button").on("click", function () {
-          window.location.replace("game.html" + window.location.search);
-        });
-        $("#browse-button").on("click", function () {
-          window.location.replace("browse.html" + window.location.search);
-        });
-        envObj.showPage();
+  function initPagination(envObj, scenarioId) {
+    var $pageNav = $("#page-navigator");
+    var $pageControl = $("#page-control");
+    var $pageBack = $("#page-back");
+    var $pageNext = $("#page-next");
+    $pageNav.pagination({
+      dataSource: envObj.getApiRootUrl() + "/vision/?scenario_id=" + scenarioId,
+      locator: "data",
+      totalNumberLocator: function (response) {
+        if (typeof response === "undefined") {
+          return 0;
+        } else {
+          return parseInt(response["total"]);
+        }
+      },
+      formatAjaxError: function () {
+        console.error("Error during pagination.");
+      },
+      ajax: {
+        type: "GET"
+      },
+      className: "paginationjs-custom",
+      pageSize: 20,
+      showPageNumbers: false,
+      showNavigator: true,
+      showGoInput: true,
+      showGoButton: true,
+      showPrevious: false,
+      showNext: false,
+      callback: function (data, pagination) {
+        if (typeof data !== "undefined" && data.length > 0) {
+          $(window).scrollTop(0);
+          loadVision(data);
+          wantToReportScrollBottom = true;
+          previousScroll = 0;
+        } else {
+          console.error("No data during pagination.");
+          $("#page-control").hide();
+          $("#prompt-text").text("Currently, there are no visions created by people. Please come back later.");
+        }
+        // Handle pagination UI
+        var totalPage = $pageNav.pagination("getTotalPage");
+        if (typeof totalPage !== "undefined" && !isNaN(totalPage) && totalPage != 1) {
+          if ($pageControl.hasClass("force-hidden")) {
+            $pageControl.removeClass("force-hidden");
+          }
+          var pageNumber = pagination["pageNumber"];
+          if (pageNumber == 1) {
+            $pageBack.prop("disabled", true);
+          } else {
+            $pageBack.prop("disabled", false);
+          }
+          if (pageNumber == totalPage) {
+            $pageNext.prop("disabled", true);
+          } else {
+            $pageNext.prop("disabled", false);
+          }
+        } else {
+          if (!$pageControl.hasClass("force-hidden")) {
+            $pageControl.addClass("force-hidden");
+          }
+        }
+      }
+    });
+    $pageBack.on("click", function () {
+      $pageNav.pagination("previous");
+    });
+    $pageNext.on("click", function () {
+      $pageNav.pagination("next");
+    });
+  }
+
+  /**
+   * Add the event to detect if the user scrolls the page to the end.
+   * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   */
+  function addScrollEndEvent(envObj) {
+    var $window = $(window);
+    $window.on("scroll", function () {
+      if (wantToReportScrollBottom && $window.scrollTop() + $window.height() == $(document).height()) {
+        var currentScroll = $window.scrollTop();
+        if (currentScroll > previousScroll) {
+          envObj.sendTrackerEvent("scroll", {
+            "value": 100
+          });
+          // Send a GA event with vision items
+          wantToReportScrollBottom = false;
+        }
+        previousScroll = currentScroll;
       }
     });
   }
@@ -188,11 +181,18 @@
   function initUI(envObj) {
     var queryParas = periscope.util.parseVars(window.location.search);
     var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
-    var topicId = "topic_id" in queryParas ? queryParas["topic_id"] : undefined;
     if (typeof scenarioId !== "undefined") {
-      envObj.checkUserConsent(topicId, function () {
-        // The user has provided consent
-        loadPageContent(envObj, scenarioId);
+      envObj.getScenarioById(scenarioId, function (data) {
+        var scenario = data["data"];
+        if ($.isEmptyObject(scenario)) {
+          envObj.showErrorPage();
+        } else {
+          $("#scenario-title").text(scenario["title"]);
+          $("#scenario-description").html(scenario["description"]);
+          initPagination(envObj, scenarioId);
+          addScrollEndEvent(envObj);
+          envObj.showPage();
+        }
       });
     } else {
       envObj.showErrorPage();
