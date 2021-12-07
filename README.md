@@ -18,7 +18,7 @@ For development, please check this [video labeling tool](https://github.com/CMU-
 - [Setup development environment](#setup-dev-env)
 - [Setup initial data](#setup-init-data)
 - [Manipulate database](#manipulate-database)
-- [Code infrastructure](#code-infrastructure)
+- [Update and test code infrastructure](#code-infrastructure)
 - [Deploy back-end using uwsgi (administrator only)](#deploy-back-end-using-uwsgi)
 - [Setup back-end and front-end on apache (administrator only)](#setup-apache)
 - [Setup SSL certificates for https (administrator only)](#setup-https)
@@ -353,7 +353,7 @@ If you want to downgrade the database to a previous state, run the following.
 sh db.sh downgrade
 ```
 
-# <a name="code-infrastructure"></a>Code infrastructure
+# <a name="code-infrastructure"></a>Update and test code infrastructure
 For the back-end, the test cases are stored in the "back-end/www/tests" folder and written using [Flask-Testing](https://pythonhosted.org/Flask-Testing/). Remember to write test cases for the model operations in the "back-end/www/models/model_operations" folder. Below shows how to run test cases:
 ```sh
 cd periscope-public-engagement-tool/back-end/www/tests
@@ -361,6 +361,10 @@ cd periscope-public-engagement-tool/back-end/www/tests
 python run_all_tests.py
 # Run one test
 python answer_tests.py
+```
+Remember that every time the back-end script is pulled from the repository, you need to restart the service:
+```sh
+sudo systemctl restart ppet
 ```
 
 # <a name="deploy-back-end-using-uwsgi"></a>Deploy back-end using uwsgi (administrator only)
