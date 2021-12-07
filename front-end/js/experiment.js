@@ -16,10 +16,9 @@
   /**
    * Add the clicking event to a scenario image (for the experiment mode).
    * @private
-   * @param {Object} envObj - environment object (in environment.js).
    * @param {Object} $element - the jQuery object of the scenario image.
    */
-  function addExperimentScenarioClickEvent(envObj, $element) {
+  function addExperimentScenarioClickEvent($element) {
     $element.on("click", function () {
       var d = $(this).data("raw");
       var scenarioId = d["id"];
@@ -58,7 +57,7 @@
                 dCopy["view"] = i;
                 dCopy["config"] = j;
                 $t.data("raw", dCopy);
-                addExperimentScenarioClickEvent(envObj, $t);
+                addExperimentScenarioClickEvent($t);
                 $scenario.append($t);
               }
             }

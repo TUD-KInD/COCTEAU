@@ -167,13 +167,13 @@
         loadMood(envObj, limit);
         loadGame(envObj, limit, scenarioId);
         $("#vision-button").on("click", function () {
-          window.location.replace("vision.html" + window.location.search);
+          window.location.href = "vision.html" + window.location.search;
         });
         $("#game-button").on("click", function () {
-          window.location.replace("game.html" + window.location.search);
+          window.location.href = "game.html" + window.location.search;
         });
         $("#browse-button").on("click", function () {
-          window.location.replace("browse.html" + window.location.search);
+          window.location.href = "browse.html" + window.location.search;
         });
         envObj.showPage();
       }

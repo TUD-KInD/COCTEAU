@@ -35,6 +35,26 @@
    */
 
   /**
+   * The object for the "Media" database table.
+   * @typedef {Object} Media
+   * @property {number} id - ID of the media.
+   * @property {string} description - description of the media.
+   * @property {string} unsplash_creator_name - the creator name of the unsplash photo.
+   * @property {string} unsplash_creator_url - the creator URL of the unsplash photo.
+   * @property {string} unsplash_image_id - the ID of the unsplash photo.
+   * @property {string} url - URL of the media (the unsplash photo URL).
+   * @property {number} vision_id - ID of the vision.
+   */
+
+  /**
+   * The object for the "Vision" database table.
+   * @typedef {Object} Vision
+   * @property {number} id - ID of the vision.
+   * @property {Media[]} medias - medias of the vision.
+   * @property {number} scenario_id - scenario ID of the vision.
+   */
+
+  /**
    * The JavaScript implementation of the python collections.defaultdict data type
    * Below are usage examples:
    * var a = new DefaultDict(Array);
@@ -1500,7 +1520,7 @@
         $html = $('<p class="text">' + text + '</p>');
       }
       return $html;
-    };
+    }
 
     /**
      * Add questions to the HTML container.
@@ -1545,7 +1565,7 @@
     /**
      * Submit the scenario answers to the back-end.
      * @public
-     * @param {Object} $container - the jQuery object of the container that have scenario questions.
+     * @param {Object} $container - the jQuery object of the container for putting scenario questions.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
@@ -1582,9 +1602,59 @@
       } else {
         var errorMessage = "(Would you please select an answer for all questions that have choices?)";
         console.error(errorMessage);
-        if (typeof error === "function") error();
+        if (typeof error === "function") error(errorMessage);
       }
+    };
+
+    /**
+     * Create the html elements for a vision.
+     * @private
+     * @param {string} caption - the caption of the vision.
+     * @param {string} imageSrc - the source URL of an image for the vision.
+     * @param {string} credit - the credit of the photo.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createVisionHTML(caption, imageSrc, credit) {
+      // This is a hack for Firefox, since Firefox does not respect the CSS "break-inside" and "page-break-inside"
+      // We have to set the CSS display to "inline-flex" to prevent Firefox from breaking the figure in the middle
+      // But, setting display to inline-flex will cause another problem in Chrome, where the columns will not be balanced
+      // So we want Chrome to use "display: flex", and we want Firefox to use "display: inline-flex"
+      var html = '<figure style="display: none;">';
+      if (periscope.util.isFirefox()) {
+        html = '<figure style="display: inline-flex">';
+      }
+      var figcaptionElement = '<figcaption>' + caption + '</figcaption>';
+      if (typeof caption === "undefined" || caption == "") {
+        figcaptionElement = "";
+      }
+      html += '<img src="' + imageSrc + '"><div>' + credit + '</div>' + figcaptionElement + '</figure>';
+      var $html = $(html);
+      $html.find("img").one("load", function () {
+        // Only show the figure when the image is loaded
+        $(this).parent().show();
+      });
+      return $html;
     }
+
+    /**
+     * Load and display visions.
+     * @public
+     * @param {Object} $container - the jQuery object of the container for putting visions.
+     * @param {Vision[]} visions - a list of vision objects to load.
+     */
+    this.addVisionsToContainer = function ($container, visions) {
+      $container.empty();
+      for (var i = 0; i < visions.length; i++) {
+        var v = visions[i];
+        var media = v["medias"][0];
+        var imageSrc = media["url"];
+        var caption = media["description"];
+        var credit = 'Credit: <a href="' + media["unsplash_creator_url"] + '" target="_blank">' + media["unsplash_creator_name"] + '</a>';
+        var $t = createVisionHTML(caption, imageSrc, credit);
+        $t.attr("id", "vision-id-" + v["id"]);
+        $container.append($t);
+      }
+    };
 
     /**
      * Check if the user provided consent.

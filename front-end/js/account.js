@@ -175,7 +175,7 @@
       gapi.signin2.render("google-sign-in-button", {
         scope: "profile",
         prompt: "select_account",
-        width: 231,
+        width: 225,
         height: 46,
         longtitle: true,
         theme: "dark",

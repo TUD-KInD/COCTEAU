@@ -362,65 +362,6 @@
   }],
   "page": 0
 }, {
-  "text": "<h2>Post-Survey</h2>",
-  "is_just_description": true,
-  "page": 3
-}, {
-  "text": "This is the final part of this study.",
-  "is_just_description": true,
-  "page": 3
-}, {
-  "text": "<h3>Part 1: please answer the following questions about this study:</h3>",
-  "is_just_description": true,
-  "page": 3
-}, {
-  "text": "The tool has been easy to use.",
-  "choices": [{
-    "text": "Strongly Agree",
-    "value": 1
-  }, {
-    "text": "Agree",
-    "value": 2
-  }, {
-    "text": "Neutral",
-    "value": 3
-  }, {
-    "text": "Disagree",
-    "value": 4
-  }, {
-    "text": "Strongly Disagree",
-    "value": 5
-  }],
-  "page": 3
-}, {
-  "text": "What is the role that you were assigned in this study?",
-  "choices": [{
-    "text": "Bachelor Student",
-    "value": 1
-  }, {
-    "text": "Master Student",
-    "value": 2
-  }, {
-    "text": "PhD Student",
-    "value": 3
-  }, {
-    "text": "Researcher",
-    "value": 4
-  }, {
-    "text": "Professor",
-    "value": 5
-  }, {
-    "text": "Other",
-    "value": 6
-  }],
-  "page": 3
-}, {
-  "text": "What do you think about the role that you were assigned in this study?",
-  "page": 3
-}, {
-  "text": "Do you have any comments for this study (e.g., problems in using the digital tool)?",
-  "page": 3
-}, {
   "text": "<h2>Back to Campus from COVID</h2>",
   "is_just_description": true,
   "page": 1
@@ -604,4 +545,89 @@
   "text": "Please describe why you choose the opinion.",
   "page": 1,
   "view": 4
+}, {
+  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's motivations?",
+  "choices": [{
+    "text": "The university should allow people to work on campus without restrictions.",
+    "value": 1
+  }, {
+    "text": "The university should have a tighter rule for people who work on campus, such as wearing masks.",
+    "value": 2
+  }, {
+    "text": "The university should not allow people to work on campus, and all activities should be online.",
+    "value": 3
+  }],
+  "page": 2
+}, {
+  "text": "Please describe why you keep or change the opinion.",
+  "page": 2
+}, {
+  "text": "<h2>Post-Survey</h2>",
+  "is_just_description": true,
+  "page": 3
+}, {
+  "text": "This is the final part of this study.",
+  "is_just_description": true,
+  "page": 3
+}, {
+  "text": "<h3>Part 1: please answer the following questions about this study:</h3>",
+  "is_just_description": true,
+  "page": 3
+}, {
+  "text": "The tool has been easy to use.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "page": 3
+}, {
+  "text": "Have you used similar digital tools before?",
+  "choices": [{
+    "text": "Yes",
+    "value": 1
+  }, {
+    "text": "No",
+    "value": 2
+  }],
+  "page": 3
+}, {
+  "text": "What is the role that you were assigned in this study?",
+  "choices": [{
+    "text": "Bachelor Student",
+    "value": 1
+  }, {
+    "text": "Master Student",
+    "value": 2
+  }, {
+    "text": "PhD Student",
+    "value": 3
+  }, {
+    "text": "Researcher",
+    "value": 4
+  }, {
+    "text": "Professor",
+    "value": 5
+  }, {
+    "text": "Other",
+    "value": 6
+  }],
+  "page": 3
+}, {
+  "text": "What do you think about the role that you were assigned in this study?",
+  "page": 3
+}, {
+  "text": "Do you have any comments for this study (e.g., problems in using the digital tool)?",
+  "page": 3
 }]

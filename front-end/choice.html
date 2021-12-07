@@ -34,12 +34,12 @@
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row">
-          <!-- The questions will be loaded by using the back-end API -->
-          <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
           <div class="flex-item flex-column">
-            <hr>
-            <p class="text highlight-text" id="prompt-text">
-              Browse the visions created by people to express thoughts about the scenario!
+            <!-- The scenario title will be loaded by using the back-end API -->
+            <h2 id="scenario-title"></h2>
+            <p class="text" id="prompt-text">
+              Below are the motivations created by other people to support their opinions.
+              <span class="highlight-text">Please select the motivations that inspire you (by clicking or tapping).</span>
             </p>
           </div>
           <!-- The visions will be loaded by using the back-end API -->
@@ -51,6 +51,21 @@
               <button id="page-back" class="custom-button-flat large stretch-on-mobile" disabled><img src="img/back.png"><span>Back</span></button>
               <button id="page-next" class="custom-button-flat large stretch-on-mobile"><img src="img/next.png"><span>Next</span></button>
               <div id="page-navigator" class="stretch-on-mobile"></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-row">
+          <!-- The questions will be loaded by using the back-end API -->
+          <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
+          <div class="flex-item flex-column">
+            <p class="text">
+              Thank you! Please click the button below to submit opinions.
+              <span class="custom-text-danger" id="submit-survey-error-message" style="display: none;"></span>
+            </p>
+            <div class="control-group">
+              <a id="next-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
+                <img src="img/next.png"><span>Submit opinions</span>
+              </a>
             </div>
           </div>
         </div>

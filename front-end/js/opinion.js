@@ -23,7 +23,7 @@
           envObj.submitScenarioAnswer($questionContainer, function () {
             if (mode == 0) {
               // Mode 0 means the deployment setting
-              window.location.replace("vision.html" + window.location.search);
+              window.location.href = "vision.html" + window.location.search;
             } else {
               // Other modes mean the experiment settings
               var queryString = window.location.search;
@@ -31,14 +31,18 @@
                 // Increase the page number
                 queryString = queryString.replace("page=" + page, "page=" + (page + 1));
               }
+              // Below is hard-coded for our experiments and is not intended for general use.
               if (page == 1) {
                 // The second page needs to be the choice revision page
-                window.location.replace("choice.html" + queryString);
+                window.location.href = "choice.html" + queryString;
+              } else if (page == 3) {
+                // We only have 3 pages, so the next page should be the "thank you" page.
+                window.location.href = "thanks.html" + queryString;
               } else {
-                window.location.replace("opinion.html" + queryString);
+                window.location.href = "opinion.html" + queryString;
               }
             }
-          }, function () {
+          }, function (errorMessage) {
             $("#submit-survey-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
           });
         });
