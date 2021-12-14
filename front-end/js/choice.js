@@ -6,8 +6,9 @@
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} scenarioId - the scenario ID of the visions.
+   * @param {boolean} noImage - a flag to indicate that we want no images for the visions.
    */
-  function initPagination(envObj, scenarioId) {
+  function initPagination(envObj, scenarioId, noImage) {
     var $pageNav = $("#page-navigator");
     var $pageControl = $("#page-control");
     var $pageBack = $("#page-back");
@@ -39,7 +40,11 @@
       callback: function (data, pagination) {
         if (typeof data !== "undefined" && data.length > 0) {
           $(window).scrollTop(0);
-          envObj.addVisionsToContainer($("#browse"), data);
+          if (typeof noImage !== "undefined" && noImage) {
+            envObj.addTextVisionsToContainer($("#browse"), data);
+          } else {
+            envObj.addVisionsToContainer($("#browse"), data);
+          }
         } else {
           console.error("No data during pagination.");
           $("#page-control").hide();
@@ -97,9 +102,12 @@
         if (mode == 3) {
           // Mode 3 in the experiment do not show motivations
           $("#prompt-text-mode-3").show();
+        } else if (mode == 2) {
+          $("#prompt-text").show();
+          initPagination(envObj, scenarioId, true);
         } else {
           $("#prompt-text").show();
-          initPagination(envObj, scenarioId);
+          initPagination(envObj, scenarioId, false);
         }
         var $questionContainer = $("#scenario-questions");
         envObj.addScenarioQuestionsToContainer($questionContainer, scenario["questions"], page, view, mode);

@@ -1693,6 +1693,48 @@
     };
 
     /**
+     * Create the html elements for a vision with only text.
+     * @private
+     * @param {string} caption - the caption of the vision.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createTextVisionHTML(caption) {
+      // This is a hack for Firefox, since Firefox does not respect the CSS "break-inside" and "page-break-inside"
+      // We have to set the CSS display to "inline-flex" to prevent Firefox from breaking the figure in the middle
+      // But, setting display to inline-flex will cause another problem in Chrome, where the columns will not be balanced
+      // So we want Chrome to use "display: flex", and we want Firefox to use "display: inline-flex"
+      var html = '<figure>';
+      if (periscope.util.isFirefox()) {
+        html = '<figure style="display: inline-flex">';
+      }
+      var figcaptionElement = '<figcaption class="text-only">' + caption + '</figcaption>';
+      if (typeof caption === "undefined" || caption == "") {
+        figcaptionElement = "";
+      }
+      html += figcaptionElement + '</figure>';
+      var $html = $(html);
+      return $html;
+    }
+
+    /**
+     * Load and display visions with only text.
+     * @public
+     * @param {Object} $container - the jQuery object of the container for putting visions.
+     * @param {Vision[]} visions - a list of vision objects to load.
+     */
+    this.addTextVisionsToContainer = function ($container, visions) {
+      $container.empty();
+      for (var i = 0; i < visions.length; i++) {
+        var v = visions[i];
+        var media = v["medias"][0];
+        var caption = media["description"];
+        var $t = createTextVisionHTML(caption);
+        $t.attr("id", "vision-id-" + v["id"]);
+        $container.append($t);
+      }
+    };
+
+    /**
      * Check if the user provided consent.
      * @public
      * @param {number} topicId - the ID of the topic.

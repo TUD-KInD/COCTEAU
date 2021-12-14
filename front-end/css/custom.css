@@ -701,6 +701,13 @@ hr {
   text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
 }
 
+.masonry figure>figcaption.text-only {
+  position: initial;
+  background-color: rgb(80, 80, 80);
+  padding: 20px 20px;
+  text-shadow: none;
+}
+
 .masonry figure>div {
   width: calc(100% - 20px);
   display: block;
