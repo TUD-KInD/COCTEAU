@@ -18,7 +18,7 @@
         envObj.showErrorPage();
       } else {
         var $questionContainer = $("#scenario-questions");
-        envObj.addScenarioQuestionsToContainer($questionContainer, scenario["questions"], page, view);
+        envObj.addScenarioQuestionsToContainer($questionContainer, scenario["questions"], page, view, mode);
         $("#next-button").on("click", function () {
           envObj.submitScenarioAnswer($questionContainer, function () {
             if (mode == 0) {
@@ -36,8 +36,8 @@
                 // The second page needs to be the choice revision page
                 window.location.href = "choice.html" + queryString;
               } else if (page == 3) {
-                // We only have 3 pages, so the next page should be the "thank you" page.
-                window.location.href = "thanks.html" + queryString;
+                // We have only 3 pages
+                window.location.href = "thanks.html";
               } else {
                 window.location.href = "opinion.html" + queryString;
               }

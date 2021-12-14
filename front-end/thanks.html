@@ -9,7 +9,6 @@
   <link href="css/frame.css" media="screen" rel="stylesheet" type="text/css" />
   <link href="css/controls.css" media="screen" rel="stylesheet" type="text/css" />
   <link href="css/widgets.css" media="screen" rel="stylesheet" type="text/css" />
-  <link href="css/account.css" media="screen" rel="stylesheet" type="text/css" />
   <link href="css/custom.css" media="screen" rel="stylesheet" type="text/css" />
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
@@ -19,41 +18,28 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script src="js/menu.js"></script>
   <script src="js/widgets.js"></script>
-  <script src="js/util.js"></script>
-  <script src="js/account.js"></script>
-  <script src="js/tracker.js"></script>
-  <script src="js/environment.js"></script>
-  <script src="js/opinion.js"></script>
 </head>
 
 <body>
   <div class="menu-container"></div>
-  <div class="content-container" id="main-content-container" style="display: none;">
+  <div class="content-container">
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row">
-          <!-- The questions will be loaded by using the back-end API -->
-          <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
           <div class="flex-item flex-column">
+            <h2 id="scenario-title">Thank you!</h2>
             <p class="text">
-              Thank you! Please click the button below to submit the answers.
-              <span class="custom-text-danger" id="submit-survey-error-message" style="display: none;"></span>
+              Please click the button below to complete the task.
             </p>
             <div class="control-group">
               <a id="next-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
-                <img src="img/next.png"><span>Submit</span>
+                <img src="img/next.png"><span>Complete the task</span>
               </a>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div id="dialog-topic-question" title="Consent" data-role="none" style="display: none;">
-    <div id="topic-questions"></div>
-    <p class="add-top-margin">
-      <span class="custom-text-danger" id="submit-topic-question-error-message" style="display: none;"></span>
-    </p>
   </div>
 </body>
 

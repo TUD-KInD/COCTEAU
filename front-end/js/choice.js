@@ -94,9 +94,15 @@
         envObj.showErrorPage();
       } else {
         $("#scenario-title").text(scenario["title"]);
-        initPagination(envObj, scenarioId);
+        if (mode == 3) {
+          // Mode 3 in the experiment do not show motivations
+          $("#prompt-text-mode-3").show();
+        } else {
+          $("#prompt-text").show();
+          initPagination(envObj, scenarioId);
+        }
         var $questionContainer = $("#scenario-questions");
-        envObj.addScenarioQuestionsToContainer($questionContainer, scenario["questions"], page, view);
+        envObj.addScenarioQuestionsToContainer($questionContainer, scenario["questions"], page, view, mode);
         $("#next-button").on("click", function () {
           envObj.submitScenarioAnswer($questionContainer, function () {
             var queryString = window.location.search;

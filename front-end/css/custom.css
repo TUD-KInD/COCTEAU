@@ -856,7 +856,7 @@ hr {
   transition: 0.1s;
 }
 
-.content-container.error {
+.content-container.full-image {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -868,7 +868,7 @@ hr {
   align-items: center;
 }
 
-.content-container.error img {
+.content-container.full-image img {
   position: absolute;
   object-fit: cover;
   width: 100%;
@@ -876,7 +876,7 @@ hr {
   z-index: 1;
 }
 
-.content-container.error .server-error-text {
+.content-container.full-image .full-image-text {
   z-index: 2;
   font-size: 28pt;
   text-align: center;

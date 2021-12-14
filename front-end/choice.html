@@ -37,9 +37,12 @@
           <div class="flex-item flex-column">
             <!-- The scenario title will be loaded by using the back-end API -->
             <h2 id="scenario-title"></h2>
-            <p class="text" id="prompt-text">
+            <p class="text" id="prompt-text" style="display: none;">
               Below are the motivations created by other people to support their opinions.
               <span class="highlight-text">Please select the motivations that inspire you (by clicking or tapping).</span>
+            </p>
+            <p class="text" id="prompt-text-mode-3" style="display: none;">
+              The options in the following question show the number of votes from other people.
             </p>
           </div>
           <!-- The visions will be loaded by using the back-end API -->
@@ -59,12 +62,12 @@
           <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
           <div class="flex-item flex-column">
             <p class="text">
-              Thank you! Please click the button below to submit opinions.
+              Thank you! Please click the button below to submit answers.
               <span class="custom-text-danger" id="submit-survey-error-message" style="display: none;"></span>
             </p>
             <div class="control-group">
               <a id="next-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
-                <img src="img/next.png"><span>Submit opinions</span>
+                <img src="img/next.png"><span>Submit</span>
               </a>
             </div>
           </div>

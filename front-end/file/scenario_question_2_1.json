@@ -546,21 +546,179 @@
   "page": 1,
   "view": 4
 }, {
-  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's motivations?",
+  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes and motivations?",
   "choices": [{
-    "text": "The university should allow people to work on campus without restrictions.",
+    "text": "The university should allow people to work on campus without restrictions. <span class='highlight-text'>(11 people vote for this option)</span>",
     "value": 1
   }, {
-    "text": "The university should have a tighter rule for people who work on campus, such as wearing masks.",
+    "text": "The university should have a tighter rule for people who work on campus, such as wearing masks. <span class='highlight-text'>(20 people vote for this option)</span>",
     "value": 2
   }, {
-    "text": "The university should not allow people to work on campus, and all activities should be online.",
+    "text": "The university should not allow people to work on campus, and all activities should be online. <span class='highlight-text'>(8 people vote for this option)</span>",
     "value": 3
   }],
-  "page": 2
+  "page": 2,
+  "mode": 1
 }, {
   "text": "Please describe why you keep or change the opinion.",
-  "page": 2
+  "page": 2,
+  "mode": 1
+}, {
+  "text": "Seeing other people’s *votes* plays an important role in my decision.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "page": 2,
+  "mode": 1
+}, {
+  "text": "Seeing other people’s *motivations* plays an important role in my decision.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "page": 2,
+  "mode": 1
+}, {
+  "text": "Seeing *images* in other people's motivations plays an important role in my decision.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "page": 2,
+  "mode": 1
+}, {
+  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes and motivations?",
+  "choices": [{
+    "text": "The university should allow people to work on campus without restrictions. <span class='highlight-text'>(11 people vote for this option)</span>",
+    "value": 1
+  }, {
+    "text": "The university should have a tighter rule for people who work on campus, such as wearing masks. <span class='highlight-text'>(20 people vote for this option)</span>",
+    "value": 2
+  }, {
+    "text": "The university should not allow people to work on campus, and all activities should be online. <span class='highlight-text'>(8 people vote for this option)</span>",
+    "value": 3
+  }],
+  "page": 2,
+  "mode": 2
+}, {
+  "text": "Please describe why you keep or change the opinion.",
+  "page": 2,
+  "mode": 2
+}, {
+  "text": "Seeing other people’s *votes* plays an important role in my decision.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "page": 2,
+  "mode": 2
+}, {
+  "text": "Seeing other people’s *motivations* plays an important role in my decision.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "page": 2,
+  "mode": 2
+}, {
+  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes?",
+  "choices": [{
+    "text": "The university should allow people to work on campus without restrictions. <span class='highlight-text'>(11 people vote for this option)</span>",
+    "value": 1
+  }, {
+    "text": "The university should have a tighter rule for people who work on campus, such as wearing masks. <span class='highlight-text'>(20 people vote for this option)</span>",
+    "value": 2
+  }, {
+    "text": "The university should not allow people to work on campus, and all activities should be online. <span class='highlight-text'>(8 people vote for this option)</span>",
+    "value": 3
+  }],
+  "page": 2,
+  "mode": 3
+}, {
+  "text": "Please describe why you keep or change the opinion.",
+  "page": 2,
+  "mode": 3
+}, {
+  "text": "Seeing other people’s *votes* plays an important role in my decision.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "page": 2,
+  "mode": 3
 }, {
   "text": "<h2>Post-Survey</h2>",
   "is_just_description": true,
@@ -570,7 +728,7 @@
   "is_just_description": true,
   "page": 3
 }, {
-  "text": "<h3>Part 1: please answer the following questions about this study:</h3>",
+  "text": "<h3>Please answer the following questions about this study:</h3>",
   "is_just_description": true,
   "page": 3
 }, {
@@ -623,9 +781,6 @@
     "text": "Other",
     "value": 6
   }],
-  "page": 3
-}, {
-  "text": "What do you think about the role that you were assigned in this study?",
   "page": 3
 }, {
   "text": "Do you have any comments for this study (e.g., problems in using the digital tool)?",

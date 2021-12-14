@@ -23,10 +23,9 @@
       var d = $(this).data("raw");
       var scenarioId = d["id"];
       var topicId = d["topic_id"];
-      var mode = d["mode"]; // deployment or experiment mode
+      var mode = d["mode"]; // system configuration
       var view = d["view"]; // view of the questions to show (e.g., different character background stories)
-      var config = d["config"]; // system configuration
-      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode + "&view=" + view + "&config=" + config + "&page=0";
+      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode + "&view=" + view + "&page=0";
       window.location.href = "opinion.html" + queryString;
     });
   }
@@ -52,10 +51,12 @@
             var numberOfConfigs = 3;
             for (var i = 0; i < numberOfViews; i++) {
               for (var j = 0; j < numberOfConfigs; j++) {
-                var $t = createScenarioHTML(d["title"] + " (view " + i + ", config " + j + ")", "img/" + d["image"]);
+                var view = i;
+                var mode = j + 1; // override the mode parameter  with different system configurations
+                var $t = createScenarioHTML(d["title"] + " (view " + view + ", mode " + mode + ")", "img/" + d["image"]);
                 var dCopy = JSON.parse(JSON.stringify(d));
-                dCopy["view"] = i;
-                dCopy["config"] = j;
+                dCopy["view"] = view
+                dCopy["mode"] = mode;
                 $t.data("raw", dCopy);
                 addExperimentScenarioClickEvent($t);
                 $scenario.append($t);

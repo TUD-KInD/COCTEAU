@@ -6,8 +6,8 @@ from models.model import QuestionTypeEnum
 from models.model import Choice
 
 
-def create_description(text,
-        topic_id=None, scenario_id=None, order=None, page=None, view=None):
+def create_description(text, topic_id=None, scenario_id=None,
+        order=None, page=None, view=None, mode=None):
     """
     Create only the description for either a topic *or* a scenario.
 
@@ -29,6 +29,9 @@ def create_description(text,
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
 
     Returns
     -------
@@ -54,9 +57,10 @@ def create_description(text,
     order = 0 if order is None else order
     page = 0 if page is None else page
     view = 0 if view is None else view
+    mode = 0 if mode is None else mode
 
     question = Question(text=text, topic_id=topic_id, scenario_id=scenario_id,
-            order=order, page=page, view=view)
+            order=order, page=page, view=view, mode=mode)
 
     db.session.add(question)
     db.session.commit()
@@ -64,8 +68,8 @@ def create_description(text,
     return question
 
 
-def create_free_text_question(text,
-        topic_id=None, scenario_id=None, order=None, page=None, view=None):
+def create_free_text_question(text, topic_id=None, scenario_id=None,
+        order=None, page=None, view=None, mode=None):
     """
     Create a free text question for either a topic *or* a scenario.
 
@@ -88,6 +92,9 @@ def create_free_text_question(text,
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
 
     Returns
     -------
@@ -113,9 +120,11 @@ def create_free_text_question(text,
     order = 0 if order is None else order
     page = 0 if page is None else page
     view = 0 if view is None else view
+    mode = 0 if mode is None else mode
 
     question = Question(text=text, question_type=QuestionTypeEnum.FREE_TEXT,
-            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page, view=view)
+            topic_id=topic_id, scenario_id=scenario_id,
+            order=order, page=page, view=view, mode=mode)
 
     db.session.add(question)
     db.session.commit()
@@ -123,8 +132,8 @@ def create_free_text_question(text,
     return question
 
 
-def create_single_choice_question(text, choices,
-        topic_id=None, scenario_id=None, order=None, page=None, view=None):
+def create_single_choice_question(text, choices, topic_id=None, scenario_id=None,
+        order=None, page=None, view=None, mode=None):
     """
     Create a single choice question for either a topic *or* a scenario.
 
@@ -147,6 +156,9 @@ def create_single_choice_question(text, choices,
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
 
     Returns
     -------
@@ -174,12 +186,14 @@ def create_single_choice_question(text, choices,
     order = 0 if order is None else order
     page = 0 if page is None else page
     view = 0 if view is None else view
+    mode = 0 if mode is None else mode
 
     if type(choices) != list:
         raise Exception("Choices need to be a list.")
 
     question = Question(text=text, question_type=QuestionTypeEnum.SINGLE_CHOICE,
-            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page, view=view)
+            topic_id=topic_id, scenario_id=scenario_id,
+            order=order, page=page, view=view, mode=mode)
 
     for c in choices:
         question.choices.append(create_choice(c))
@@ -190,8 +204,8 @@ def create_single_choice_question(text, choices,
     return question
 
 
-def create_multi_choice_question(text, choices,
-        topic_id=None, scenario_id=None, order=None, page=None, view=None):
+def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None,
+        order=None, page=None, view=None, mode=None):
     """
     Create a single choice question for either a topic *or* a scenario.
 
@@ -214,6 +228,9 @@ def create_multi_choice_question(text, choices,
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
 
     Returns
     -------
@@ -239,12 +256,14 @@ def create_multi_choice_question(text, choices,
     order = 0 if order is None else order
     page = 0 if page is None else page
     view = 0 if view is None else view
+    mode = 0 if mode is None else mode
 
     if type(choices) != list:
         raise Exception("Choices need to be a list.")
 
     question = Question(text=text, question_type=QuestionTypeEnum.MULTI_CHOICE,
-            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page, view=view)
+            topic_id=topic_id, scenario_id=scenario_id,
+            order=order, page=page, view=view, mode=mode)
 
     for c in choices:
         question.choices.append(create_choice(c))
@@ -255,7 +274,7 @@ def create_multi_choice_question(text, choices,
     return question
 
 
-def get_question_by_id(question_id, page=None, view=None):
+def get_question_by_id(question_id, page=None, view=None, mode=None):
     """
     Get the details of a queston by its ID.
 
@@ -269,6 +288,9 @@ def get_question_by_id(question_id, page=None, view=None):
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
 
     Returns
     -------
@@ -278,19 +300,32 @@ def get_question_by_id(question_id, page=None, view=None):
     # TODO: need to improve the testing case
     if page is None:
         if view is None:
-            question = Question.query.filter_by(id=question_id).first()
+            if mode is None:
+                question = Question.query.filter_by(id=question_id).first()
+            else:
+                question = Question.query.filter_by(id=question_id, mode=mode).first()
         else:
-            question = Question.query.filter_by(id=question_id, view=view).first()
+            if mode is None:
+                question = Question.query.filter_by(id=question_id, view=view).first()
+            else:
+                question = Question.query.filter_by(id=question_id, view=view, mode=mode).first()
     else:
         if view is None:
-            question = Question.query.filter_by(id=question_id, page=page).first()
+            if mode is None:
+                question = Question.query.filter_by(id=question_id, page=page).first()
+            else:
+                question = Question.query.filter_by(id=question_id, page=page, mode=mode).first()
         else:
-            question = Question.query.filter_by(id=question_id, page=page, view=view).first()
+            if mode is None:
+                question = Question.query.filter_by(id=question_id, page=page, view=view).first()
+            else:
+                question = Question.query.filter_by(id=question_id,
+                        page=page, view=view, mode=mode).first()
 
     return question
 
 
-def get_questions_by_topic(topic_id, page=None, view=None):
+def get_questions_by_topic(topic_id, page=None, view=None, mode=None):
     """
     Get all the questions related to a topic.
 
@@ -304,6 +339,9 @@ def get_questions_by_topic(topic_id, page=None, view=None):
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
 
     Returns
     -------
@@ -313,19 +351,32 @@ def get_questions_by_topic(topic_id, page=None, view=None):
     # TODO: need to improve the testing case
     if page is None:
         if view is None:
-            questions = Question.query.filter_by(topic_id=topic_id).all()
+            if mode is None:
+                questions = Question.query.filter_by(topic_id=topic_id).all()
+            else:
+                questions = Question.query.filter_by(topic_id=topic_id, mode=mode).all()
         else:
-            questions = Question.query.filter_by(topic_id=topic_id, view=view).all()
+            if mode is None:
+                questions = Question.query.filter_by(topic_id=topic_id, view=view).all()
+            else:
+                questions = Question.query.filter_by(topic_id=topic_id, view=view, mode=mode).all()
     else:
         if view is None:
-            questions = Question.query.filter_by(topic_id=topic_id, page=page).all()
+            if mode is None:
+                questions = Question.query.filter_by(topic_id=topic_id, page=page).all()
+            else:
+                questions = Question.query.filter_by(topic_id=topic_id, page=page, mode=mode).all()
         else:
-            questions = Question.query.filter_by(topic_id=topic_id, page=page, view=view).all()
+            if mode is None:
+                questions = Question.query.filter_by(topic_id=topic_id, page=page, view=view).all()
+            else:
+                questions = Question.query.filter_by(topic_id=topic_id,
+                        page=page, view=view, mode=mode).all()
 
     return questions
 
 
-def get_questions_by_scenario(scenario_id, page=None, view=None):
+def get_questions_by_scenario(scenario_id, page=None, view=None, mode=None):
     """
     Get all the question related to a scenario.
 
@@ -339,6 +390,9 @@ def get_questions_by_scenario(scenario_id, page=None, view=None):
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
 
     Returns
     -------
@@ -348,19 +402,32 @@ def get_questions_by_scenario(scenario_id, page=None, view=None):
     # TODO: need to improve the testing case
     if page is None:
         if view is None:
-            questions = Question.query.filter_by(scenario_id=scenario_id).all()
+            if mode is None:
+                questions = Question.query.filter_by(scenario_id=scenario_id).all()
+            else:
+                questions = Question.query.filter_by(scenario_id=scenario_id, mode=mode).all()
         else:
-            questions = Question.query.filter_by(scenario_id=scenario_id, view=view).all()
+            if mode is None:
+                questions = Question.query.filter_by(scenario_id=scenario_id, view=view).all()
+            else:
+                questions = Question.query.filter_by(scenario_id=scenario_id, view=view, mode=mode).all()
     else:
         if view is None:
-            questions = Question.query.filter_by(scenario_id=scenario_id, page=page).all()
+            if mode is None:
+                questions = Question.query.filter_by(scenario_id=scenario_id, page=page).all()
+            else:
+                questions = Question.query.filter_by(scenario_id=scenario_id, page=page, mode=mode).all()
         else:
-            questions = Question.query.filter_by(scenario_id=scenario_id, page=page, view=view).all()
+            if mode is None:
+                questions = Question.query.filter_by(scenario_id=scenario_id, page=page, view=view).all()
+            else:
+                questions = Question.query.filter_by(scenario_id=scenario_id,
+                        page=page, view=view, mode=mode).all()
 
     return questions
 
 
-def get_all_questions(page=None, view=None):
+def get_all_questions(page=None, view=None, mode=None):
     """
     Get all questions.
 
@@ -374,6 +441,9 @@ def get_all_questions(page=None, view=None):
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
 
     Returns
     -------
@@ -383,20 +453,32 @@ def get_all_questions(page=None, view=None):
     # TODO: need a testing case
     if page is None:
         if view is None:
-            questions = Question.query.all()
+            if mode is None:
+                questions = Question.query.all()
+            else:
+                questions = Question.query.filter_by(mode=mode).all()
         else:
-            questions = Question.query.filter_by(view=view).all()
+            if mode is None:
+                questions = Question.query.filter_by(view=view).all()
+            else:
+                questions = Question.query.filter_by(view=view, mode=mode).all()
     else:
         if view is None:
-            questions = Question.query.filter_by(page=page).all()
+            if mode is None:
+                questions = Question.query.filter_by(page=page).all()
+            else:
+                questions = Question.query.filter_by(page=page, mode=mode).all()
         else:
-            questions = Question.query.filter_by(page=page, view=view).all()
+            if mode is None:
+                questions = Question.query.filter_by(page=page, view=view).all()
+            else:
+                questions = Question.query.filter_by(page=page, view=view, mode=mode).all()
 
     return questions
 
 
-def update_question(question_id,
-        text=None, choices=None, topic_id=None, scenario_id=None, order=None, page=None, view=None):
+def update_question(question_id, text=None, choices=None, topic_id=None, scenario_id=None,
+        order=None, page=None, view=None, mode=None):
     """
     Modify a question text or choices.
 
@@ -418,6 +500,9 @@ def update_question(question_id,
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
 
     Returns
     -------
@@ -460,6 +545,9 @@ def update_question(question_id,
 
     if view is not None:
         question.view = view
+
+    if mode is not None:
+        question.mode = mode
 
     if topic_id is not None:
         if scenario_id is not None:

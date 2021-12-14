@@ -147,6 +147,9 @@ class Question(db.Model):
     view : int
         The alternative views of the question.
         (for creating a question on a page with alternative views on the front-end side)
+    mode : int
+        The alternative modes of the question.
+        (for creating a question on a page based on system configurations on the front-end side)
     scenario_id : int
         ID of the Scenario the question belongs to.
         Either the scenario_id or topic_id must be set, not both.
@@ -164,6 +167,7 @@ class Question(db.Model):
     order = db.Column(db.Integer, nullable=False, default=0)
     page = db.Column(db.Integer, nullable=False, default=0)
     view = db.Column(db.Integer, nullable=False, default=0)
+    mode = db.Column(db.Integer, nullable=False, default=0)
     scenario_id = db.Column(db.Integer, db.ForeignKey("scenario.id"))
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"))
     choices = db.relationship("Choice", backref=db.backref("question", lazy=True), lazy=True)

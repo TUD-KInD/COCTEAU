@@ -33,7 +33,7 @@
    * @param {number} scenarioId - the scenario ID of the questions.
    */
   function loadAnswers(envObj, scenarioId) {
-    envObj.getQuestionByScenarioId(scenarioId, undefined, undefined, function (returnData) {
+    envObj.getQuestionByScenarioId(scenarioId, undefined, undefined, undefined, function (returnData) {
       var questions = returnData["data"];
       var filteredQuestions = [];
       for (var j = 0; j < questions.length; j++) {
