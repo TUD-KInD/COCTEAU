@@ -34,18 +34,10 @@
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row">
-          <div class="flex-item flex-column">
-            <!-- The scenario title will be loaded by using the back-end API -->
-            <h2 id="scenario-title"></h2>
-            <p class="text" id="prompt-text" style="display: none;">
-              Below are the motivations created by other people to support their opinions.
-              <span class="highlight-text">Please select the motivations that inspire you (by clicking or tapping).</span>
-            </p>
-            <p class="text" id="prompt-text-mode-3" style="display: none;">
-              The options in the following question show the number of votes from other people.
-            </p>
-          </div>
-          <!-- The visions will be loaded by using the back-end API -->
+          <!-- The questions will be loaded by using the back-end API -->
+          <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
+        </div>
+        <div class="flex-row">
           <div class="masonry add-top-margin-small add-bottom-margin-small" id="browse"></div>
         </div>
         <div class="flex-row">
@@ -58,8 +50,6 @@
           </div>
         </div>
         <div class="flex-row">
-          <!-- The questions will be loaded by using the back-end API -->
-          <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
           <div class="flex-item flex-column">
             <p class="text">
               Thank you! Please click the button below to submit answers.

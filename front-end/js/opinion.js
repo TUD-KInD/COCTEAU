@@ -31,12 +31,12 @@
                 // Increase the page number
                 queryString = queryString.replace("page=" + page, "page=" + (page + 1));
               }
-              // Below is hard-coded for our experiments and is not intended for general use.
-              if (page == 1) {
+              // IMPORTANT: below is hard-coded for our experiments and is not intended for general use.
+              if (page == 2) {
                 // The second page needs to be the choice revision page
                 window.location.href = "choice.html" + queryString;
-              } else if (page == 3) {
-                // We have only 3 pages
+              } else if (page == 5) {
+                // For the last page, we need to go to the thank you page
                 window.location.href = "thanks.html";
               } else {
                 window.location.href = "opinion.html" + queryString;

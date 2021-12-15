@@ -48,7 +48,6 @@
         } else {
           console.error("No data during pagination.");
           $("#page-control").hide();
-          $("#prompt-text").text("Currently, there are no visions created by people. Please come back later.");
         }
         // Handle pagination UI
         var totalPage = $pageNav.pagination("getTotalPage");
@@ -98,15 +97,11 @@
       if ($.isEmptyObject(scenario)) {
         envObj.showErrorPage();
       } else {
-        $("#scenario-title").text(scenario["title"]);
-        if (mode == 3) {
-          // Mode 3 in the experiment do not show motivations
-          $("#prompt-text-mode-3").show();
-        } else if (mode == 2) {
-          $("#prompt-text").show();
+        if (mode == 2) {
+          // Mode 2 has no image
           initPagination(envObj, scenarioId, true);
-        } else {
-          $("#prompt-text").show();
+        } else if (mode == 1) {
+          // Mode 1 has both image and text
           initPagination(envObj, scenarioId, false);
         }
         var $questionContainer = $("#scenario-questions");
