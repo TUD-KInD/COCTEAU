@@ -26,7 +26,7 @@
       var mode = d["mode"]; // system configuration
       var view = d["view"]; // view of the questions to show (e.g., different character background stories)
       var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode + "&view=" + view + "&page=0";
-      window.location.href = "opinion.html" + queryString;
+      window.location.href = "experiment-opinion.html" + queryString;
     });
   }
 

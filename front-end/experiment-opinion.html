@@ -17,59 +17,50 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-  <script src="js/menu.js"></script>
   <script src="js/widgets.js"></script>
   <script src="js/util.js"></script>
   <script src="js/account.js"></script>
   <script src="js/tracker.js"></script>
   <script src="js/environment.js"></script>
-  <script src="js/experiment.js"></script>
-  <style>
-    #menu-index {
-      color: rgb(255, 255, 255) !important;
-      opacity: 1 !important;
-      font-weight: 700 !important;
-    }
-  </style>
+  <script src="js/opinion.js"></script>
 </head>
 
 <body>
-  <div class="menu-container"></div>
+  <div class="menu-container">
+    <div class="menu">
+      <div class="menu-table flex-row-space-between">
+        <div class="logo flex-row-center">
+          <a href="javascript:void(0)" style="cursor: default;">COCTEAU.nl</a>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="content-container" id="main-content-container" style="display: none;">
     <div class="content">
       <div class="content-table flex-column">
-        <div class="flex-row-space-between">
-          <div class="flex-item flex-column">
-            <h2 class="add-top-margin">
-              Experiment!
-            </h2>
-          </div>
-          <div class="flex-item flex-column">
-            <div class="control-group">
-              <a id="sign-in-prompt" class="custom-button-flat large stretch-on-mobile pulse-primary"><img src="img/user.png"><span>Sign In</span></a>
-            </div>
-          </div>
-        </div>
         <div class="flex-row">
+          <!-- The questions will be loaded by using the back-end API -->
+          <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
           <div class="flex-item flex-column">
             <p class="text">
-              This is the page that shows the scenarios for the experiments.
+              Thank you! Please click the button below to submit the answers.
+              <span class="custom-text-danger" id="submit-survey-error-message" style="display: none;"></span>
             </p>
-          </div>
-        </div>
-        <!-- The scenarios will be loaded by using the back-end API -->
-        <div class="gallery add-top-margin-small add-bottom-margin-small" id="scenario"></div>
-        <div class="flex-row">
-          <div class="flex-item flex-item-stretch flex-column">
-            <p class="text text-small text-italic">
-              Credits: this tool is developed in <a href="https://www.tudelft.nl/en/ide/" target="_blank">TU Delft IDE</a> and is supported by the <a href="https://periscopeproject.eu/" target="_blank">PERISCOPE project</a>.
-              The design is adopted from the <a href="http://trigger-game.eu/" target="_blank">COCTEAU tool</a> in the <a href="https://trigger-project.eu/" target="_blank">Trigger project</a>.
-              Photos are obtained from <a href="https://unsplash.com/" target="_blank">Unsplash</a> and <a href="https://www.ams-institute.org/" target="_blank">AMS</a>.
-            </p>
+            <div class="control-group">
+              <a id="next-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
+                <img src="img/next.png"><span>Submit</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <div id="dialog-topic-question" title="Consent" data-role="none" style="display: none;">
+    <div id="topic-questions"></div>
+    <p class="add-top-margin">
+      <span class="custom-text-danger" id="submit-topic-question-error-message" style="display: none;"></span>
+    </p>
   </div>
 </body>
 

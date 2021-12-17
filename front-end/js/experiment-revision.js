@@ -113,7 +113,7 @@
               // Increase the page number
               queryString = queryString.replace("page=" + page, "page=" + (page + 1));
             }
-            window.location.href = "opinion.html" + queryString;
+            window.location.href = "experiment-opinion.html" + queryString;
           }, function (errorMessage) {
             $("#submit-survey-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
           });
