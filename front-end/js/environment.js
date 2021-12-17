@@ -1356,9 +1356,28 @@
           // This condition means that this is a single or multiple choice question
           if ($checkedChoices.length > 0 && $checkedChoices.val() != "none") {
             // This condition means that user provides the answer
+            // So we need to get the list of the choices
             answer["choiceIdList"] = $checkedChoices.map(function () {
               return parseInt($(this).val());
             }).get();
+            // Also we need to store some extra experiment information in the text
+            var queryParas = periscope.util.parseVars(window.location.search);
+            var scenarioId = queryParas["scenario_id"];
+            var topicId = queryParas["topic_id"];
+            var userPlatformId = queryParas["PROLIFIC_PID"];
+            var view = queryParas["view"];
+            var mode = queryParas["mode"];
+            if (typeof scenarioId !== "undefined" && typeof topicId !== "undefined" && typeof userPlatformId !== "undefined" && typeof view !== "undefined" && typeof mode !== "undefined") {
+              var info = {
+                "scenario_id": scenarioId,
+                "topic_id": topicId,
+                "user_platform_id": userPlatformId,
+                "view": view,
+                "mode": mode
+              };
+              answer["text"] = JSON.stringify(info);
+            }
+            // Add the answer to the answer list that we will submit
             answers.push(answer);
             // Only record the values of answers to YES/NO questions
             // The length should be 3 since there should be "Select", "Yes", and "No" options
