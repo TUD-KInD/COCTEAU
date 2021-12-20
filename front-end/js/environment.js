@@ -897,7 +897,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllAnswer = function (success, error) {
-      generalGet("/answer/", success, error);
+      var path = "/answer/";
+      if (typeof userToken !== "undefined") {
+        path += "?user_token=" + userToken;
+      }
+      generalGet(path, success, error);
     };
 
     /**
@@ -908,7 +912,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByScenarioId = function (scenarioId, success, error) {
-      generalGet("/answer/?scenario_id=" + scenarioId, success, error);
+      var path = "/answer/?scenario_id=" + scenarioId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      generalGet(path, success, error);
     };
 
     /**
@@ -919,7 +927,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByQuestionId = function (questionId, success, error) {
-      generalGet("/answer/?question_id=" + questionId, success, error);
+      var path = "/answer/?question_id=" + questionId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      generalGet(path, success, error);
     };
 
     /**
@@ -930,7 +942,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerOfCurrentUserByScenarioId = function (scenarioId, success, error) {
-      generalGet("/answer/?scenario_id=" + scenarioId + "&user_id=" + userData["user_id"], success, error);
+      var path = "/answer/?scenario_id=" + scenarioId + "&user_id=" + userData["user_id"];
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      generalGet(path, success, error);
     };
 
     /**
@@ -941,7 +957,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByTopicId = function (topicId, success, error) {
-      generalGet("/answer/?topic_id=" + topicId, success, error);
+      var path = "/answer/?topic_id=" + topicId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      generalGet(path, success, error);
     };
 
     /**
@@ -952,7 +972,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     var getAnswerOfCurrentUserByTopicId = function (topicId, success, error) {
-      generalGet("/answer/?topic_id=" + topicId + "&user_id=" + userData["user_id"], success, error);
+      var path = "/answer/?topic_id=" + topicId + "&user_id=" + userData["user_id"];
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      generalGet(path, success, error);
     };
     this.getAnswerOfCurrentUserByTopicId = getAnswerOfCurrentUserByTopicId;
 
@@ -964,7 +988,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByUserId = function (userId, success, error) {
-      generalGet("/answer/?user_id=" + userId, success, error);
+      var path = "/answer/?user_id=" + userId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      generalGet(path, success, error);
     };
 
     /**
@@ -974,7 +1002,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByCurrentUserId = function (success, error) {
-      generalGet("/answer/?user_id=" + userData["user_id"], success, error);
+      var path = "/answer/?user_id=" + userData["user_id"];
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      generalGet(path, success, error);
     };
 
     /**
@@ -985,7 +1017,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerById = function (answerId, success, error) {
-      generalGet("/answer/?answer_id=" + answerId, success, error);
+      var path = "/answer/?answer_id=" + answerId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      generalGet(path, success, error);
     };
 
     /**
@@ -1010,7 +1046,7 @@
         return true;
       } else {
         var a = answers[0];
-        createAnswer(a["questionId"], a["text"], a["choiceIdList"], function (data) {
+        createAnswer(a["questionId"], a["text"], a["choiceIdList"], a["secret"], function (data) {
           answerList.push(data["data"]);
           createAnswersInOrder(answers.slice(1), answerList, success, error);
         }, function () {
@@ -1027,10 +1063,11 @@
      * @param {number} questionId - ID of the question that we want to fill in the answer.
      * @param {string} [text] - text of the answer.
      * @param {number[]} [choiceIdList] - array of the IDs of the selected choice objects.
+     * @param {string} [secret] - a secret message related to the answer that only admin users can see.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    var createAnswer = function (questionId, text, choiceIdList, success, error) {
+    var createAnswer = function (questionId, text, choiceIdList, secret, success, error) {
       var data = {
         "question_id": questionId
       };
@@ -1039,6 +1076,9 @@
       }
       if (typeof choiceIdList !== "undefined") {
         data["choices"] = choiceIdList;
+      }
+      if (typeof secret !== "undefined") {
+        data["secret"] = secret;
       }
       generalPost("/answer/", data, success, error);
     };
@@ -1375,7 +1415,7 @@
                 "view": view,
                 "mode": mode
               };
-              answer["text"] = JSON.stringify(info);
+              answer["secret"] = JSON.stringify(info);
             }
             // Add the answer to the answer list that we will submit
             answers.push(answer);

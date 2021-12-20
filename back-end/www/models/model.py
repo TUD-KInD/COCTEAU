@@ -222,6 +222,8 @@ class Answer(db.Model):
         Unique identifier.
     text : str
         The text of the Answer, only available for FREE_TEXT questions.
+    secret : str
+        Any secret information related to the answer for admin users.
     created_at : datetime
         Timestamp of when the answer was submitted.
     user_id : int
@@ -237,6 +239,7 @@ class Answer(db.Model):
     created_at = db.Column(db.DateTime, server_default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     question_id = db.Column(db.Integer, db.ForeignKey("question.id"))
+    secret = db.Column(db.String, nullable=True)
     choices = db.relationship("Choice",
             secondary=answer_choice_table, lazy="subquery", back_populates="answers")
 

@@ -120,6 +120,16 @@ answer_schema = AnswerSchema()
 answers_schema = AnswerSchema(many=True)
 
 
+class AnswerAdminSchema(ma.Schema):
+    """The schema for the Answer table for admin users, used for jsonify."""
+    choices = ma.Nested(choices_schema)
+    class Meta:
+        model = Answer
+        fields = ("id", "text", "user_id", "question_id", "choices", "secret")
+answer_admin_schema = AnswerAdminSchema()
+answers_admin_schema = AnswerAdminSchema(many=True)
+
+
 class GuessSchema(ma.Schema):
     """The schema for the Guess table, used for jsonify."""
     class Meta:
