@@ -1577,8 +1577,44 @@
       html += '  <div class="custom-radio-group-survey add-top-margin">';
       for (var i = 0; i < option.length; i++) {
         html += '  <div>';
-        html += '    <input type="radio" name="scenario-question-' + uniqueId + '-scale" value="' + option[i]["id"] + '" id="scenario-question-' + uniqueId + '-item-' + i + '">'
-        html += '    <label for="scenario-question-' + uniqueId + '-item-' + i + '">' + option[i]["text"] + '</label>'
+        var inputId = 'scenario-question-' + uniqueId + '-item-' + i;
+        html += '    <input type="radio" name="scenario-question-' + uniqueId + '-scale" value="' + option[i]["id"] + '" id="' + inputId + '">'
+        var ti = option[i]["text"];
+        var isTextJson = false;
+        if (ti.indexOf("%7B") !== -1 && ti.indexOf("%7D") !== -1) {
+          // This means that it is likely to be an encoded JSON string
+          try {
+            ti = JSON.parse(decodeURIComponent(ti));
+            isTextJson = true;
+          } catch (err) {
+            console.error(err.message);
+            isTextJson = false;
+          }
+        }
+        if (isTextJson) {
+          if ("url" in ti) {
+            // Add a DOM item with image and text
+            var imageSrc = ti["url"];
+            var caption = ti["description"];
+            var credit = 'Credit: <a href="' + ti["unsplash_creator_url"] + '" target="_blank">' + ti["unsplash_creator_name"] + '</a>';
+            var figcaptionElement = '<figcaption>' + caption + '</figcaption>';
+            if (typeof caption === "undefined" || caption == "") {
+              figcaptionElement = "";
+            }
+            html += '<label for="' + inputId + '"><figure style="max-width: 350px;"><img src="' + imageSrc + '"><div>' + credit + '</div>' + figcaptionElement + '</figure></label>';
+          } else {
+            // Add a DOM item with only text
+            var caption = ti["description"];
+            var figcaptionElement = '<figcaption class="text-only">' + caption + '</figcaption>';
+            if (typeof caption === "undefined" || caption == "") {
+              figcaptionElement = "";
+            }
+            html += '<label for="' + inputId + '"><figure>' + figcaptionElement + '</figure></label>';
+          }
+        } else {
+          // Add the normal question item
+          html += '    <label class="break-long-url" for="' + inputId + '">' + ti + '</label>'
+        }
         html += '  </div>';
       }
       html += '  </div>';
@@ -1600,7 +1636,7 @@
       try {
         $html = $(text);
       } catch (error) {
-        $html = $('<p class="text">' + text + '</p>');
+        $html = $('<p class="text break-long-url">' + text + '</p>');
       }
       return $html;
     }

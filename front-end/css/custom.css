@@ -217,7 +217,7 @@ h3 {
   break-inside: avoid;
 }
 
-.custom-survey .custom-radio-group-survey img {
+.custom-survey .custom-radio-group-survey label>img {
   width: calc(100% - 5px);
   margin-top: 5px;
   margin-bottom: 10px;
@@ -243,6 +243,104 @@ h3 {
   -ms-user-select: none;
   user-select: none;
   width: 100%;
+}
+
+.custom-survey .custom-radio-group-survey input[type="radio"]+label>figure,
+.custom-survey .custom-radio-group-survey input[type="checkbox"]+label>figure {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  border: 0;
+  color: black;
+  text-decoration: none;
+  padding: 0;
+  margin: 0 auto;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
+  width: 100%;
+}
+
+.custom-survey .custom-radio-group-survey input[type="radio"]+label>figure>img,
+.custom-survey .custom-radio-group-survey input[type="radio"]+label>figure>video,
+.custom-survey .custom-radio-group-survey input[type="checkbox"]+label>figure>img,
+.custom-survey .custom-radio-group-survey input[type="checkbox"]+label>figure>video {
+  width: 100%;
+  background-image: url(../img/loading.gif);
+  background-repeat: no-repeat;
+  background-size: 30px 30px;
+  background-position: center;
+  min-height: 50px;
+  display: block;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.custom-survey .custom-radio-group-survey input[type="radio"]+label>figure>figcaption,
+.custom-survey .custom-radio-group-survey input[type="checkbox"]+label>figure>figcaption {
+  position: absolute;
+  bottom: max(min(2vw, 10px), 5px);
+  left: max(min(2vw, 10px), 5px);
+  right: max(min(2vw, 10px), 5px);
+  font-family: 'Oswald', Helvetica, Arial, sans-serif;
+  width: auto;
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-size: 25px;
+  font-size: max(min(4.5vw, 24px), 16px);
+  line-height: 1.3;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  background-color: transparent;
+  text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
+}
+
+.custom-survey .custom-radio-group-survey input[type="radio"]+label>figure>figcaption.text-only,
+.custom-survey .custom-radio-group-survey input[type="checkbox"]+label>figure>figcaption.text-only {
+  position: initial;
+  background-color: rgb(80, 80, 80);
+  padding: 20px 20px;
+  text-shadow: none;
+}
+
+.custom-survey .custom-radio-group-survey input[type="radio"]+label>figure>div,
+.custom-survey .custom-radio-group-survey input[type="checkbox"]+label>figure>div {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  line-height: 2;
+  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #000;
+  text-align: center;
+  padding: 0;
+  height: 30px;
+  margin: 0;
+}
+
+.custom-survey .custom-radio-group-survey input[type="radio"]+label>figure>div>a,
+.custom-survey .custom-radio-group-survey input[type="checkbox"]+label>figure>div>a {
+  cursor: alias;
+  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  text-decoration: underline;
 }
 
 .custom-survey .custom-radio-group-survey input[type="radio"]:not(:disabled):hover,
