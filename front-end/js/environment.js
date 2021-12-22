@@ -1571,11 +1571,31 @@
      */
     function createScenarioQuestionHTML(uniqueId, question) {
       var option = question["choices"];
+      // Check if it is a multiple choice question
       var isMulitpleChoice = question["question_type"] == "MULTI_CHOICE";
+      // Check if the choices are images
+      var firstText = option[0]["text"];
+      var isImageOnly = false;
+      if (firstText.indexOf("%7B") !== -1 && firstText.indexOf("%7D") !== -1) {
+        // This means that it is likely to be an encoded JSON string
+        // Which means it is going to be a meme image
+        try {
+          ti = JSON.parse(decodeURIComponent(firstText));
+          isImageOnly = true;
+        } catch (err) {
+          console.error(err.message);
+          isImageOnly = false;
+        }
+      }
+      // Construct the HTML
       var html = '';
       html += '<div class="custom-survey add-top-margin add-bottom-margin" id="scenario-question-' + uniqueId + '">';
       html += '  <span class="text">' + question["text"] + '</span>';
-      html += '  <div class="custom-radio-group-survey add-top-margin">';
+      if (isImageOnly) {
+        html += '  <div class="custom-radio-group-survey image-only add-top-margin">';
+      } else {
+        html += '  <div class="custom-radio-group-survey add-top-margin">';
+      }
       for (var i = 0; i < option.length; i++) {
         html += '  <div>';
         var inputId = 'scenario-question-' + uniqueId + '-item-' + i;
@@ -1601,12 +1621,12 @@
             // Add a DOM item with image and text
             var imageSrc = ti["url"];
             var caption = ti["description"];
-            var credit = 'Credit: <a href="' + ti["unsplash_creator_url"] + '" target="_blank">' + ti["unsplash_creator_name"] + '</a>';
+            var credit = 'Credit: ' + ti["unsplash_creator_name"];
             var figcaptionElement = '<figcaption>' + caption + '</figcaption>';
             if (typeof caption === "undefined" || caption == "") {
               figcaptionElement = "";
             }
-            html += '<label for="' + inputId + '"><figure style="max-width: 350px;"><img src="' + imageSrc + '"><div>' + credit + '</div>' + figcaptionElement + '</figure></label>';
+            html += '<label for="' + inputId + '"><figure><img src="' + imageSrc + '"><div>' + credit + '</div>' + figcaptionElement + '</figure></label>';
           } else {
             // Add a DOM item with only text
             var caption = ti["description"];

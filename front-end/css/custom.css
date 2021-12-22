@@ -210,6 +210,12 @@ h3 {
   column-gap: 0;
 }
 
+.custom-survey .custom-radio-group-survey.image-only {
+  column-count: 2;
+  column-fill: balance;
+  column-gap: 0;
+}
+
 .custom-survey .custom-radio-group-survey div {
   display: inline-flex;
   position: relative;
@@ -228,10 +234,10 @@ h3 {
 .custom-survey .custom-radio-group-survey input[type="radio"]+label,
 .custom-survey .custom-radio-group-survey input[type="checkbox"]+label {
   position: relative;
-  padding: 13px 13px 13px 48px;
+  padding: 10px 10px 10px 48px;
   cursor: pointer;
   font-size: 16px;
-  line-height: 30px;
+  line-height: 1.8;
   display: grid;
   color: black;
   border: 0;
@@ -243,6 +249,11 @@ h3 {
   -ms-user-select: none;
   user-select: none;
   width: 100%;
+}
+
+.custom-survey .custom-radio-group-survey.image-only input[type="radio"]+label,
+.custom-survey .custom-radio-group-survey.image-only input[type="checkbox"]+label {
+  padding: 10px;
 }
 
 .custom-survey .custom-radio-group-survey input[type="radio"]+label>figure,
@@ -389,11 +400,12 @@ h3 {
   content: '';
   position: absolute;
   left: 14px;
-  top: 18px;
+  top: 14px;
   width: 20px;
   height: 20px;
   border: 1px solid #aaa;
   background: #fff;
+  z-index: 1;
 }
 
 .custom-survey .custom-radio-group-survey input[type="radio"]+label:before {
@@ -411,10 +423,11 @@ h3 {
   height: 14px;
   background: #005cbf;
   position: absolute;
-  top: 22px;
+  top: 18px;
   left: 18px;
   -webkit-transition: all 0.1s ease;
   transition: all 0.1s ease;
+  z-index: 1;
 }
 
 .custom-survey .custom-radio-group-survey input[type="radio"]+label:after {
@@ -1075,6 +1088,10 @@ hr {
   #photos-masonry {
     column-count: 4;
   }
+
+  .custom-survey .custom-radio-group-survey.image-only {
+    column-count: 2;
+  }
 }
 
 @media screen and (min-width: 700px) and (max-width: 900px) {
@@ -1094,6 +1111,10 @@ hr {
   #photos-masonry {
     column-count: 3;
   }
+
+  .custom-survey .custom-radio-group-survey.image-only {
+    column-count: 2;
+  }
 }
 
 @media screen and (min-width: 500px) and (max-width: 700px) {
@@ -1109,6 +1130,10 @@ hr {
   #express-emotion.custom-survey .custom-radio-group-survey {
     column-count: 2;
   }
+
+  .custom-survey .custom-radio-group-survey.image-only {
+    column-count: 1;
+  }
 }
 
 @media screen and (max-width: 500px) {
@@ -1122,6 +1147,10 @@ hr {
   }
 
   #express-emotion.custom-survey .custom-radio-group-survey {
+    column-count: 1;
+  }
+
+  .custom-survey .custom-radio-group-survey.image-only {
     column-count: 1;
   }
 }
