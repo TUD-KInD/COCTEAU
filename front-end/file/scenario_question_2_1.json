@@ -583,21 +583,7 @@
   "page": 3,
   "mode": 1
 }, {
-  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes and motivations?",
-  "choices": [{
-    "text": "The university should allow people to work on campus without restrictions. <span><b>(5 people vote for this option)</b></span>",
-    "value": 1
-  }, {
-    "text": "The university should have a tighter rule for people who work on campus, such as wearing masks. <span><b>(8 people vote for this option)</b></span>",
-    "value": 2
-  }, {
-    "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(4 people vote for this option)</b></span>",
-    "value": 3
-  }],
-  "page": 3,
-  "mode": 1
-}, {
-  "text": "Below are other people's motivations to support their opinions. Please select the motivation that inspires you the most.",
+  "text": "Below are other people's motivations to support their opinions. Please take a look at them and select the ones that inspire you. <b>You can select none or multiple ones.</b>",
   "choices": [{
     "text": "%7B%22url%22%3A%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1564069114553-7215e1ff1890%3Fixid%3DMnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8%26ixlib%3Drb-1.2.1%26auto%3Dformat%26fit%3Dcrop%26w%3D1000%26q%3D80%22%2C%22description%22%3A%22One%20does%20not%20simply%20go%20back%20to%20the%20campus%22%2C%22unsplash_creator_url%22%3A%22https%3A%2F%2Funsplash.com%2F%40rozetsky%22%2C%22unsplash_creator_name%22%3A%22Ant%20Rozetsky%22%2C%22unsplash_image_id%22%3A%22HXOllTSwrpM%22%7D",
     "value": 1
@@ -613,9 +599,21 @@
   }, {
     "text": "%7B%22url%22%3A%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1503525537183-c84679c9147f%3Fixlib%3Drb-1.2.1%26ixid%3DMnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8%26auto%3Dformat%26fit%3Dcrop%26w%3D1000%26q%3D80%22%2C%22description%22%3A%22Who%20need%20vaccines%20whyyyyy%22%2C%22unsplash_creator_url%22%3A%22https%3A%2F%2Funsplash.com%2F%40dre0316%22%2C%22unsplash_creator_name%22%3A%22Andre%20Hunter%22%2C%22unsplash_image_id%22%3A%22vm2cwMEiUFA%22%7D",
     "value": 5
+  }],
+  "is_mulitple_choice": true,
+  "page": 3,
+  "mode": 1
+}, {
+  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes and motivations?",
+  "choices": [{
+    "text": "The university should allow people to work on campus without restrictions. <span><b>(5 people vote for this option)</b></span>",
+    "value": 1
   }, {
-    "text": "None of the above motivations inspire me.",
-    "value": 6
+    "text": "The university should have a tighter rule for people who work on campus, such as wearing masks. <span><b>(8 people vote for this option)</b></span>",
+    "value": 2
+  }, {
+    "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(4 people vote for this option)</b></span>",
+    "value": 3
   }],
   "page": 3,
   "mode": 1
@@ -630,21 +628,7 @@
   "page": 3,
   "mode": 2
 }, {
-  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes and motivations?",
-  "choices": [{
-    "text": "The university should allow people to work on campus without restrictions. <span><b>(5 people vote for this option)</b></span>",
-    "value": 1
-  }, {
-    "text": "The university should have a tighter rule for people who work on campus, such as wearing masks. <span><b>(8 people vote for this option)</b></span>",
-    "value": 2
-  }, {
-    "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(4 people vote for this option)</b></span>",
-    "value": 3
-  }],
-  "page": 3,
-  "mode": 2
-}, {
-  "text": "Below are other people's motivations to support their opinions. Please select the motivation that inspires you the most.",
+  "text": "Below are other people's motivations to support their opinions. Please take a look at them and select the ones that inspire you. <b>You can select none or multiple ones.</b>",
   "choices": [{
     "text": "%7B%22description%22%3A%22One%20does%20not%20simply%20go%20back%20to%20the%20campus%22%2C%22unsplash_creator_url%22%3A%22https%3A%2F%2Funsplash.com%2F%40rozetsky%22%2C%22unsplash_creator_name%22%3A%22Ant%20Rozetsky%22%2C%22unsplash_image_id%22%3A%22HXOllTSwrpM%22%7D",
     "value": 1
@@ -660,9 +644,21 @@
   }, {
     "text": "%7B%22description%22%3A%22Who%20need%20vaccines%20whyyyyy%22%2C%22unsplash_creator_url%22%3A%22https%3A%2F%2Funsplash.com%2F%40dre0316%22%2C%22unsplash_creator_name%22%3A%22Andre%20Hunter%22%2C%22unsplash_image_id%22%3A%22vm2cwMEiUFA%22%7D",
     "value": 5
+  }],
+  "is_mulitple_choice": true,
+  "page": 3,
+  "mode": 2
+}, {
+  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes and motivations?",
+  "choices": [{
+    "text": "The university should allow people to work on campus without restrictions. <span><b>(5 people vote for this option)</b></span>",
+    "value": 1
   }, {
-    "text": "None of the above motivations inspire me.",
-    "value": 6
+    "text": "The university should have a tighter rule for people who work on campus, such as wearing masks. <span><b>(8 people vote for this option)</b></span>",
+    "value": 2
+  }, {
+    "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(4 people vote for this option)</b></span>",
+    "value": 3
   }],
   "page": 3,
   "mode": 2

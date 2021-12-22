@@ -1571,6 +1571,7 @@
      */
     function createScenarioQuestionHTML(uniqueId, question) {
       var option = question["choices"];
+      var isMulitpleChoice = question["question_type"] == "MULTI_CHOICE";
       var html = '';
       html += '<div class="custom-survey add-top-margin add-bottom-margin" id="scenario-question-' + uniqueId + '">';
       html += '  <span class="text">' + question["text"] + '</span>';
@@ -1578,7 +1579,11 @@
       for (var i = 0; i < option.length; i++) {
         html += '  <div>';
         var inputId = 'scenario-question-' + uniqueId + '-item-' + i;
-        html += '    <input type="radio" name="scenario-question-' + uniqueId + '-scale" value="' + option[i]["id"] + '" id="' + inputId + '">'
+        if (isMulitpleChoice) {
+          html += '    <input type="checkbox" name="scenario-question-' + uniqueId + '-scale" value="' + option[i]["id"] + '" id="' + inputId + '">'
+        } else {
+          html += '    <input type="radio" name="scenario-question-' + uniqueId + '-scale" value="' + option[i]["id"] + '" id="' + inputId + '">'
+        }
         var ti = option[i]["text"];
         var isTextJson = false;
         if (ti.indexOf("%7B") !== -1 && ti.indexOf("%7D") !== -1) {
@@ -1721,7 +1726,10 @@
             answers.push(answer);
           } else {
             // This condition means that there are no answers to this question
-            areAllQuestionsAnswered = false;
+            if ($allChoices.attr("type") == "radio") {
+              // Only do the answer check for radio (not checkbox)
+              areAllQuestionsAnswered = false;
+            }
           }
         } else {
           // This condition means that this is a free text question
