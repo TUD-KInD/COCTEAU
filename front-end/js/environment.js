@@ -1574,17 +1574,19 @@
       // Check if it is a multiple choice question
       var isMulitpleChoice = question["question_type"] == "MULTI_CHOICE";
       // Check if the choices are images
-      var firstText = option[0]["text"];
       var isImageOnly = false;
-      if (firstText.indexOf("%7B") !== -1 && firstText.indexOf("%7D") !== -1) {
-        // This means that it is likely to be an encoded JSON string
-        // Which means it is going to be a meme image
-        try {
-          ti = JSON.parse(decodeURIComponent(firstText));
-          isImageOnly = true;
-        } catch (err) {
-          console.error(err.message);
-          isImageOnly = false;
+      if (typeof option[0] !== "undefined") {
+        var firstText = option[0]["text"];
+        if (firstText.indexOf("%7B") !== -1 && firstText.indexOf("%7D") !== -1) {
+          // This means that it is likely to be an encoded JSON string
+          // Which means it is going to be a meme image
+          try {
+            ti = JSON.parse(decodeURIComponent(firstText));
+            isImageOnly = true;
+          } catch (err) {
+            console.error(err.message);
+            isImageOnly = false;
+          }
         }
       }
       // Construct the HTML
