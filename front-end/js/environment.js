@@ -596,6 +596,13 @@
         "text": text
       };
       if (typeof choices !== "undefined") {
+        for (var i = 0; i < choices.length; i++) {
+          var c = choices[i]["text"];
+          if (typeof c === "object") {
+            // If the choice text turns out to be a dictionary, we need to encode it into a string that can be decoded later.
+            choices[i]["text"] = encodeURIComponent(JSON.stringify(c));
+          }
+        };
         data["choices"] = choices;
       }
       if (typeof topicId !== "undefined") {
@@ -1581,7 +1588,7 @@
           // This means that it is likely to be an encoded JSON string
           // Which means it is going to be a meme image
           try {
-            ti = JSON.parse(decodeURIComponent(firstText));
+            var ti = JSON.parse(decodeURIComponent(firstText));
             isImageOnly = true;
           } catch (err) {
             console.error(err.message);

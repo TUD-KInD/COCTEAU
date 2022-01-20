@@ -719,7 +719,7 @@
           });
         }
       });
-    }, 4800);
+    }, 5600);
     // Delete all topics
     window.setTimeout(function () {
       envObj.getAllTopic(function (returnData) {
@@ -730,7 +730,7 @@
           });
         }
       });
-    }, 5600);
+    }, 6400);
     // Delete all moods
     window.setTimeout(function () {
       envObj.getAllMood(function (returnData) {
@@ -741,7 +741,7 @@
           });
         }
       });
-    }, 6400);
+    }, 7200);
   }
 
   /**
