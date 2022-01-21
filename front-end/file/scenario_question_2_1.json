@@ -424,9 +424,6 @@
   }],
   "page": 2
 }, {
-  "text": "Please describe why you choose the opinion.",
-  "page": 2
-}, {
   "text": "<h2>Back to Campus from COVID</h2>",
   "is_just_description": true,
   "page": 2,
@@ -464,10 +461,6 @@
     "text": "The university should allow people to work on campus without restrictions.",
     "value": 5
   }],
-  "page": 2,
-  "view": 1
-}, {
-  "text": "Please describe why you choose the opinion.",
   "page": 2,
   "view": 1
 }, {
@@ -511,10 +504,6 @@
   "page": 2,
   "view": 2
 }, {
-  "text": "Please describe why you choose the opinion.",
-  "page": 2,
-  "view": 2
-}, {
   "text": "<h2>Back to Campus from COVID</h2>",
   "is_just_description": true,
   "page": 2,
@@ -552,10 +541,6 @@
     "text": "The university should allow people to work on campus without restrictions.",
     "value": 5
   }],
-  "page": 2,
-  "view": 3
-}, {
-  "text": "Please describe why you choose the opinion.",
   "page": 2,
   "view": 3
 }, {
@@ -599,21 +584,22 @@
   "page": 2,
   "view": 4
 }, {
-  "text": "Please describe why you choose the opinion.",
-  "page": 2,
-  "view": 4
-}, {
-  "text": "<h2>Rethink about Your Opinion</h2>",
+  "text": "<h2>Check Other People's Motivations</h2>",
   "is_just_description": true,
   "page": 3,
   "mode": 1
 }, {
-  "text": "This page shows the motivations that other people provided to support the opinions that they chose. <b class='custom-text-danger'>Please DO NOT go back to the previous page to make changes.</b>",
+  "text": "<p class='text'><b class='custom-text-danger'>Please DO NOT go back to the previous page to make changes.</b></p>",
   "is_just_description": true,
   "page": 3,
   "mode": 1
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should allow people to work on campus without restrictions.</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "This page shows a part of the motivations (randomly selected) that other people provided to support their opinions. Please take a look at them and choose the ones that make you <b>understand</b> or <b>resonate</b> with their point of view, considering both the text and the accompanying image.",
+  "is_just_description": true,
+  "page": 3,
+  "mode": 1
+}, {
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should not allow people to work on campus, and all activities should be online.</b></p>",
   "choices": [{
     "text": {
       "url": "https://images.unsplash.com/photo-1554415707-6e8cfc93fe23?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
@@ -691,7 +677,7 @@
   "page": 3,
   "mode": 1
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should only allow fully vaccinated people to enter the campus.</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should only allow fully vaccinated people to enter the campus.</b></p>",
   "choices": [{
     "text": {
       "url": "https://images.unsplash.com/photo-1610703415552-d7fca41a8857?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2062&q=80",
@@ -769,7 +755,7 @@
   "page": 3,
   "mode": 1
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should support the hybrid setting to enable both physical and virtual presence (for example, using scheduling systems or masks).</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should support the hybrid setting to enable both physical and virtual presence (for example, using scheduling systems or masks).</b></p>",
   "choices": [{
     "text": {
       "url": "https://images.unsplash.com/photo-1597914377769-db5167cb0221?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
@@ -847,7 +833,7 @@
   "page": 3,
   "mode": 1
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should only allow education activities on campus, and no other activities are allowed (e.g., social gatherings).</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should only allow education activities on campus, and no other activities are allowed (e.g., social gatherings).</b></p>",
   "choices": [{
     "text": {
       "url": "https://images.unsplash.com/photo-1581726707445-75cbe4efc586?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2952&q=80",
@@ -925,7 +911,7 @@
   "page": 3,
   "mode": 1
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should allow people to work on campus without restrictions.</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should allow people to work on campus without restrictions.</b></p>",
   "choices": [{
     "text": {
       "url": "https://images.unsplash.com/photo-1577985043696-8bd54d9f093f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
@@ -1003,6 +989,11 @@
   "page": 3,
   "mode": 1
 }, {
+  "text": "<h2>Rethink about Your Opinion</h2>",
+  "is_just_description": true,
+  "page": 3,
+  "mode": 1
+}, {
   "text": "<h3>After looking at other people's motivations for choosing opinions, please select your opinion again. As a reminder, below is the scenario.</h3>",
   "is_just_description": true,
   "page": 3,
@@ -1013,7 +1004,7 @@
   "page": 3,
   "mode": 1
 }, {
-  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes and motivations?",
+  "text": "Now that you have looked at other people's motivations. Based on your assigned role, what is your opinion on the scenario?",
   "choices": [{
     "text": "The university should allow people to work on campus without restrictions. <span><b>(13 people vote for this option)</b></span>",
     "value": 1
@@ -1033,17 +1024,22 @@
   "page": 3,
   "mode": 1
 }, {
-  "text": "<h2>Rethink about Your Opinion</h2>",
+  "text": "<h2>Check Other People's Motivations</h2>",
   "is_just_description": true,
   "page": 3,
   "mode": 2
 }, {
-  "text": "This page shows the motivations that other people provided to support the opinions that they chose. <b class='custom-text-danger'>Please DO NOT go back to the previous page to make changes.</b>",
+  "text": "<p class='text'><b class='custom-text-danger'>Please DO NOT go back to the previous page to make changes.</b></p>",
   "is_just_description": true,
   "page": 3,
   "mode": 2
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should allow people to work on campus without restrictions.</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "This page shows a part of the motivations (randomly selected) that other people provided to support their opinions. Please take a look at them and choose the ones that make you <b>understand</b> or <b>resonate</b> with their point of view.",
+  "is_just_description": true,
+  "page": 3,
+  "mode": 2
+}, {
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should not allow people to work on campus, and all activities should be online.</b></p>",
   "choices": [{
     "text": {
       "description": "Home is the best place"
@@ -1089,7 +1085,7 @@
   "page": 3,
   "mode": 2
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should only allow fully vaccinated people to enter the campus.</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should only allow fully vaccinated people to enter the campus.</b></p>",
   "choices": [{
     "text": {
       "description": "Enough with the social distancing"
@@ -1135,7 +1131,7 @@
   "page": 3,
   "mode": 2
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should support the hybrid setting to enable both physical and virtual presence (for example, using scheduling systems or masks).</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should support the hybrid setting to enable both physical and virtual presence (for example, using scheduling systems or masks).</b></p>",
   "choices": [{
     "text": {
       "description": "Balanced as everything should be."
@@ -1181,7 +1177,7 @@
   "page": 3,
   "mode": 2
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should only allow education activities on campus, and no other activities are allowed (e.g., social gatherings).</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should only allow education activities on campus, and no other activities are allowed (e.g., social gatherings).</b></p>",
   "choices": [{
     "text": {
       "description": "Still better than nothing."
@@ -1227,7 +1223,7 @@
   "page": 3,
   "mode": 2
 }, {
-  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should allow people to work on campus without restrictions.</b> Please take a look at them and select the ones that inspire you.</p>",
+  "text": "<p class='text'><b class='custom-text-danger'>You can select none or multiple ones.</b> Below are other people's motivations to support the opinion: <b>The university should allow people to work on campus without restrictions.</b></p>",
   "choices": [{
     "text": {
       "description": "A university is more than just lectures"
@@ -1273,6 +1269,11 @@
   "page": 3,
   "mode": 2
 }, {
+  "text": "<h2>Rethink about Your Opinion</h2>",
+  "is_just_description": true,
+  "page": 3,
+  "mode": 2
+}, {
   "text": "<h3>After looking at other people's motivations for choosing opinions, please select your opinion again. As a reminder, below is the scenario.</h3>",
   "is_just_description": true,
   "page": 3,
@@ -1283,7 +1284,7 @@
   "page": 3,
   "mode": 2
 }, {
-  "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes and motivations?",
+  "text": "Now that you have looked at other people's motivations. Based on your assigned role, what is your opinion on the scenario?",
   "choices": [{
     "text": "The university should allow people to work on campus without restrictions. <span><b>(13 people vote for this option)</b></span>",
     "value": 1
@@ -1314,11 +1315,6 @@
   "mode": 3
 }, {
   "text": "<h3>The question on this page shows other people's votes. Please take a look at them and select your opinion again. As a reminder, below is the scenario.</h3>",
-  "is_just_description": true,
-  "page": 3,
-  "mode": 3
-}, {
-  "text": "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people's needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter.",
   "is_just_description": true,
   "page": 3,
   "mode": 3

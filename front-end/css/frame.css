@@ -1,6 +1,6 @@
 /*************************************************************************
  * GitHub: https://github.com/yenchiah/project-website-template
- * Version: v3.30
+ * Version: v3.31
  * This CSS file is for the website frame
  * If you want to keep this template updated, avoid modifying this file
  * Instead, add your own CSS in the index.css
@@ -15,6 +15,12 @@ body {
   left: 0;
   right: 0;
   width: auto;
+}
+
+/* This is a hack for FireFox that the <b> tag does not work */
+strong,
+b {
+  font-weight: bold;
 }
 
 a {
