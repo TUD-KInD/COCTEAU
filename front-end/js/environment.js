@@ -195,7 +195,7 @@
     }
 
     /**
-     * Get user token from the back-end.
+     * Get user token from the back-end or the session storage.
      * @private
      * @param {Object.<string, *>} data - the data object to give to the back-end.
      * @param {string} [data.google_id_token] - the token returned by the Google Sign-In API.
@@ -204,14 +204,27 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     function getUserToken(data, success, error) {
-      generalRequest("POST", "/login/", data, function (returnData) {
-        userToken = returnData["user_token"];
+      var storedUserToken = sessionStorage.getItem("userToken");
+      if (storedUserToken == null || typeof storedUserToken === "undefined") {
+        console.log("No user token found in the session storage");
+        // This means that no user token is stored, so we need to request a token from the server.
+        generalRequest("POST", "/login/", data, function (returnData) {
+          userToken = returnData["user_token"];
+          userData = getJwtPayload(userToken);
+          sessionStorage.setItem("userToken", userToken);
+          if (typeof success === "function") success(userData);
+        }, function () {
+          console.error("ERROR when getting user token.");
+          if (typeof error === "function") error();
+        });
+      } else {
+        console.log("User token found in the session storage");
+        // This means that the user has logged in before in another page.
+        // So we can just reuse the stored user token.
+        userToken = storedUserToken;
         userData = getJwtPayload(userToken);
-        if (typeof success === "function") success(returnData);
-      }, function () {
-        console.error("ERROR when getting user token.");
-        if (typeof error === "function") error();
-      });
+        if (typeof success === "function") success(userData);
+      }
     }
 
     /**
