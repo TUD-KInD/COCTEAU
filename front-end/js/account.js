@@ -58,7 +58,9 @@
       $guestButton.on("click", function () {
         $accountDialog.dialog("close");
       });
-      renderGoogleSignInButton();
+      silentSignInWithGoogle(function () {
+        renderGoogleSignInButton();
+      });
     }
 
     /**
@@ -143,28 +145,20 @@
       var auth2 = gapi.auth2.getAuthInstance();
       auth2.signOut().then(function () {
         auth2.disconnect();
-        onGoogleSignOutSuccess();
+        $googleSignOutButton.hide();
+        $googleSignInButton.show();
+        $guestButton.show();
+        $signInText.show();
+        $helloText.hide();
+        var $content = $googleSignInButton.find(".abcRioButtonContents");
+        var $hidden = $content.find(":hidden");
+        var $visible = $content.find(":visible");
+        $hidden.show();
+        $visible.hide();
+        if (typeof signOutSuccess === "function") {
+          signOutSuccess(thisObj);
+        }
       });
-    }
-
-    /**
-     * A handler when signing out from Google successfully.
-     * @private
-     */
-    function onGoogleSignOutSuccess() {
-      $googleSignOutButton.hide();
-      $googleSignInButton.show();
-      $guestButton.show();
-      $signInText.show();
-      $helloText.hide();
-      var $content = $googleSignInButton.find(".abcRioButtonContents");
-      var $hidden = $content.find(":hidden");
-      var $visible = $content.find(":visible");
-      $hidden.show();
-      $visible.hide();
-      if (typeof signOutSuccess === "function") {
-        signOutSuccess(thisObj);
-      }
     }
 
     /**
@@ -179,24 +173,19 @@
         height: 46,
         longtitle: true,
         theme: "dark",
-        onsuccess: onGoogleSignInSuccess
+        onsuccess: function (googleUserObj) {
+          $guestButton.hide();
+          $googleSignOutButton.show();
+          $helloText.show();
+          $signInText.hide();
+          $googleSignInButton.hide();
+          $accountDialog.dialog("close");
+          if (typeof signInSuccess === "function") {
+            signInSuccess(thisObj, googleUserObj);
+          }
+        }
       });
-    }
 
-    /**
-     * A handler when signing in with Google successfully.
-     * @private
-     */
-    function onGoogleSignInSuccess(googleUserObj) {
-      $guestButton.hide();
-      $googleSignOutButton.show();
-      $helloText.show();
-      $signInText.hide();
-      $googleSignInButton.hide();
-      $accountDialog.dialog("close");
-      if (typeof signInSuccess === "function") {
-        signInSuccess(thisObj, googleUserObj);
-      }
     }
 
     /**
@@ -260,10 +249,10 @@
     /**
      * Sign in with Google on the background.
      * (used when the user has signed in with Google before)
-     * @public
+     * @private
      * @param {signInDone} [done] - callback function when signing in is done.
      */
-    this.silentSignInWithGoogle = function (done) {
+    function silentSignInWithGoogle(done) {
       if (typeof gapi === "undefined") {
         if (typeof done === "function") {
           done();
@@ -290,7 +279,7 @@
           });
         });
       }
-    };
+    }
 
     /**
      * A helper for getting the jQuery dialog object.

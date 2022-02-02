@@ -109,6 +109,7 @@
   var Environment = function (settings) {
     settings = safeGet(settings, {});
     var ready = settings["ready"];
+    var isReadyEventCalled = false;
     var fail = settings["fail"];
     var thisObj = this;
     var userToken;
@@ -176,16 +177,23 @@
      * @private
      */
     function initAccountUI() {
+      var userTokenError = function () {
+        fail("Back-end server error.");
+      };
       var accountObj = new periscope.Account({
         "signInSuccess": function (accountObj, googleUserObj) {
           getUserTokenWrapper(googleUserObj, function () {
+            if (!isReadyEventCalled) {
+              isReadyEventCalled = true;
+              ready(thisObj);
+            }
             handleGoogleSignInSuccessUI(accountObj);
-          });
+          }, userTokenError);
         },
         "signOutSuccess": function (accountObj) {
           getUserTokenWrapper(undefined, function () {
             handleGoogleSignOutSuccessUI(accountObj);
-          });
+          }, userTokenError);
         }
       });
       $("#sign-in-prompt").on("click", function () {
@@ -1914,25 +1922,7 @@
      * @private
      */
     function Environment() {
-      var accountObj = initAccountUI();
-      var userTokenSuccess = function () {
-        ready(thisObj);
-      };
-      var userTokenError = function () {
-        fail("Back-end server error.");
-      };
-      accountObj.silentSignInWithGoogle(function (isUserSignedInWithGoogle, googleUserObj) {
-        if (isUserSignedInWithGoogle) {
-          getUserTokenWrapper(googleUserObj, function () {
-            handleGoogleSignInSuccessUI(accountObj);
-            userTokenSuccess();
-          }, userTokenError);
-        } else {
-          getUserTokenWrapper(undefined, function () {
-            userTokenSuccess();
-          }, userTokenError);
-        }
-      });
+      initAccountUI();
     }
     Environment();
   };
