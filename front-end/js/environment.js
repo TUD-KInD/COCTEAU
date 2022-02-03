@@ -109,7 +109,6 @@
   var Environment = function (settings) {
     settings = safeGet(settings, {});
     var ready = settings["ready"];
-    var isReadyEventCalled = false;
     var fail = settings["fail"];
     var thisObj = this;
     var userToken;
@@ -181,16 +180,19 @@
         fail("Back-end server error.");
       };
       var accountObj = new periscope.Account({
-        "signInSuccess": function (accountObj, googleUserObj) {
-          getUserTokenWrapper(googleUserObj, function () {
-            if (!isReadyEventCalled) {
-              isReadyEventCalled = true;
-              ready(thisObj);
-            }
+        "ready": function () {
+          getUserTokenWrapper(undefined, function () {
+            ready(thisObj);
+          }, userTokenError);
+        },
+        "signInSuccess": function (accountObj, response) {
+          sessionStorage.removeItem("userToken");
+          getUserTokenWrapper(response, function () {
             handleGoogleSignInSuccessUI(accountObj);
           }, userTokenError);
         },
         "signOutSuccess": function (accountObj) {
+          sessionStorage.removeItem("userToken");
           getUserTokenWrapper(undefined, function () {
             handleGoogleSignOutSuccessUI(accountObj);
           }, userTokenError);
@@ -1282,15 +1284,15 @@
     /**
      * A wrapper of the getUserToken function to make it easier to use.
      * @private
-     * @param {Object} googleUserObj - user object returned by the Google Sign-In API.
+     * @param {Object} response - response returned by the Google Sign-In API.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    function getUserTokenWrapper(googleUserObj, success, error) {
+    function getUserTokenWrapper(response, success, error) {
       if (typeof periscope.Tracker === "undefined") {
         // This means that some plugin blocks the tracker.js file so that the tracker object cannot be created
         console.warn("Failed to initialize the tracker object (maybe blocked by a third-party plugin).");
-        if (typeof googleUserObj === "undefined") {
+        if (typeof response === "undefined") {
           // This means that the user did not sign in with Google
           // In this case, we need to manually generate the client ID to log in to the back-end
           getUserToken({
@@ -1300,14 +1302,14 @@
           // This means that the user has signed in with Google
           // In this case, we need to use the Google user token to log in to the back-end
           getUserToken({
-            "google_id_token": googleUserObj.getAuthResponse().id_token
+            "google_id_token": response.credential
           }, success, error);
         }
       } else {
         // This means that we can create the tracker (and it is not blocked)
         // The tracker object will handle the case if the Google Analytics script is blocked
         if (typeof tracker === "undefined") {
-          if (typeof googleUserObj === "undefined") {
+          if (typeof response === "undefined") {
             // This means that the tracker is not created yet
             // And the user did not sign in with Google
             // For example, initially when loading the application without Google sign-in
@@ -1329,13 +1331,13 @@
             tracker = new periscope.Tracker({
               "ready": function () {
                 getUserToken({
-                  "google_id_token": googleUserObj.getAuthResponse().id_token
+                  "google_id_token": response.credential
                 }, success, error);
               }
             });
           }
         } else {
-          if (typeof googleUserObj === "undefined") {
+          if (typeof response === "undefined") {
             // This means that the tracker is already created
             // And the user did not sign in with Google
             // For example, when user signed out with Google on the account dialog
@@ -1349,7 +1351,7 @@
             // For example, when user signed in with Google on the account dialog
             // In this case, we need to use the Google user token to log in to the back-end
             getUserToken({
-              "google_id_token": googleUserObj.getAuthResponse().id_token
+              "google_id_token": response.credential
             }, success, error);
           }
         }

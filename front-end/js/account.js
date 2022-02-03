@@ -5,7 +5,7 @@
    * Callback function for a successful Google sign-in.
    * @callback signInSuccess
    * @param {Object} accountObj - account object (in account.js).
-   * @param {Object} googleUserObj - user object returned by the Google Sign-In API.
+   * @param {Object} response - response returned by the Google Sign-In API.
    */
 
   /**
@@ -15,13 +15,19 @@
    */
 
   /**
+   * Callback function when the object is ready.
+   * @callback ready
+   * @param {Object} accountObj - account object (in account.js).
+   */
+
+  /**
    * Class for signing in and out with Google's account.
    * @public
    * @class
    * @param {Object.<string, *>} [settings] - dialog settings.
+   * @param {ready} [settings.ready] - callback function when the object is ready.
    * @param {signInSuccess} [settings.signInSuccess] - callback function for a successful sign-in.
    * @param {signOutSuccess} [settings.signOutSuccess] - callback function for a successful sign-out.
-   * @param {boolean} [settings.noUI=false] - indicate that UI (the dialog box) is needed or not.
    */
   var Account = function (settings) {
     settings = safeGet(settings, {});
@@ -36,7 +42,7 @@
     var widgets = new edaplotjs.Widgets();
     var signInSuccess = settings["signInSuccess"];
     var signOutSuccess = settings["signOutSuccess"];
-    var noUI = safeGet(settings["noUI"], false);
+    var ready = settings["ready"];
     var thisObj = this;
 
     /**
@@ -58,9 +64,7 @@
       $guestButton.on("click", function () {
         $accountDialog.dialog("close");
       });
-      silentSignInWithGoogle(function () {
-        renderGoogleSignInButton();
-      });
+      renderGoogleSignInButton();
     }
 
     /**
@@ -125,8 +129,8 @@
       html += '      <span id="user-id-sentence">Your anonymous user ID is <span id="user-id-text"></span>.</span>';
       html += '    </p>';
       html += '  </div>';
-      html += '  <div id="google-sign-in-button" class="g-signin2"></div>';
-      html += '  <button id="google-sign-out-button" class="custom-button">Sign out from Google</button>';
+      html += '  <div id="google-sign-in-button" class="g_id_signin"></div>';
+      html += '  <button id="google-sign-out-button" class="custom-button" class="g_id_signout">Sign out from Google</button>';
       html += '  <button id="guest-button" class="custom-button">Continue as guest</button>';
       html += '</div>';
       $("body").append($(html));
@@ -142,23 +146,15 @@
      * @private
      */
     function googleSignOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        auth2.disconnect();
-        $googleSignOutButton.hide();
-        $googleSignInButton.show();
-        $guestButton.show();
-        $signInText.show();
-        $helloText.hide();
-        var $content = $googleSignInButton.find(".abcRioButtonContents");
-        var $hidden = $content.find(":hidden");
-        var $visible = $content.find(":visible");
-        $hidden.show();
-        $visible.hide();
-        if (typeof signOutSuccess === "function") {
-          signOutSuccess(thisObj);
-        }
-      });
+      google.accounts.id.disableAutoSelect();
+      $googleSignOutButton.hide();
+      $googleSignInButton.show();
+      $guestButton.show();
+      $signInText.show();
+      $helloText.hide();
+      if (typeof signOutSuccess === "function") {
+        signOutSuccess(thisObj);
+      }
     }
 
     /**
@@ -166,26 +162,16 @@
      * @private
      */
     function renderGoogleSignInButton() {
-      gapi.signin2.render("google-sign-in-button", {
-        scope: "profile",
-        prompt: "select_account",
-        width: 225,
-        height: 46,
-        longtitle: true,
-        theme: "dark",
-        onsuccess: function (googleUserObj) {
-          $guestButton.hide();
-          $googleSignOutButton.show();
-          $helloText.show();
-          $signInText.hide();
-          $googleSignInButton.hide();
-          $accountDialog.dialog("close");
-          if (typeof signInSuccess === "function") {
-            signInSuccess(thisObj, googleUserObj);
-          }
+      google.accounts.id.renderButton(
+        document.getElementById("google-sign-in-button"), {
+          type: "standard",
+          theme: "filled_blue",
+          shape: "rectangular",
+          width: 225,
+          auto_select: false,
+          locale: "en_US"
         }
-      });
-
+      );
     }
 
     /**
@@ -198,87 +184,6 @@
     function safeGet(v, defaultVal) {
       if (typeof defaultVal === "undefined") defaultVal = "";
       return (typeof v === "undefined") ? defaultVal : v;
-    }
-
-    /**
-     * Callback function when signing in (or the sign-in check) is done.
-     * @callback signInDone
-     * @param {bool} isUserSignedInWithGoogle - whether the user signed in with Google or not.
-     * @param {Object} googleUserObj - the user object returned by Google.
-     * @param {Object} errorObj - the error object returned by Google.
-     */
-
-    /**
-     * Check if the user already signed in with Google.
-     * @public
-     * @param {signInDone} [done] - callback function when the sign-in check is done.
-     */
-    var isAuthenticatedWithGoogle = function (done) {
-      if (typeof gapi === "undefined") {
-        if (typeof done === "function") {
-          done();
-        }
-      } else {
-        if (typeof gapi.auth2 === "undefined") {
-          gapi.load("auth2", function () {
-            gapi.auth2.init().then(function () {
-              isAuthenticatedWithGoogle(done);
-            }, function (errorObj) {
-              if (typeof errorObj !== "undefined") {
-                if (typeof done === "function") {
-                  done(undefined, undefined, errorObj);
-                }
-              }
-            });
-          });
-        } else {
-          if (typeof done === "function") {
-            var auth2 = gapi.auth2.getAuthInstance();
-            var isUserSignedInWithGoogle = auth2.isSignedIn.get();
-            if (isUserSignedInWithGoogle) {
-              done(isUserSignedInWithGoogle, auth2.currentUser.get());
-            } else {
-              done(isUserSignedInWithGoogle);
-            }
-          }
-        }
-      }
-    };
-    this.isAuthenticatedWithGoogle = isAuthenticatedWithGoogle;
-
-    /**
-     * Sign in with Google on the background.
-     * (used when the user has signed in with Google before)
-     * @private
-     * @param {signInDone} [done] - callback function when signing in is done.
-     */
-    function silentSignInWithGoogle(done) {
-      if (typeof gapi === "undefined") {
-        if (typeof done === "function") {
-          done();
-        }
-      } else {
-        gapi.load("auth2", function () {
-          // The gapi.auth2.init() function will automatically sign in a user if previously signed in
-          gapi.auth2.init().then(function () {
-            if (typeof done === "function") {
-              var auth2 = gapi.auth2.getAuthInstance();
-              var isUserSignedInWithGoogle = auth2.isSignedIn.get();
-              if (isUserSignedInWithGoogle) {
-                done(isUserSignedInWithGoogle, auth2.currentUser.get());
-              } else {
-                done(isUserSignedInWithGoogle);
-              }
-            }
-          }, function (errorObj) {
-            if (typeof errorObj !== "undefined") {
-              if (typeof done === "function") {
-                done(undefined, undefined, errorObj);
-              }
-            }
-          });
-        });
-      }
     }
 
     /**
@@ -309,25 +214,36 @@
     };
 
     /**
+     * Handle the situation when the Google Sign-In API returns a user credential.
+     * @private
+     */
+    function handleCredentialResponse(response) {
+      $guestButton.hide();
+      $googleSignOutButton.show();
+      $helloText.show();
+      $signInText.hide();
+      $googleSignInButton.hide();
+      $accountDialog.dialog("close");
+      if (typeof signInSuccess === "function") {
+        signInSuccess(thisObj, response);
+      }
+    }
+
+    /**
      * Load and initialize the Google Sign-In API.
      * @private
      */
     function loadGoogleSignInAPI() {
-      // The resolve function of the Promise
-      var resolve = function () {
+      window.onGoogleLibraryLoad = function () {
+        google.accounts.id.initialize({
+          client_id: getGoogleSignInClientId(),
+          callback: handleCredentialResponse
+        });
         initUI();
-      };
-      // The reject function of the Promise
-      var reject = function () {
-        console.error("Error when loading the Google Sign-In API script.");
+        ready(thisObj);
       };
       // Load the Google Sign-In API script
-      // The resolve functino will be called when the script is loaded successfully
-      // The reject function will be called when the script fails to load
-      var src = "https://apis.google.com/js/platform.js";
-      $("head").append('<meta name="google-signin-scope" content="profile">');
-      $("head").append('<meta name="google-signin-client_id" content="' + getGoogleSignInClientId() + '">');
-      loaderScript(src).then(resolve).catch(reject);
+      loaderScript("https://accounts.google.com/gsi/client");
     }
 
     /**
@@ -336,11 +252,7 @@
      * @private
      */
     function Account() {
-      if (noUI) {
-        return;
-      } else {
-        loadGoogleSignInAPI();
-      }
+      loadGoogleSignInAPI();
     }
     Account();
   };
