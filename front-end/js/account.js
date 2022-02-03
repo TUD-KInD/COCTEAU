@@ -217,8 +217,8 @@
      * Handle the situation when the Google Sign-In API returns a user credential.
      * @private
      */
-    function handleCredentialResponse(response, select_by) {
-      console.log("Google Sign-In by:", select_by);
+    function handleCredentialResponse(response) {
+      console.log("Google Sign-In by:", response["select_by"]);
       $guestButton.hide();
       $googleSignOutButton.show();
       $helloText.show();
