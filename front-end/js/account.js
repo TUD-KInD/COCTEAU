@@ -168,7 +168,7 @@
           theme: "filled_blue",
           shape: "rectangular",
           width: 225,
-          auto_select: false,
+          auto_select: true,
           locale: "en_US"
         }
       );
@@ -217,7 +217,8 @@
      * Handle the situation when the Google Sign-In API returns a user credential.
      * @private
      */
-    function handleCredentialResponse(response) {
+    function handleCredentialResponse(response, select_by) {
+      console.log("Google Sign-In by:", select_by);
       $guestButton.hide();
       $googleSignOutButton.show();
       $helloText.show();
