@@ -222,6 +222,7 @@
           userToken = returnData["user_token"];
           userData = getJwtPayload(userToken);
           sessionStorage.setItem("userToken", userToken);
+          console.log("User ID: " + userData["user_id"]);
           if (typeof success === "function") success(userData);
         }, function () {
           console.error("ERROR when getting user token.");
@@ -233,6 +234,7 @@
         // So we can just reuse the stored user token.
         userToken = storedUserToken;
         userData = getJwtPayload(userToken);
+        console.log("User ID: " + userData["user_id"]);
         if (typeof success === "function") success(userData);
       }
     }
