@@ -186,13 +186,15 @@
           }, userTokenError);
         },
         "signInSuccess": function (accountObj, response) {
-          sessionStorage.removeItem("userToken");
+          localStorage.removeItem("userToken");
+          localStorage.removeItem("isGoogleTokenStored");
           getUserTokenWrapper(response, function () {
             handleGoogleSignInSuccessUI(accountObj);
           }, userTokenError);
         },
         "signOutSuccess": function (accountObj) {
-          sessionStorage.removeItem("userToken");
+          localStorage.removeItem("userToken");
+          localStorage.removeItem("isGoogleTokenStored");
           getUserTokenWrapper(undefined, function () {
             handleGoogleSignOutSuccessUI(accountObj);
           }, userTokenError);
@@ -214,14 +216,14 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     function getUserToken(data, success, error) {
-      var storedUserToken = sessionStorage.getItem("userToken");
+      var storedUserToken = localStorage.getItem("userToken");
       if (storedUserToken == null || typeof storedUserToken === "undefined") {
         console.log("No user token found in the session storage");
         // This means that no user token is stored, so we need to request a token from the server.
         generalRequest("POST", "/login/", data, function (returnData) {
           userToken = returnData["user_token"];
           userData = getJwtPayload(userToken);
-          sessionStorage.setItem("userToken", userToken);
+          localStorage.setItem("userToken", userToken);
           console.log("User ID: " + userData["user_id"]);
           if (typeof success === "function") success(userData);
         }, function () {
@@ -1303,6 +1305,7 @@
         } else {
           // This means that the user has signed in with Google
           // In this case, we need to use the Google user token to log in to the back-end
+          localStorage.setItem("isGoogleTokenStored", true);
           getUserToken({
             "google_id_token": response.credential
           }, success, error);
@@ -1330,6 +1333,7 @@
             // For example, initially when loading the application with Google sign-in
             // In this case, we need to use the Google user token to log in to the back-end
             // We also need to create the tracker
+            localStorage.setItem("isGoogleTokenStored", true);
             tracker = new periscope.Tracker({
               "ready": function () {
                 getUserToken({
@@ -1352,6 +1356,7 @@
             // And the user has signed in with Google
             // For example, when user signed in with Google on the account dialog
             // In this case, we need to use the Google user token to log in to the back-end
+            localStorage.setItem("isGoogleTokenStored", true);
             getUserToken({
               "google_id_token": response.credential
             }, success, error);

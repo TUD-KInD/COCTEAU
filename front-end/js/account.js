@@ -65,6 +65,11 @@
         $accountDialog.dialog("close");
       });
       renderGoogleSignInButton();
+      // Check if use signed in with Google before
+      var isGoogleTokenStored = localStorage.getItem("isGoogleTokenStored");
+      if (typeof isGoogleTokenStored !== "undefined" && isGoogleTokenStored == true) {
+        handleGoogleSignInUI();
+      }
     }
 
     /**
@@ -119,8 +124,8 @@
       var html = "";
       html += '<div id="account-dialog" class="custom-dialog-large" title="Account" data-role="none">';
       html += '  <p id="sign-in-text">';
-      html += '    Sign in to track your data.';
-      html += '    We will <b>NOT</b> store your personal information (e.g., email).';
+      html += '    Sign in to track your data for only this session.';
+      html += '    We will <b>NOT</b> store your personal information.';
       html += '    Your information is only used to verify your identity.';
       html += '  </p>';
       html += '  <div id="hello-text">';
@@ -147,14 +152,35 @@
      */
     function googleSignOut() {
       google.accounts.id.disableAutoSelect();
+      handleGoogleSignOutUI();
+      if (typeof signOutSuccess === "function") {
+        signOutSuccess(thisObj);
+      }
+    }
+
+    /**
+     * Handle the UI when users sign in with Google.
+     * @private
+     */
+    function handleGoogleSignInUI() {
+      $guestButton.hide();
+      $googleSignOutButton.show();
+      $helloText.show();
+      $signInText.hide();
+      $googleSignInButton.hide();
+      $accountDialog.dialog("close");
+    }
+
+    /**
+     * Handle the UI when users sign out from Google.
+     * @private
+     */
+    function handleGoogleSignOutUI() {
       $googleSignOutButton.hide();
       $googleSignInButton.show();
       $guestButton.show();
       $signInText.show();
       $helloText.hide();
-      if (typeof signOutSuccess === "function") {
-        signOutSuccess(thisObj);
-      }
     }
 
     /**
@@ -221,12 +247,7 @@
      */
     function handleCredentialResponse(response) {
       console.log("Google Sign-In by:", response["select_by"]);
-      $guestButton.hide();
-      $googleSignOutButton.show();
-      $helloText.show();
-      $signInText.hide();
-      $googleSignInButton.hide();
-      $accountDialog.dialog("close");
+      handleGoogleSignInUI();
       if (typeof signInSuccess === "function") {
         signInSuccess(thisObj, response);
       }
