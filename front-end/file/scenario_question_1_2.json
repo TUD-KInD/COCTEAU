@@ -2,7 +2,7 @@
   "text": "<h2>Pre-Survey: Back to Campus from COVID</h2>",
   "is_just_description": true
 }, {
-  "text": "COVID-19 situation is getting better. Schools have decided to keep in place agile working approaches. Therefore, students and employees chose to continue to work from their households or come back to the shared workplace.",
+  "text": "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people’s needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter.",
   "is_just_description": true
 }, {
   "text": "<h3>Part 1: would you mind providing opinions on the following questions?</h3>",
@@ -26,7 +26,7 @@
     "value": 5
   }]
 }, {
-  "text": "2. Working from home is more productive.",
+  "text": "2. Working/studying from home is more productive.",
   "choices": [{
     "text": "Strongly Agree",
     "value": 1
@@ -44,7 +44,7 @@
     "value": 5
   }]
 }, {
-  "text": "3. Working from home reduces the workload.",
+  "text": "3. Working/studying from home reduces the workload.",
   "choices": [{
     "text": "Strongly Agree",
     "value": 1
@@ -62,7 +62,7 @@
     "value": 5
   }]
 }, {
-  "text": "4. Working from home reduces stress.",
+  "text": "4. Working/studying from home reduces stress.",
   "choices": [{
     "text": "Strongly Agree",
     "value": 1
@@ -80,7 +80,7 @@
     "value": 5
   }]
 }, {
-  "text": "5. Working from home makes my work schedule and timeline more flexible.",
+  "text": "5. Working/studying from home makes my work schedule and timeline more flexible.",
   "choices": [{
     "text": "Strongly Agree",
     "value": 1
