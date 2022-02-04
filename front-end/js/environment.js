@@ -184,6 +184,11 @@
           getUserTokenWrapper(undefined, function () {
             ready(thisObj);
           }, userTokenError);
+          // Check if use signed in with Google before
+          var isGoogleTokenStored = localStorage.getItem("isGoogleTokenStored");
+          if (typeof isGoogleTokenStored !== "undefined" && isGoogleTokenStored == "true") {
+            handleGoogleSignInSuccessUI(accountObj);
+          }
         },
         "signInSuccess": function (accountObj, response) {
           localStorage.removeItem("userToken");
