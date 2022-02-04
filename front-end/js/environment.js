@@ -1305,7 +1305,7 @@
         } else {
           // This means that the user has signed in with Google
           // In this case, we need to use the Google user token to log in to the back-end
-          localStorage.setItem("isGoogleTokenStored", true);
+          localStorage.setItem("isGoogleTokenStored", "true");
           getUserToken({
             "google_id_token": response.credential
           }, success, error);
@@ -1333,7 +1333,7 @@
             // For example, initially when loading the application with Google sign-in
             // In this case, we need to use the Google user token to log in to the back-end
             // We also need to create the tracker
-            localStorage.setItem("isGoogleTokenStored", true);
+            localStorage.setItem("isGoogleTokenStored", "true");
             tracker = new periscope.Tracker({
               "ready": function () {
                 getUserToken({
@@ -1356,7 +1356,7 @@
             // And the user has signed in with Google
             // For example, when user signed in with Google on the account dialog
             // In this case, we need to use the Google user token to log in to the back-end
-            localStorage.setItem("isGoogleTokenStored", true);
+            localStorage.setItem("isGoogleTokenStored", "true");
             getUserToken({
               "google_id_token": response.credential
             }, success, error);
