@@ -164,12 +164,14 @@
     function renderGoogleSignInButton() {
       google.accounts.id.renderButton(
         document.getElementById("google-sign-in-button"), {
-          type: "standard",
-          theme: "filled_blue",
-          shape: "rectangular",
-          width: 225,
-          auto_select: true,
-          locale: "en_US"
+          "type": "standard",
+          "shape": "rectangular",
+          "theme": "filled_blue",
+          "text": "signin_with",
+          "size": "large",
+          "locale": "en_US",
+          "logo_alignment": "left",
+          "width": 225
         }
       );
     }
@@ -237,8 +239,11 @@
     function loadGoogleSignInAPI() {
       window.onGoogleLibraryLoad = function () {
         google.accounts.id.initialize({
-          client_id: getGoogleSignInClientId(),
-          callback: handleCredentialResponse
+          "client_id": getGoogleSignInClientId(),
+          "context": "signin",
+          "ux_mode": "popup",
+          "callback": handleCredentialResponse,
+          "auto_prompt": false
         });
         initUI();
         ready(thisObj);
