@@ -185,21 +185,21 @@
             ready(thisObj);
           }, userTokenError);
           // Check if use signed in with Google before
-          var isGoogleTokenStored = localStorage.getItem("isGoogleTokenStored");
+          var isGoogleTokenStored = sessionStorage.getItem("isGoogleTokenStored");
           if (typeof isGoogleTokenStored !== "undefined" && isGoogleTokenStored == "true") {
             handleGoogleSignInSuccessUI(accountObj);
           }
         },
         "signInSuccess": function (accountObj, response) {
-          localStorage.removeItem("userToken");
-          localStorage.removeItem("isGoogleTokenStored");
+          sessionStorage.removeItem("userToken");
+          sessionStorage.removeItem("isGoogleTokenStored");
           getUserTokenWrapper(response, function () {
             handleGoogleSignInSuccessUI(accountObj);
           }, userTokenError);
         },
         "signOutSuccess": function (accountObj) {
-          localStorage.removeItem("userToken");
-          localStorage.removeItem("isGoogleTokenStored");
+          sessionStorage.removeItem("userToken");
+          sessionStorage.removeItem("isGoogleTokenStored");
           getUserTokenWrapper(undefined, function () {
             handleGoogleSignOutSuccessUI(accountObj);
           }, userTokenError);
@@ -221,14 +221,14 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     function getUserToken(data, success, error) {
-      var storedUserToken = localStorage.getItem("userToken");
+      var storedUserToken = sessionStorage.getItem("userToken");
       if (storedUserToken == null || typeof storedUserToken === "undefined") {
         console.log("No user token found in the session storage");
         // This means that no user token is stored, so we need to request a token from the server.
         generalRequest("POST", "/login/", data, function (returnData) {
           userToken = returnData["user_token"];
           userData = getJwtPayload(userToken);
-          localStorage.setItem("userToken", userToken);
+          sessionStorage.setItem("userToken", userToken);
           console.log("User ID: " + userData["user_id"]);
           if (typeof success === "function") success(userData);
         }, function () {
@@ -1310,7 +1310,7 @@
         } else {
           // This means that the user has signed in with Google
           // In this case, we need to use the Google user token to log in to the back-end
-          localStorage.setItem("isGoogleTokenStored", "true");
+          sessionStorage.setItem("isGoogleTokenStored", "true");
           getUserToken({
             "google_id_token": response.credential
           }, success, error);
@@ -1338,7 +1338,7 @@
             // For example, initially when loading the application with Google sign-in
             // In this case, we need to use the Google user token to log in to the back-end
             // We also need to create the tracker
-            localStorage.setItem("isGoogleTokenStored", "true");
+            sessionStorage.setItem("isGoogleTokenStored", "true");
             tracker = new periscope.Tracker({
               "ready": function () {
                 getUserToken({
@@ -1361,7 +1361,7 @@
             // And the user has signed in with Google
             // For example, when user signed in with Google on the account dialog
             // In this case, we need to use the Google user token to log in to the back-end
-            localStorage.setItem("isGoogleTokenStored", "true");
+            sessionStorage.setItem("isGoogleTokenStored", "true");
             getUserToken({
               "google_id_token": response.credential
             }, success, error);

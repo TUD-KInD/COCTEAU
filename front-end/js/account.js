@@ -66,7 +66,7 @@
       });
       renderGoogleSignInButton();
       // Check if use signed in with Google before
-      var isGoogleTokenStored = localStorage.getItem("isGoogleTokenStored");
+      var isGoogleTokenStored = sessionStorage.getItem("isGoogleTokenStored");
       if (typeof isGoogleTokenStored !== "undefined" && isGoogleTokenStored == "true") {
         handleGoogleSignInUI();
       }
