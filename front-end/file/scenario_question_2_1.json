@@ -407,7 +407,7 @@
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role?",
   "choices": [{
-    "text": "The university should allow people to work on campus without restrictions.",
+    "text": "The university should not allow people to work on campus, and all activities should be online.",
     "value": 1
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus.",
@@ -446,7 +446,7 @@
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role?",
   "choices": [{
-    "text": "The university should allow people to work on campus without restrictions.",
+    "text": "The university should not allow people to work on campus, and all activities should be online.",
     "value": 1
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus.",
@@ -486,7 +486,7 @@
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role?",
   "choices": [{
-    "text": "The university should allow people to work on campus without restrictions.",
+    "text": "The university should not allow people to work on campus, and all activities should be online.",
     "value": 1
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus.",
@@ -526,7 +526,7 @@
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role?",
   "choices": [{
-    "text": "The university should allow people to work on campus without restrictions.",
+    "text": "The university should not allow people to work on campus, and all activities should be online.",
     "value": 1
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus.",
@@ -566,7 +566,7 @@
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role?",
   "choices": [{
-    "text": "The university should allow people to work on campus without restrictions.",
+    "text": "The university should not allow people to work on campus, and all activities should be online.",
     "value": 1
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus.",
@@ -1006,7 +1006,7 @@
 }, {
   "text": "Now that you have looked at other people's motivations. Based on your assigned role, what is your opinion on the scenario?",
   "choices": [{
-    "text": "The university should allow people to work on campus without restrictions. <span><b>(13 people vote for this option)</b></span>",
+    "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(13 people vote for this option)</b></span>",
     "value": 1
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus. <span><b>(11 people vote for this option)</b></span>",
@@ -1286,7 +1286,7 @@
 }, {
   "text": "Now that you have looked at other people's motivations. Based on your assigned role, what is your opinion on the scenario?",
   "choices": [{
-    "text": "The university should allow people to work on campus without restrictions. <span><b>(13 people vote for this option)</b></span>",
+    "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(13 people vote for this option)</b></span>",
     "value": 1
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus. <span><b>(11 people vote for this option)</b></span>",
@@ -1321,7 +1321,7 @@
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes?",
   "choices": [{
-    "text": "The university should allow people to work on campus without restrictions. <span><b>(13 people vote for this option)</b></span>",
+    "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(13 people vote for this option)</b></span>",
     "value": 1
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus. <span><b>(11 people vote for this option)</b></span>",
