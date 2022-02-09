@@ -468,6 +468,10 @@ h3 {
   color: black;
 }
 
+.custom-survey h3 {
+  margin-top: 0;
+}
+
 .custom-survey .custom-textbox-survey {
   color: black;
 }
