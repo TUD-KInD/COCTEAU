@@ -708,7 +708,7 @@
   }, {
     "text": {
       "url": "https://images.unsplash.com/photo-1638771105695-8b57e47be23a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
-      "description": "Is this… Irresponsiblity?",
+      "description": "Is this... Irresponsiblity?",
       "unsplash_creator_url": "https://unsplash.com/@djpaine",
       "unsplash_creator_name": "DJ Paine",
       "unsplash_image_id": "_mmronFYaMg"
@@ -960,7 +960,7 @@
   }, {
     "text": {
       "url": "https://images.unsplash.com/photo-1528605248644-14dd04022da1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
-      "description": "Life is too short, let’s go drinking!!!",
+      "description": "Life is too short, let's go drinking!!!",
       "unsplash_creator_url": "https://unsplash.com/@priscilladupreez",
       "unsplash_creator_name": "Priscilla Du Preez",
       "unsplash_image_id": "W3SEyZODn8U"
@@ -1103,7 +1103,7 @@
     "value": 3
   }, {
     "text": {
-      "description": "Is this… Irresponsiblity?"
+      "description": "Is this... Irresponsiblity?"
     },
     "value": 4
   }, {
@@ -1251,7 +1251,7 @@
     "value": 5
   }, {
     "text": {
-      "description": "Life is too short, let’s go drinking!!!"
+      "description": "Life is too short, let's go drinking!!!"
     },
     "value": 6
   }, {
@@ -1349,7 +1349,7 @@
   "page": 4,
   "mode": 1
 }, {
-  "text": "Seeing other people’s <b>votes</b> plays an important role in my decision.",
+  "text": "Seeing other people's <b>votes</b> plays an important role in my decision.",
   "choices": [{
     "text": "Strongly Agree",
     "value": 1
@@ -1369,7 +1369,7 @@
   "page": 4,
   "mode": 1
 }, {
-  "text": "Seeing other people’s <b>motivations</b> plays an important role in my decision.",
+  "text": "Seeing other people's <b>motivations</b> plays an important role in my decision.",
   "choices": [{
     "text": "Strongly Agree",
     "value": 1
@@ -1419,7 +1419,7 @@
   "page": 4,
   "mode": 2
 }, {
-  "text": "Seeing other people’s <b>votes</b> plays an important role in my decision.",
+  "text": "Seeing other people's <b>votes</b> plays an important role in my decision.",
   "choices": [{
     "text": "Strongly Agree",
     "value": 1
@@ -1439,7 +1439,7 @@
   "page": 4,
   "mode": 2
 }, {
-  "text": "Seeing other people’s <b>motivations</b> plays an important role in my decision.",
+  "text": "Seeing other people's <b>motivations</b> plays an important role in my decision.",
   "choices": [{
     "text": "Strongly Agree",
     "value": 1
@@ -1469,7 +1469,7 @@
   "page": 4,
   "mode": 3
 }, {
-  "text": "Seeing other people’s <b>votes</b> plays an important role in my decision.",
+  "text": "Seeing other people's <b>votes</b> plays an important role in my decision.",
   "choices": [{
     "text": "Strongly Agree",
     "value": 1
