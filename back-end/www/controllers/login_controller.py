@@ -115,7 +115,7 @@ def encode_user_jwt(**kwargs):
     payload["iat"] = t
     payload["jti"] = uuid.uuid4().hex
     payload["iss"] = "api.periscope.io.tudelft.nl"
-    payload["exp"] = t + 3600 # the token will expire after one hour
+    payload["exp"] = t + 2592000 # the token will expire after 30 days
     for k in kwargs:
         payload[k] = kwargs[k]
     return encode_jwt(payload, config.JWT_PRIVATE_KEY)

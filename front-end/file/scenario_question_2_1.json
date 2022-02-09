@@ -401,7 +401,7 @@
   "is_just_description": true,
   "page": 2
 }, {
-  "text": "You are a new Bachelor's student enrolled in UNIVERSITY. You just moved into a dorm on campus. You still keep in touch with high-school friends who live close to the campus. You have a private room and a shared common area for socializing. Besides attending courses and labs, you take a part-time job on campus to help with the tuition fees.",
+  "text": "<ul><li>You are a new Bachelor's student enrolled in UNIVERSITY.</li><li>You just moved into a dorm on campus.</li><li>You still keep in touch with high-school friends who live close to the campus.</li><li>You have a private room and a shared common area for socializing.</li><li>You have a part-time job on campus to help with the tuition fees.</li></ul>",
   "is_just_description": true,
   "page": 2
 }, {
@@ -439,7 +439,7 @@
   "page": 2,
   "view": 1
 }, {
-  "text": "You are a new Master's student enrolled in UNIVERSITY, and you come from abroad, and you don't know anyone. You live in a shared apartment with the other three tenants. In this semester you have lessons 4 days a week, all starting at 9 am. After lectures, you like to study in the public spaces of the campus.",
+  "text": "<ul><li>You are a new Master's student enrolled in UNIVERSITY.</li><li>You come from abroad, and you don't know anyone.</li><li>You live in a shared apartment with the other three tenants.</li><li>In this semester you have lessons 4 days a week, all starting at 9 am.</li><li>After lectures, you like to study in the public spaces of the campus.</li></ul>",
   "is_just_description": true,
   "page": 2,
   "view": 1
@@ -479,7 +479,7 @@
   "page": 2,
   "view": 2
 }, {
-  "text": "You are a PhD student just enrolled in the graduate program of UNIVERSITY. You have weekly meetings with your supervisor and with the other PhD candidates. While the university provided you with a working laptop, you still need to access some facilities on campus to carry out your work (e.g., using laboratory equipment).",
+  "text": "<ul><li>You are a PhD student just enrolled in the graduate program of UNIVERSITY.</li><li>You have weekly meetings with your supervisor and with the other PhD candidates.</li><li>While the university provided you with a working laptop, you still need to access some facilities on campus to carry out your work (e.g., using laboratory equipment).</li></ul>",
   "is_just_description": true,
   "page": 2,
   "view": 2
@@ -519,7 +519,7 @@
   "page": 2,
   "view": 3
 }, {
-  "text": "You are a researcher working at UNIVERSITY. Your duties mainly include conducting research, meeting with colleagues, and doing small teaching activities, such as coaching students. You don't require any specific facility to carry out your work, but you do like the desk, chair, and monitor provided by the university (and the free coffee).",
+  "text": "<ul><li>You are a researcher working at UNIVERSITY.</li><li>Your duties mainly include conducting research, meeting with colleagues, and doing small teaching activities, such as coaching students.</li><li>You don't require any specific facility to carry out your work, but you do like the desk, chair, and monitor provided by the university (and the free coffee).</li></ul>",
   "is_just_description": true,
   "page": 2,
   "view": 3
@@ -559,7 +559,7 @@
   "page": 2,
   "view": 4
 }, {
-  "text": "You are a professor working at UNIVERSITY. Your duties on campus include attending meetings with both colleagues and students, teaching courses, and conducting research. During the past year, you learned how to use several software tools to carry out your work in a remote setting.",
+  "text": "<ul><li>You are a professor working at UNIVERSITY.</li><li>Your duties on campus include attending meetings with both colleagues and students, teaching courses, and conducting research.</li><li>During the past year, you learned how to use several software tools to carry out your work in a remote setting.</li></ul>",
   "is_just_description": true,
   "page": 2,
   "view": 4
