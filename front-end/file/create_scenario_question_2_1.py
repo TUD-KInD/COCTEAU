@@ -10,51 +10,21 @@ likert_scale_5 = [
 ]
 
 empathy_questions = [
-    {
-        "text": "Before criticizing somebody, I try to imagine how I would feel if I were in their place.",
-    },
-    {
-        "text": "When I see someone being taken advantage of, I feel kind of protective toward them.",
-    },
-    {
-        "text": "If I'm sure I'm right about something, I don't waste much time listening to other people's arguments.",
-    },
-    {
-        "text": "When I see someone being treated unfairly, I sometimes don't feel very much pity for them.",
-    },
-    {
-        "text": "I sometimes try to understand my friends better by imagining how things look from their perspective.",
-    },
-    {
-        "text": "I often have tender, concerned feelings for people less fortunate than me.",
-    },
-    {
-        "text": "I believe that there are two sides to every question and try to look at them both.",
-    },
-    {
-        "text": "I would describe myself as a pretty soft-hearted person.",
-    },
-    {
-        "text": "I sometimes find it difficult to see things from the other person's point of view.",
-    },
-    {
-        "text": "Sometimes I don't feel sorry for other people when they are having problems.",
-    },
-    {
-        "text": "I try to look at everybody's side of a disagreement before I make a decision.",
-    },
-    {
-        "text": "Other people's misfortunes do not usually disturb me a great deal.",
-    },
-    {
-        "text": "When I'm upset at someone, I usually try to put myself in their shoes for a while.",
-    },
-    {
-        "text": "I am often quite touched by things that I see happen.",
-    },
-    {
-        "text": "Sometimes I feel sorry for other people when they are having problems.",
-    },
+    {"text": "Before criticizing somebody, I try to imagine how I would feel if I were in their place."},
+    {"text": "When I see someone being taken advantage of, I feel kind of protective toward them."},
+    {"text": "If I'm sure I'm right about something, I don't waste much time listening to other people's arguments."},
+    {"text": "When I see someone being treated unfairly, I sometimes don't feel very much pity for them."},
+    {"text": "I sometimes try to understand my friends better by imagining how things look from their perspective."},
+    {"text": "I often have tender, concerned feelings for people less fortunate than me."},
+    {"text": "I believe that there are two sides to every question and try to look at them both."},
+    {"text": "I would describe myself as a pretty soft-hearted person."},
+    {"text": "I sometimes find it difficult to see things from the other person's point of view."},
+    {"text": "Sometimes I don't feel sorry for other people when they are having problems."},
+    {"text": "I try to look at everybody's side of a disagreement before I make a decision."},
+    {"text": "Other people's misfortunes do not usually disturb me a great deal."},
+    {"text": "When I'm upset at someone, I usually try to put myself in their shoes for a while."},
+    {"text": "I am often quite touched by things that I see happen."},
+    {"text": "Sometimes I feel sorry for other people when they are having problems."},
 ]
 
 for i in range(len(empathy_questions)):
@@ -137,14 +107,8 @@ for i in range(len(page_1)):
 scenario_txt = "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people's needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter."
 
 scenario = [
-    {
-        "text": "<h2>Back to Campus from COVID</h2>",
-        "is_just_description": True,
-    },
-    {
-        "text": scenario_txt,
-        "is_just_description": True,
-    },
+    {"text": "<h2>Back to Campus from COVID</h2>", "is_just_description": True},
+    {"text": scenario_txt, "is_just_description": True},
 ]
 
 opinion_1_txt = "The university should not allow people to work on campus, and all activities should be online."
@@ -259,21 +223,11 @@ for i in range(len(page_2)):
     page_2[i]["page"] = 2
 
 opinion_after = [
-    {
-        "text": opinion_1_txt + " <span><b>(13 people vote for this option)</b></span>",
-    },
-    {
-        "text": opinion_2_txt + " <span><b>(11 people vote for this option)</b></span>",
-    },
-    {
-        "text": opinion_3_txt + " <span><b>(16 people vote for this option)</b></span>",
-    },
-    {
-        "text": opinion_4_txt + " <span><b>(14 people vote for this option)</b></span>",
-    },
-    {
-        "text": opinion_5_txt + " <span><b>(10 people vote for this option)</b></span>",
-    },
+    {"text": opinion_1_txt + " <span><b>(13 people vote for this option)</b></span>"},
+    {"text": opinion_2_txt + " <span><b>(11 people vote for this option)</b></span>"},
+    {"text": opinion_3_txt + " <span><b>(16 people vote for this option)</b></span>"},
+    {"text": opinion_4_txt + " <span><b>(14 people vote for this option)</b></span>"},
+    {"text": opinion_5_txt + " <span><b>(10 people vote for this option)</b></span>"},
 ]
 
 for i in range(len(opinion_after)):
