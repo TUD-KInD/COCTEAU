@@ -426,23 +426,23 @@
 }, {
   "text": "<h2>Back to Campus from COVID</h2>",
   "is_just_description": true,
-  "page": 2,
-  "view": 1
+  "view": 1,
+  "page": 2
 }, {
   "text": "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people's needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter.",
   "is_just_description": true,
-  "page": 2,
-  "view": 1
+  "view": 1,
+  "page": 2
 }, {
   "text": "<h3>Imagine you are a Master Student</h3>",
   "is_just_description": true,
-  "page": 2,
-  "view": 1
+  "view": 1,
+  "page": 2
 }, {
   "text": "<ul><li>You are a new Master's student enrolled in UNIVERSITY.</li><li>You come from abroad, and you don't know anyone.</li><li>You live in a shared apartment with the other three tenants.</li><li>In this semester you have lessons 4 days a week, all starting at 9 am.</li><li>After lectures, you like to study in the public spaces of the campus.</li></ul>",
   "is_just_description": true,
-  "page": 2,
-  "view": 1
+  "view": 1,
+  "page": 2
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role?",
   "choices": [{
@@ -461,28 +461,28 @@
     "text": "The university should allow people to work on campus without restrictions.",
     "value": 5
   }],
-  "page": 2,
-  "view": 1
+  "view": 1,
+  "page": 2
 }, {
   "text": "<h2>Back to Campus from COVID</h2>",
   "is_just_description": true,
-  "page": 2,
-  "view": 2
+  "view": 2,
+  "page": 2
 }, {
   "text": "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people's needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter.",
   "is_just_description": true,
-  "page": 2,
-  "view": 2
+  "view": 2,
+  "page": 2
 }, {
   "text": "<h3>Imagine you are a PhD Student</h3>",
   "is_just_description": true,
-  "page": 2,
-  "view": 2
+  "view": 2,
+  "page": 2
 }, {
   "text": "<ul><li>You are a PhD student just enrolled in the graduate program of UNIVERSITY.</li><li>You have weekly meetings with your supervisor and with the other PhD candidates.</li><li>While the university provided you with a working laptop, you still need to access some facilities on campus to carry out your work (e.g., using laboratory equipment).</li></ul>",
   "is_just_description": true,
-  "page": 2,
-  "view": 2
+  "view": 2,
+  "page": 2
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role?",
   "choices": [{
@@ -501,28 +501,28 @@
     "text": "The university should allow people to work on campus without restrictions.",
     "value": 5
   }],
-  "page": 2,
-  "view": 2
+  "view": 2,
+  "page": 2
 }, {
   "text": "<h2>Back to Campus from COVID</h2>",
   "is_just_description": true,
-  "page": 2,
-  "view": 3
+  "view": 3,
+  "page": 2
 }, {
   "text": "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people's needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter.",
   "is_just_description": true,
-  "page": 2,
-  "view": 3
+  "view": 3,
+  "page": 2
 }, {
   "text": "<h3>Imagine you are a Researcher</h3>",
   "is_just_description": true,
-  "page": 2,
-  "view": 3
+  "view": 3,
+  "page": 2
 }, {
   "text": "<ul><li>You are a researcher working at UNIVERSITY.</li><li>Your duties mainly include conducting research, meeting with colleagues, and doing small teaching activities, such as coaching students.</li><li>You don't require any specific facility to carry out your work, but you do like the desk, chair, and monitor provided by the university (and the free coffee).</li></ul>",
   "is_just_description": true,
-  "page": 2,
-  "view": 3
+  "view": 3,
+  "page": 2
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role?",
   "choices": [{
@@ -541,28 +541,28 @@
     "text": "The university should allow people to work on campus without restrictions.",
     "value": 5
   }],
-  "page": 2,
-  "view": 3
+  "view": 3,
+  "page": 2
 }, {
   "text": "<h2>Back to Campus from COVID</h2>",
   "is_just_description": true,
-  "page": 2,
-  "view": 4
+  "view": 4,
+  "page": 2
 }, {
   "text": "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people's needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter.",
   "is_just_description": true,
-  "page": 2,
-  "view": 4
+  "view": 4,
+  "page": 2
 }, {
   "text": "<h3>Imagine you are a Professor</h3>",
   "is_just_description": true,
-  "page": 2,
-  "view": 4
+  "view": 4,
+  "page": 2
 }, {
   "text": "<ul><li>You are a professor working at UNIVERSITY.</li><li>Your duties on campus include attending meetings with both colleagues and students, teaching courses, and conducting research.</li><li>During the past year, you learned how to use several software tools to carry out your work in a remote setting.</li></ul>",
   "is_just_description": true,
-  "page": 2,
-  "view": 4
+  "view": 4,
+  "page": 2
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role?",
   "choices": [{
@@ -581,23 +581,23 @@
     "text": "The university should allow people to work on campus without restrictions.",
     "value": 5
   }],
-  "page": 2,
-  "view": 4
+  "view": 4,
+  "page": 2
 }, {
   "text": "<h2>Check Other People's Motivations</h2>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "<p class='text'><b class='custom-text-danger'>Please DO NOT go back to the previous page to make changes.</b></p>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
-  "text": "This page shows a part of the motivations (randomly selected) that other people provided to support their opinions. Please take a look at them and choose the ones that make you <b>understand</b> or <b>resonate</b> with their point of view, considering both the text and image.",
+  "text": "This page shows a part of the motivations (randomly selected) that other people provided to support their opinions. Please take a look at them and choose the ones that make you <b>understand</b> or <b>resonate</b> with their point of view.",
   "is_just_description": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "<h3>The university should not allow people to work on campus, and all activities should be online.</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -674,8 +674,8 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "<h3>The university should only allow fully vaccinated people to enter the campus.</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -752,8 +752,8 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "<h3>The university should support the hybrid setting to enable both physical and virtual presence (for example, using scheduling systems or masks).</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -830,8 +830,8 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "<h3>The university should only allow education activities on campus, and no other activities are allowed (e.g., social gatherings).</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -908,8 +908,8 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "<h3>The university should allow people to work on campus without restrictions.</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -986,58 +986,58 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "<h2>Rethink about Your Opinion</h2>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "<h3>After looking at other people's motivations for choosing opinions, please select your opinion again. As a reminder, below is the scenario.</h3>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people's needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter.",
   "is_just_description": true,
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "Now that you have looked at other people's motivations. Based on your assigned role, what is your opinion on the scenario?",
   "choices": [{
     "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(13 people vote for this option)</b></span>",
-    "value": 1
+    "value": 0
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus. <span><b>(11 people vote for this option)</b></span>",
-    "value": 2
+    "value": 1
   }, {
     "text": "The university should support the hybrid setting to enable both physical and virtual presence (for example, using scheduling systems or masks). <span><b>(16 people vote for this option)</b></span>",
-    "value": 3
+    "value": 2
   }, {
     "text": "The university should only allow education activities on campus, and no other activities are allowed (e.g., social gatherings). <span><b>(14 people vote for this option)</b></span>",
-    "value": 4
+    "value": 3
   }, {
     "text": "The university should allow people to work on campus without restrictions. <span><b>(10 people vote for this option)</b></span>",
-    "value": 5
+    "value": 4
   }],
-  "page": 3,
-  "mode": 1
+  "mode": 1,
+  "page": 3
 }, {
   "text": "<h2>Check Other People's Motivations</h2>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "<p class='text'><b class='custom-text-danger'>Please DO NOT go back to the previous page to make changes.</b></p>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "This page shows a part of the motivations (randomly selected) that other people provided to support their opinions. Please take a look at them and choose the ones that make you <b>understand</b> or <b>resonate</b> with their point of view.",
   "is_just_description": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "<h3>The university should not allow people to work on campus, and all activities should be online.</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -1082,8 +1082,8 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "<h3>The university should only allow fully vaccinated people to enter the campus.</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -1128,8 +1128,8 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "<h3>The university should support the hybrid setting to enable both physical and virtual presence (for example, using scheduling systems or masks).</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -1174,8 +1174,8 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "<h3>The university should only allow education activities on campus, and no other activities are allowed (e.g., social gatherings).</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -1220,8 +1220,8 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "<h3>The university should allow people to work on campus without restrictions.</h3><b class='custom-text-danger'>You may select none, single, or multiple ones.</b>",
   "choices": [{
@@ -1266,88 +1266,88 @@
     "value": 8
   }],
   "is_mulitple_choice": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "<h2>Rethink about Your Opinion</h2>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "<h3>After looking at other people's motivations for choosing opinions, please select your opinion again. As a reminder, below is the scenario.</h3>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people's needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter.",
   "is_just_description": true,
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "Now that you have looked at other people's motivations. Based on your assigned role, what is your opinion on the scenario?",
   "choices": [{
     "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(13 people vote for this option)</b></span>",
-    "value": 1
+    "value": 0
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus. <span><b>(11 people vote for this option)</b></span>",
-    "value": 2
+    "value": 1
   }, {
     "text": "The university should support the hybrid setting to enable both physical and virtual presence (for example, using scheduling systems or masks). <span><b>(16 people vote for this option)</b></span>",
-    "value": 3
+    "value": 2
   }, {
     "text": "The university should only allow education activities on campus, and no other activities are allowed (e.g., social gatherings). <span><b>(14 people vote for this option)</b></span>",
-    "value": 4
+    "value": 3
   }, {
     "text": "The university should allow people to work on campus without restrictions. <span><b>(10 people vote for this option)</b></span>",
-    "value": 5
+    "value": 4
   }],
-  "page": 3,
-  "mode": 2
+  "mode": 2,
+  "page": 3
 }, {
   "text": "<h2>Rethink about Your Opinion</h2>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 3
+  "mode": 3,
+  "page": 3
 }, {
   "text": "<p class='text'><b class='custom-text-danger'>Please DO NOT go back to the previous page to make changes.</b></p>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 3
+  "mode": 3,
+  "page": 3
 }, {
-  "text": "<h3>The question on this page shows other people's votes. Please take a look at them and select your opinion again. As a reminder, below is the scenario.</h3>",
+  "text": "<h3>The question on this page shows other people's votes. Please take a look at them and select your opinion again.</h3>",
   "is_just_description": true,
-  "page": 3,
-  "mode": 3
+  "mode": 3,
+  "page": 3
 }, {
   "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes?",
   "choices": [{
     "text": "The university should not allow people to work on campus, and all activities should be online. <span><b>(13 people vote for this option)</b></span>",
-    "value": 1
+    "value": 0
   }, {
     "text": "The university should only allow fully vaccinated people to enter the campus. <span><b>(11 people vote for this option)</b></span>",
-    "value": 2
+    "value": 1
   }, {
     "text": "The university should support the hybrid setting to enable both physical and virtual presence (for example, using scheduling systems or masks). <span><b>(16 people vote for this option)</b></span>",
-    "value": 3
+    "value": 2
   }, {
     "text": "The university should only allow education activities on campus, and no other activities are allowed (e.g., social gatherings). <span><b>(14 people vote for this option)</b></span>",
-    "value": 4
+    "value": 3
   }, {
     "text": "The university should allow people to work on campus without restrictions. <span><b>(10 people vote for this option)</b></span>",
-    "value": 5
+    "value": 4
   }],
-  "page": 3,
-  "mode": 3
+  "mode": 3,
+  "page": 3
 }, {
   "text": "<h2>Reflection Questionnaire</h2>",
   "is_just_description": true,
-  "page": 4,
-  "mode": 1
+  "mode": 1,
+  "page": 4
 }, {
   "text": "Please answer the following questions regarding the previous step of rethinking your opinion.",
   "is_just_description": true,
-  "page": 4,
-  "mode": 1
+  "mode": 1,
+  "page": 4
 }, {
   "text": "Seeing other people's <b>votes</b> plays an important role in my decision.",
   "choices": [{
@@ -1366,8 +1366,8 @@
     "text": "Strongly Disagree",
     "value": 5
   }],
-  "page": 4,
-  "mode": 1
+  "mode": 1,
+  "page": 4
 }, {
   "text": "Seeing other people's <b>motivations</b> plays an important role in my decision.",
   "choices": [{
@@ -1386,8 +1386,8 @@
     "text": "Strongly Disagree",
     "value": 5
   }],
-  "page": 4,
-  "mode": 1
+  "mode": 1,
+  "page": 4
 }, {
   "text": "Seeing <b>images</b> in other people's motivations plays an important role in my decision.",
   "choices": [{
@@ -1406,18 +1406,18 @@
     "text": "Strongly Disagree",
     "value": 5
   }],
-  "page": 4,
-  "mode": 1
+  "mode": 1,
+  "page": 4
 }, {
   "text": "<h2>Reflection Questionnaire</h2>",
   "is_just_description": true,
-  "page": 4,
-  "mode": 2
+  "mode": 2,
+  "page": 4
 }, {
   "text": "Please answer the following questions regarding the previous step of rethinking your opinion.",
   "is_just_description": true,
-  "page": 4,
-  "mode": 2
+  "mode": 2,
+  "page": 4
 }, {
   "text": "Seeing other people's <b>votes</b> plays an important role in my decision.",
   "choices": [{
@@ -1436,8 +1436,8 @@
     "text": "Strongly Disagree",
     "value": 5
   }],
-  "page": 4,
-  "mode": 2
+  "mode": 2,
+  "page": 4
 }, {
   "text": "Seeing other people's <b>motivations</b> plays an important role in my decision.",
   "choices": [{
@@ -1456,18 +1456,18 @@
     "text": "Strongly Disagree",
     "value": 5
   }],
-  "page": 4,
-  "mode": 2
+  "mode": 2,
+  "page": 4
 }, {
   "text": "<h2>Reflection Questionnaire</h2>",
   "is_just_description": true,
-  "page": 4,
-  "mode": 3
+  "mode": 3,
+  "page": 4
 }, {
-  "text": "Please answer the following question regarding the previous step of rethinking your opinion.",
+  "text": "Please answer the following questions regarding the previous step of rethinking your opinion.",
   "is_just_description": true,
-  "page": 4,
-  "mode": 3
+  "mode": 3,
+  "page": 4
 }, {
   "text": "Seeing other people's <b>votes</b> plays an important role in my decision.",
   "choices": [{
@@ -1486,8 +1486,8 @@
     "text": "Strongly Disagree",
     "value": 5
   }],
-  "page": 4,
-  "mode": 3
+  "mode": 3,
+  "page": 4
 }, {
   "text": "<h2>Satisfaction Questionnaire</h2>",
   "is_just_description": true,
