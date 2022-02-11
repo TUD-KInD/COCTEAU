@@ -34,7 +34,7 @@
               // IMPORTANT: below is hard-coded for our experiments and is not intended for general use.
               if (page == 5) {
                 // For the last page, we need to go to the thank you page
-                window.location.href = "experiment-thanks.html";
+                window.location.href = "experiment-thanks.html" + queryString;
               } else {
                 window.location.href = "experiment-opinion.html" + queryString;
               }
