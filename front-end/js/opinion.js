@@ -32,7 +32,7 @@
                 queryString = queryString.replace("page=" + page, "page=" + (page + 1));
               }
               // IMPORTANT: below is hard-coded for our experiments and is not intended for general use.
-              if (page == 5) {
+              if ((mode == 1 && page == 10) || (mode == 2 && page == 10) || (mode == 3 && page == 5)) {
                 // For the last page, we need to go to the thank you page
                 window.location.href = "experiment-thanks.html" + queryString;
               } else {
