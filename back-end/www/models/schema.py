@@ -37,7 +37,7 @@ class QuestionSchema(ma.Schema):
     class Meta:
         model = Question
         fields = ("id", "text", "question_type", "scenario_id", "topic_id",
-                "choices", "order", "page", "view", "mode")
+                "choices", "order", "page")
 question_schema = QuestionSchema()
 questions_schema = QuestionSchema(many=True)
 

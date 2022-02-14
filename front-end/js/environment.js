@@ -1730,24 +1730,19 @@
         if (typeof p === "undefined" || typeof v === "undefined" || typeof m === "undefined") continue;
         questionDict[p][v][m].push(sq);
       }
+      // Select the questions that will always show
+      var alwaysShownQuestions = questionDict[-1][-1][-1];
+      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[-1][-1][mode]);
+      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[page][-1][-1]);
+      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[-1][view][-1]);
+      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[-1][view][mode]);
+      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[page][-1][mode]);
+      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[page][view][-1]);
       // Filter questions by page and view
       var filteredQuestions = questionDict[page][view][mode];
-      if (view != 0 && filteredQuestions.length == 0) {
-        // Use the default view if the desired view has no questions
-        // Default view is 0
-        filteredQuestions = questionDict[page][0][mode];
-      }
-      if (mode != 0 && filteredQuestions.length == 0) {
-        // Use the default mode if the desired mode has no questions
-        // Default mode is 0
-        filteredQuestions = questionDict[page][view][0];
-      }
-      if (mode != 0 && view != 0 && filteredQuestions.length == 0) {
-        // Use the default mode if the desired mode has no questions
-        // Default mode is 0
-        filteredQuestions = questionDict[page][0][0];
-      }
+      filteredQuestions = filteredQuestions.concat(alwaysShownQuestions);
       // Sort questions
+      // TODO: randomly sort the questions with the same order
       periscope.util.sortArrayOfDictByKeyInPlace(filteredQuestions, "order");
       // Create HTML elements
       for (var j = 0; j < filteredQuestions.length; j++) {

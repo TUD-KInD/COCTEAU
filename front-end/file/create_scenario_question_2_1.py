@@ -832,45 +832,51 @@ def add_field_increase(array_of_dict, field_name, field_value_init):
 
 page_array = []
 
+# The page that explains the study and ask empathy-related questions
 page_0 = study_head + empathy_questions
 page_0 = add_field(page_0, "page", 0)
 page_array.append(page_0)
 
+# The page that asks demographic questions
 page_1 = demographic_questions
 page_1 = add_field(page_1, "page", 1)
 page_array.append(page_1)
 
+# The page that explains the scenario with different roles (i.e., views)
 page_2 = []
-page_2_views = []
-for k in range(len(view_array)):
-    page_2_views.append(scenario + view_array[k] + opinion_before)
-
-for i in range(len(page_2_views)):
-    page_2 += add_field(page_2_views[i], "view", i)
-page_array.append(add_field(page_2, "page", 2))
+page_2 += scenario
+for i in range(len(view_array)):
+    page_2 += add_field(view_array[i], "view", i)
+page_2 += opinion_before
+page_2 = add_field(page_2, "page", 2)
+page_array.append(page_2)
 
 ##########################
 # Mode 1 specific pages
 
 mode_1_pages = []
 
+# The pages for selecting motivations
 for j in range(len(motivations_meme)):
     mode_1_page_n = []
-    mode_1_page_n_views = []
-    for k in range(len(view_array_reminder)):
-        mode_1_page_n_views.append(motivation_header + view_array_reminder[k] + [motivations_meme[j]])
-    for i in range(len(mode_1_page_n_views)):
-        mode_1_page_n += add_field(mode_1_page_n_views[i], "view", i)
+    mode_1_page_n += motivation_header
+    for i in range(len(view_array_reminder)):
+        mode_1_page_n += add_field(view_array_reminder[i], "view", i)
+    mode_1_page_n.append(motivations_meme[j])
     mode_1_pages.append(mode_1_page_n)
 
+# The page for re-selecting the opinion
 mode_1_pages.append(rethink)
+
+# The page that asks reflection questions
 mode_1_pages.append(reflection_head + reflection_vote + reflection_motivation + reflection_image)
+
+# The page that asks satisfaction questions
 mode_1_pages.append(satisfaction)
 
 for i in range(len(mode_1_pages)):
     mode_1_pages[i] = add_field(mode_1_pages[i], "page", 3 + i)
     mode_1_pages[i] = add_field(mode_1_pages[i], "mode", 1)
-
 page_array += mode_1_pages
 
 ##########################
@@ -878,32 +884,43 @@ page_array += mode_1_pages
 
 mode_2_pages = []
 
+# The pages for selecting motivations
 for j in range(len(motivations_text_only)):
     mode_2_page_n = []
-    mode_2_page_n_views = []
-    for k in range(len(view_array_reminder)):
-        mode_2_page_n_views.append(motivation_header + view_array_reminder[k] + [motivations_text_only[j]])
-    for i in range(len(mode_2_page_n_views)):
-        mode_2_page_n += add_field(mode_2_page_n_views[i], "view", i)
+    mode_2_page_n += motivation_header
+    for i in range(len(view_array_reminder)):
+        mode_2_page_n += add_field(view_array_reminder[i], "view", i)
+    mode_2_page_n.append(motivations_text_only[j])
     mode_2_pages.append(mode_2_page_n)
 
+# The page for re-selecting the opinion
 mode_2_pages.append(rethink)
+
+# The page that asks reflection questions
 mode_2_pages.append(reflection_head + reflection_vote + reflection_motivation)
+
+# The page that asks satisfaction questions
 mode_2_pages.append(satisfaction)
 
 for i in range(len(mode_2_pages)):
     mode_2_pages[i] = add_field(mode_2_pages[i], "page", 3 + i)
     mode_2_pages[i] = add_field(mode_2_pages[i], "mode", 2)
-
 page_array += mode_2_pages
 
 ##########################
 # Mode 3 specific pages
 
 mode_3_pages = []
+
+# The page for re-selecting the opinion
 mode_3_pages.append(rethink_no_scenario_txt)
+
+# The page that asks reflection questions
 mode_3_pages.append(reflection_head + reflection_vote)
+
+# The page that asks satisfaction questions
 mode_3_pages.append(satisfaction)
+
 for i in range(len(mode_3_pages)):
     mode_3_pages[i] = add_field(mode_3_pages[i], "page", 3 + i)
     mode_3_pages[i] = add_field(mode_3_pages[i], "mode", 3)

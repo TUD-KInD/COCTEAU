@@ -42,7 +42,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, server_default=func.now())
     client_id = db.Column(db.String(255), unique=True, nullable=False)
-    client_type = db.Column(db.Integer, nullable=False, default=1)
+    client_type = db.Column(db.Integer, nullable=False, server_default="1")
     answers = db.relationship("Answer", backref=db.backref("user", lazy=True), lazy=True)
 
     def __repr__(self):
@@ -105,7 +105,7 @@ class Scenario(db.Model):
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=False)
-    mode = db.Column(db.Integer, nullable=False, default=0)
+    mode = db.Column(db.Integer, nullable=False, server_default="0")
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"))
     questions = db.relationship("Question", backref=db.backref("scenario", lazy=True), lazy=True)
 
@@ -144,12 +144,7 @@ class Question(db.Model):
     page : int
         The page number for the question.
         (for creating questions on different pages on the front-end side)
-    view : int
-        The alternative views of the question.
-        (for creating a question on a page with alternative views on the front-end side)
-    mode : int
-        The alternative modes of the question.
-        (for creating a question on a page based on system configurations on the front-end side)
+        Page -1 means the question will appear on any page.
     scenario_id : int
         ID of the Scenario the question belongs to.
         Either the scenario_id or topic_id must be set, not both.
@@ -164,10 +159,8 @@ class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String, nullable=False)
     question_type = db.Column(db.Enum(QuestionTypeEnum))
-    order = db.Column(db.Integer, nullable=False, default=0)
-    page = db.Column(db.Integer, nullable=False, default=0)
-    view = db.Column(db.Integer, nullable=False, default=0)
-    mode = db.Column(db.Integer, nullable=False, default=0)
+    order = db.Column(db.Integer, nullable=False, server_default="0")
+    page = db.Column(db.Integer, nullable=False, server_default="-1")
     scenario_id = db.Column(db.Integer, db.ForeignKey("scenario.id"))
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"))
     choices = db.relationship("Choice", backref=db.backref("question", lazy=True), lazy=True)
@@ -297,7 +290,7 @@ class Mood(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=True)
-    order = db.Column(db.Integer, nullable=False, default=0)
+    order = db.Column(db.Integer, nullable=False, server_default="0")
 
     def __repr__(self):
         return "<Mood id=%r name=%r image=%r>" % (

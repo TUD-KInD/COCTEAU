@@ -4,7 +4,7 @@ from models.model import db
 from models.model import Scenario
 
 
-def create_scenario(title, description, image, topic_id, mode=None):
+def create_scenario(title, description, image, topic_id, mode=0):
     """
     Create a scenario object.
 
@@ -28,8 +28,6 @@ def create_scenario(title, description, image, topic_id, mode=None):
     scenario : Scenario
         The created scenario.
     """
-    mode = 0 if mode is None else mode
-
     scenario = Scenario(title=title, description=description,
             image=image, topic_id=topic_id, mode=mode)
 
