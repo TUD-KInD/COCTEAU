@@ -820,7 +820,7 @@
       return true;
     } else {
       var m = moods[0];
-      envObj.createMood(m["name"], m["image"], moodList.length, function (moodData) {
+      envObj.createMood(m["name"], m["image"], m["order"], function (moodData) {
         console.log("Mood created", moodData);
         moodList.push(moodData["data"]);
         addMoodInOrder(envObj, moods.slice(1), moodList, success, error);
@@ -853,7 +853,7 @@
       return true;
     } else {
       var q = questions[0];
-      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], questionList.length, q["page"], q["view"], q["mode"], function (questionData) {
+      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], q["order"], q["page"], q["view"], q["mode"], function (questionData) {
         console.log("Question created", questionData);
         questionList.push(questionData["data"]);
         addQuestionInOrder(envObj, questions.slice(1), questionList, topicId, scenarioId, success, error);

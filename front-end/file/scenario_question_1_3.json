@@ -1,18 +1,25 @@
 [{
   "text": "<h2>Pre-Survey: Data Brainstorming</h2>",
-  "is_just_description": true
+  "is_just_description": true,
+  "order": 0
 }, {
   "text": "You will use data to create a design concept for a product-service system for the city of Amsterdam to help tackle societal challenges. You will learn how to use data as design material. For example, how data can be useful to understand a design problem, how to be inspired by data when envisioning possible design directions, how data can be part of the design solutions, and how to use data for validation purposes.",
-  "is_just_description": true
+  "is_just_description": true,
+  "order": 1
 }, {
   "text": "<h3>Would you mind providing opinions on the following questions?</h3>",
-  "is_just_description": true
+  "is_just_description": true,
+  "order": 2
 }, {
-  "text": "1. What are the societal challenges that you are interested in? (health, sustainability, mobility, or tourism)"
+  "text": "1. What are the societal challenges that you are interested in? (health, sustainability, mobility, or tourism)",
+  "order": 3
 }, {
-  "text": "2. What topics do you want to explore and are related to the challenges you picked? (for example, water pollution for the sustainability challenge)"
+  "text": "2. What topics do you want to explore and are related to the challenges you picked? (for example, water pollution for the sustainability challenge)",
+  "order": 4
 }, {
-  "text": "3. For the topics of the challenges that you pick, what data can help you design solutions, including problem framming, concept generation, artifact creation, result validation? (for example, sensor data for water pollution)"
+  "text": "3. For the topics of the challenges that you pick, what data can help you design solutions, including problem framming, concept generation, artifact creation, result validation? (for example, sensor data for water pollution)",
+  "order": 5
 }, {
-  "text": "4. What are your learning expectations about what you would like to learn about data? Please give TWO expectations."
+  "text": "4. What are your learning expectations about what you would like to learn about data? Please give TWO expectations.",
+  "order": 6
 }]

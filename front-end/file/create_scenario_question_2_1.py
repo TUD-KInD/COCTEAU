@@ -820,21 +820,31 @@ def add_field(array_of_dict, field_name, field_value):
     return cp
 
 
+def add_field_increase(array_of_dict, field_name, field_value_init):
+    cp = deepcopy(array_of_dict)
+    for i in range(len(cp)):
+        cp[i][field_name] = field_value_init + i
+    return cp
+
+
 ####################
 # General pages
 
 page_array = []
 
 page_0 = study_head + empathy_questions
-page_array.append(add_field(page_0, "page", 0))
+page_0 = add_field(page_0, "page", 0)
+page_array.append(page_0)
 
 page_1 = demographic_questions
-page_array.append(add_field(page_1, "page", 1))
+page_1 = add_field(page_1, "page", 1)
+page_array.append(page_1)
 
 page_2 = []
 page_2_views = []
 for k in range(len(view_array)):
     page_2_views.append(scenario + view_array[k] + opinion_before)
+
 for i in range(len(page_2_views)):
     page_2 += add_field(page_2_views[i], "view", i)
 page_array.append(add_field(page_2, "page", 2))
@@ -905,6 +915,7 @@ page_array += mode_3_pages
 data = []
 for p in page_array:
     data += p
+data = add_field_increase(data, "order", 0)
 
 with open("scenario_question_2_1.json", "w") as outfile:
     json.dump(data, outfile)

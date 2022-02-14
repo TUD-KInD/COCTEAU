@@ -1,12 +1,15 @@
 [{
   "text": "<h2>Pre-Survey: Back to Campus from COVID</h2>",
-  "is_just_description": true
+  "is_just_description": true,
+  "order": 0
 }, {
   "text": "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people’s needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter.",
-  "is_just_description": true
+  "is_just_description": true,
+  "order": 1
 }, {
   "text": "<h3>Part 1: would you mind providing opinions on the following questions?</h3>",
-  "is_just_description": true
+  "is_just_description": true,
+  "order": 2
 }, {
   "text": "1. If I was not obliged to stay home, I would go to my workplace.",
   "choices": [{
@@ -24,7 +27,8 @@
   }, {
     "text": "Strongly Disagree",
     "value": 5
-  }]
+  }],
+  "order": 3
 }, {
   "text": "2. Working/studying from home is more productive.",
   "choices": [{
@@ -42,7 +46,8 @@
   }, {
     "text": "Strongly Disagree",
     "value": 5
-  }]
+  }],
+  "order": 4
 }, {
   "text": "3. Working/studying from home reduces the workload.",
   "choices": [{
@@ -60,7 +65,8 @@
   }, {
     "text": "Strongly Disagree",
     "value": 5
-  }]
+  }],
+  "order": 5
 }, {
   "text": "4. Working/studying from home reduces stress.",
   "choices": [{
@@ -78,7 +84,8 @@
   }, {
     "text": "Strongly Disagree",
     "value": 5
-  }]
+  }],
+  "order": 6
 }, {
   "text": "5. Working/studying from home makes my work schedule and timeline more flexible.",
   "choices": [{
@@ -96,12 +103,15 @@
   }, {
     "text": "Strongly Disagree",
     "value": 5
-  }]
+  }],
+  "order": 7
 }, {
-  "text": "6. Do you have other comments about returning the the shared workspace?"
+  "text": "6. Do you have other comments about returning the the shared workspace?",
+  "order": 8
 }, {
   "text": "<h3>Part 2: would you mind helping us understand the diversity?</h3>",
-  "is_just_description": true
+  "is_just_description": true,
+  "order": 9
 }, {
   "text": "7. What is your gender identity?",
   "choices": [{
@@ -122,7 +132,8 @@
   }, {
     "text": "Prefer not to say",
     "value": -1
-  }]
+  }],
+  "order": 10
 }, {
   "text": "8. What is your age range?",
   "choices": [{
@@ -149,7 +160,8 @@
   }, {
     "text": "Prefer not to say",
     "value": -1
-  }]
+  }],
+  "order": 11
 }, {
   "text": "9. What is your job category?",
   "choices": [{
@@ -170,5 +182,6 @@
   }, {
     "text": "Prefer not to say",
     "value": -1
-  }]
+  }],
+  "order": 12
 }]
