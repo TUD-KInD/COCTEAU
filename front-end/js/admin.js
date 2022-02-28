@@ -837,19 +837,19 @@
         envObj.createTopic(t["title"], t["description"], function (topicData) {
           console.log("Topic created", topicData);
           var topicId = topicData["data"]["id"];
-          addQuestion(envObj, "file/topic_question_1.json", topicId, undefined); // topic questions
-          addDataSet(envObj, topicId, "file/scenario_1_1.json", "file/scenario_question_1_1.json", moodId, "file/vision_1_1.json");
-          addDataSet(envObj, topicId, "file/scenario_1_2.json", "file/scenario_question_1_2.json", moodId, "file/vision_1_2.json");
-          //addDataSet(envObj, topicId, "file/scenario_1_3.json", "file/scenario_question_1_3.json", moodId, "file/vision_empty.json");
+          addQuestion(envObj, "file/topic_1_question.json", topicId, undefined); // topic questions
+          addDataSet(envObj, topicId, "file/scenario_1.json", "file/scenario_1_question.json", moodId, "file/scenario_1_vision.json");
+          addDataSet(envObj, topicId, "file/scenario_2.json", "file/scenario_2_question.json", moodId, "file/scenario_2_vision.json");
+          //addDataSet(envObj, topicId, "file/scenario_3.json", "file/scenario_3_question.json", moodId, "file/empty.json");
         });
       });
       // Add the crowdscouring experiments
-      $.getJSON("file/topic_2.json", function (t) {
+      $.getJSON("file/topic_4.json", function (t) {
         envObj.createTopic(t["title"], t["description"], function (topicData) {
           console.log("Topic created", topicData);
           var topicId = topicData["data"]["id"];
-          addQuestion(envObj, "file/topic_question_2.json", topicId, undefined); // topic questions
-          addDataSet(envObj, topicId, "file/scenario_2_1.json", "file/scenario_question_2_1.json", moodId, "file/vision_empty.json");
+          addQuestion(envObj, "file/topic_4_question.json", topicId, undefined); // topic questions
+          addDataSet(envObj, topicId, "file/scenario_4.json", "file/scenario_4_question.json", moodId, "file/empty.json");
         });
       });
     });
