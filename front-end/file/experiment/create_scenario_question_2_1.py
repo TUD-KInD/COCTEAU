@@ -912,36 +912,26 @@ consent_questions = [
 # Dictionaries for all scenarios
 num_of_modes = 3
 num_of_views = len(view_array)
-topic_list = []
-topic_question_list = []
-scenario_list = []
-scenario_question_list = []
 
 #####################################
-# Add data
+# Save topic questions
+with open("topic_4_question.json", "w") as outfile:
+    json.dump(add_field_increase(consent_questions, "order", 0), outfile)
+
+# Add other data
 for i in range(num_of_modes):
     for j in range(num_of_views):
         # Define mode and view
         m = i + 1
         v = j + 1
-        # Add scenario
+        # Add and save scenario
         s = {"title": scenario_title, "description": scenario_txt, "image": "scenario_3.png", "mode": m, "view": v}
-        scenario_list.append(s)
-        # Save scenario
-        with open("scenario_2_%d_%d.json" % (m, v), "w") as outfile:
-            json.dump(scenario_list, outfile)
-        # Add topic
+        with open("scenario_4_mode_%d_view_%d.json" % (m, v), "w") as outfile:
+            json.dump(s, outfile)
+        # Add and save topic
         t = {"title": "Crowdsourcing Experiment", "description": "mode %d view %d" % (m, v)}
-        topic_list.append(t)
-        # Save topic
-        with open("topic_2_%d_%d.json" % (m, v), "w") as outfile:
-            json.dump(topic_list, outfile)
-        # Add topic questions
-        tq = add_field_increase(consent_questions, "order", 0)
-        topic_question_list.append(tq)
-        # Save topic questions
-        with open("topic_question_2_%d_%d.json" % (m, v), "w") as outfile:
-            json.dump(topic_question_list, outfile)
+        with open("topic_4_mode_%d_view_%d.json" % (m, v), "w") as outfile:
+            json.dump(t, outfile)
         # Add scenario questions
         page_array = []
         # The page that explains the study and ask empathy-related questions
@@ -1009,7 +999,6 @@ for i in range(num_of_modes):
         for p in page_array:
             sq += p
         sq = add_field_increase(sq, "order", 0)
-        scenario_question_list.append(sq)
         # Save scenario questions
-        with open("scenario_question_2_%d_%d.json" % (m, v), "w") as outfile:
-            json.dump(scenario_question_list, outfile)
+        with open("scenario_4_question_mode_%d_view_%d.json" % (m, v), "w") as outfile:
+            json.dump(sq, outfile)

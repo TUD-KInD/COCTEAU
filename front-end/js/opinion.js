@@ -8,16 +8,16 @@
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} scenarioId - the ID of the scenario.
    * @param {number} page - page of the scenario questions that we want to load.
-   * @param {number} mode - system configuration of the scenario.
    */
-  function loadPageContent(envObj, scenarioId, page, mode) {
+  function loadPageContent(envObj, scenarioId, page) {
     envObj.getScenarioById(scenarioId, function (data) {
       var scenario = data["data"];
+      var mode = scenario["mode"];
       if ($.isEmptyObject(scenario)) {
         envObj.showErrorPage();
       } else {
         var $questionContainer = $("#scenario-questions");
-        envObj.addScenarioQuestionsToContainer($questionContainer, scenario["questions"], page);
+        envObj.addScenarioQuestionsToContainer($questionContainer, scenarioId, page);
         $("#next-button").on("click", function () {
           envObj.submitScenarioAnswer($questionContainer, function () {
             if (mode == 0) {
@@ -57,11 +57,10 @@
     var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
     var topicId = "topic_id" in queryParas ? queryParas["topic_id"] : undefined;
     var page = "page" in queryParas ? parseInt(queryParas["page"]) : 0;
-    var mode = "mode" in queryParas ? parseInt(queryParas["mode"]) : 0;
     if (typeof scenarioId !== "undefined" && topicId !== "undefined") {
       envObj.checkUserConsent(topicId, function () {
         // The user has provided consent
-        loadPageContent(envObj, scenarioId, page, mode);
+        loadPageContent(envObj, scenarioId, page);
       });
     } else {
       envObj.showErrorPage();

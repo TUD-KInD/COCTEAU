@@ -273,7 +273,7 @@
         request["contentType"] = "application/json";
         request["dataType"] = "json";
       }
-      $.ajax(request);
+      return $.ajax(request);
     }
 
     /**
@@ -284,7 +284,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     function generalGet(path, success, error) {
-      generalRequest("GET", path, undefined, success, error);
+      return generalRequest("GET", path, undefined, success, error);
     }
 
     /**
@@ -297,7 +297,7 @@
      */
     function generalDelete(path, data, success, error) {
       data["user_token"] = userToken;
-      generalRequest("DELETE", path, data, success, error);
+      return generalRequest("DELETE", path, data, success, error);
     }
 
     /**
@@ -310,7 +310,7 @@
      */
     function generalPost(path, data, success, error) {
       data["user_token"] = userToken;
-      generalRequest("POST", path, data, success, error);
+      return generalRequest("POST", path, data, success, error);
     }
 
     /**
@@ -323,7 +323,7 @@
      */
     function generalPatch(path, data, success, error) {
       data["user_token"] = userToken;
-      generalRequest("PATCH", path, data, success, error);
+      return generalRequest("PATCH", path, data, success, error);
     }
 
     /**
@@ -333,7 +333,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllTopic = function (success, error) {
-      generalGet("/topic/", success, error);
+      return generalGet("/topic/", success, error);
     };
 
     /**
@@ -344,7 +344,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getTopicById = function (topicId, success, error) {
-      generalGet("/topic/?topic_id=" + topicId, success, error);
+      return generalGet("/topic/?topic_id=" + topicId, success, error);
     };
 
     /**
@@ -360,7 +360,7 @@
         "title": title,
         "description": description
       };
-      generalPost("/topic/", data, success, error);
+      return generalPost("/topic/", data, success, error);
     };
 
     /**
@@ -382,7 +382,7 @@
       if (typeof description !== "undefined") {
         data["description"] = description;
       }
-      generalPatch("/topic/", data, success, error);
+      return generalPatch("/topic/", data, success, error);
     };
 
     /**
@@ -396,7 +396,7 @@
       var data = {
         "topic_id": topicId
       };
-      generalDelete("/topic/", data, success, error);
+      return generalDelete("/topic/", data, success, error);
     };
 
     /**
@@ -406,7 +406,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllScenario = function (success, error) {
-      generalGet("/scenario/", success, error);
+      return generalGet("/scenario/", success, error);
     };
 
     /**
@@ -417,7 +417,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getScenarioByTopicId = function (topicId, success, error) {
-      generalGet("/scenario/?topic_id=" + topicId, success, error);
+      return generalGet("/scenario/?topic_id=" + topicId, success, error);
     };
 
     /**
@@ -428,7 +428,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getScenarioById = function (scenarioId, success, error) {
-      generalGet("/scenario/?scenario_id=" + scenarioId, success, error);
+      return generalGet("/scenario/?scenario_id=" + scenarioId, success, error);
     };
 
     /**
@@ -456,7 +456,7 @@
       if (typeof view !== "undefined") {
         data["view"] = view;
       }
-      generalPost("/scenario/", data, success, error);
+      return generalPost("/scenario/", data, success, error);
     };
 
     /**
@@ -494,7 +494,7 @@
       if (typeof view !== "undefined") {
         data["view"] = view;
       }
-      generalPatch("/scenario/", data, success, error);
+      return generalPatch("/scenario/", data, success, error);
     };
 
     /**
@@ -508,7 +508,7 @@
       var data = {
         "scenario_id": scenarioId
       };
-      generalDelete("/scenario/", data, success, error);
+      return generalDelete("/scenario/", data, success, error);
     };
 
     /**
@@ -523,7 +523,7 @@
       if (typeof page !== "undefined") {
         path += "&page=" + page;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -539,7 +539,7 @@
       if (typeof page !== "undefined") {
         path += "&page=" + page;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
     this.getQuestionByTopicId = getQuestionByTopicId;
 
@@ -551,13 +551,14 @@
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getQuestionByScenarioId = function (scenarioId, page, success, error) {
+    var getQuestionByScenarioId = function (scenarioId, page, success, error) {
       var path = "/question/?scenario_id=" + scenarioId;
       if (typeof page !== "undefined") {
         path += "&page=" + page;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
+    this.getQuestionByScenarioId = getQuestionByScenarioId;
 
     /**
      * Get a question by ID.
@@ -572,7 +573,7 @@
       if (typeof page !== "undefined") {
         path += "&page=" + page;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -628,7 +629,7 @@
       if (typeof page !== "undefined") {
         data["page"] = page;
       }
-      generalPost("/question/", data, success, error);
+      return generalPost("/question/", data, success, error);
     };
 
     /**
@@ -666,7 +667,7 @@
       if (typeof page !== "undefined") {
         data["page"] = page;
       }
-      generalPatch("/question/", data, success, error);
+      return generalPatch("/question/", data, success, error);
     };
 
     /**
@@ -680,7 +681,7 @@
       var data = {
         "question_id": questionId
       };
-      generalDelete("/question/", data, success, error);
+      return generalDelete("/question/", data, success, error);
     };
 
     /**
@@ -690,7 +691,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllMood = function (success, error) {
-      generalGet("/mood/", success, error);
+      return generalGet("/mood/", success, error);
     };
 
     /**
@@ -701,7 +702,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getMoodById = function (moodId, success, error) {
-      generalGet("/mood/?mood_id=" + moodId, success, error);
+      return generalGet("/mood/?mood_id=" + moodId, success, error);
     };
 
     /**
@@ -723,7 +724,7 @@
       if (typeof order !== "undefined") {
         data["order"] = order;
       }
-      generalPost("/mood/", data, success, error);
+      return generalPost("/mood/", data, success, error);
     };
 
     /**
@@ -745,7 +746,7 @@
       if (typeof image !== "undefined") {
         data["image"] = image;
       }
-      generalPatch("/mood/", data, success, error);
+      return generalPatch("/mood/", data, success, error);
     };
 
     /**
@@ -759,7 +760,7 @@
       var data = {
         "mood_id": moodId
       };
-      generalDelete("/mood/", data, success, error);
+      return generalDelete("/mood/", data, success, error);
     };
 
     /**
@@ -769,7 +770,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllVision = function (success, error) {
-      generalGet("/vision/?paginate=0", success, error);
+      return generalGet("/vision/?paginate=0", success, error);
     };
 
     /**
@@ -780,7 +781,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getVisionByScenarioId = function (scenarioId, success, error) {
-      generalGet("/vision/?paginate=0&scenario_id=" + scenarioId, success, error);
+      return generalGet("/vision/?paginate=0&scenario_id=" + scenarioId, success, error);
     };
 
     /**
@@ -791,7 +792,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getVisionByUserId = function (userId, success, error) {
-      generalGet("/vision/?paginate=0&user_id=" + userId, success, error);
+      return generalGet("/vision/?paginate=0&user_id=" + userId, success, error);
     };
 
     /**
@@ -802,7 +803,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getVisionById = function (visionId, success, error) {
-      generalGet("/vision/?vision_id=" + visionId, success, error);
+      return generalGet("/vision/?vision_id=" + visionId, success, error);
     };
 
     /**
@@ -831,7 +832,7 @@
         }],
         "scenario_id": scenarioId,
       };
-      generalPost("/vision/", data, success, error);
+      return generalPost("/vision/", data, success, error);
     };
 
     /**
@@ -871,7 +872,7 @@
         console.warn("Field 'unsplashCreatorUrl' is ignored.");
         console.warn("Must have all of the above ignored fields.");
       }
-      generalPatch("/vision/", data, success, error);
+      return generalPatch("/vision/", data, success, error);
     };
 
     /**
@@ -885,7 +886,7 @@
       var data = {
         "vision_id": visionId
       };
-      generalDelete("/vision/", data, success, error);
+      return generalDelete("/vision/", data, success, error);
     };
 
     /**
@@ -899,7 +900,7 @@
       if (typeof userToken !== "undefined") {
         path += "?user_token=" + userToken;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -914,7 +915,7 @@
       if (typeof userToken !== "undefined") {
         path += "&user_token=" + userToken;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -929,7 +930,7 @@
       if (typeof userToken !== "undefined") {
         path += "&user_token=" + userToken;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -944,7 +945,7 @@
       if (typeof userToken !== "undefined") {
         path += "&user_token=" + userToken;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -959,7 +960,7 @@
       if (typeof userToken !== "undefined") {
         path += "&user_token=" + userToken;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -974,7 +975,7 @@
       if (typeof userToken !== "undefined") {
         path += "&user_token=" + userToken;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
     this.getAnswerOfCurrentUserByTopicId = getAnswerOfCurrentUserByTopicId;
 
@@ -990,7 +991,7 @@
       if (typeof userToken !== "undefined") {
         path += "&user_token=" + userToken;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -1004,7 +1005,7 @@
       if (typeof userToken !== "undefined") {
         path += "&user_token=" + userToken;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -1019,7 +1020,7 @@
       if (typeof userToken !== "undefined") {
         path += "&user_token=" + userToken;
       }
-      generalGet(path, success, error);
+      return generalGet(path, success, error);
     };
 
     /**
@@ -1078,7 +1079,7 @@
       if (typeof secret !== "undefined") {
         data["secret"] = secret;
       }
-      generalPost("/answer/", data, success, error);
+      return generalPost("/answer/", data, success, error);
     };
     this.createAnswer = createAnswer;
 
@@ -1093,7 +1094,7 @@
       var data = {
         "answer_id": answerId
       };
-      generalDelete("/answer/", data, success, error);
+      return generalDelete("/answer/", data, success, error);
     };
 
     /**
@@ -1103,7 +1104,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllGame = function (success, error) {
-      generalGet("/game/", success, error);
+      return generalGet("/game/", success, error);
     };
 
     /**
@@ -1114,7 +1115,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getGameByUserId = function (userId, success, error) {
-      generalGet("/game/?user_id=" + userId, success, error);
+      return generalGet("/game/?user_id=" + userId, success, error);
     };
 
     /**
@@ -1125,7 +1126,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getGameByVisionId = function (visionId, success, error) {
-      generalGet("/game/?vision_id=" + visionId, success, error);
+      return generalGet("/game/?vision_id=" + visionId, success, error);
     };
 
     /**
@@ -1136,7 +1137,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getGameById = function (gameId, success, error) {
-      generalGet("/game/?game_id=" + gameId, success, error);
+      return generalGet("/game/?game_id=" + gameId, success, error);
     };
 
     /**
@@ -1151,7 +1152,7 @@
       if (typeof scenarioId !== "undefined") {
         data["scenario_id"] = scenarioId;
       }
-      generalPost("/game/", data, success, error);
+      return generalPost("/game/", data, success, error);
     };
 
     /**
@@ -1173,7 +1174,7 @@
       if (typeof feedback !== "undefined") {
         data["feedback"] = feedback;
       }
-      generalPatch("/game/", data, success, error);
+      return generalPatch("/game/", data, success, error);
     };
 
     /**
@@ -1187,7 +1188,7 @@
       var data = {
         "game_id": gameId
       };
-      generalDelete("/game/", data, success, error);
+      return generalDelete("/game/", data, success, error);
     };
 
     /**
@@ -1667,37 +1668,36 @@
      * Add questions to the HTML container.
      * @public
      * @param {Object} $container - the jQuery object of the question container.
-     * @param {Question[]} questions - a list of the scenario question object.
-     * @param {number} page - page of the scenario questions that we want to load.
+     * @param {number} scenarioId - ID of the scenario that we wish to get the corresponding questions.
+     * @param {number} page - page number of the scenario questions that we want to load.
+     * @param {function} [success] - callback function when the operation is successful.
      */
-    this.addScenarioQuestionsToContainer = function ($container, questions, page) {
-      // Build a dictionary based on page
-      var questionDict = new DefaultDict(new DefaultDict(new DefaultDict(Array)))
-      for (var i = 0; i < questions.length; i++) {
-        var sq = questions[i];
-        var p = sq["page"];
-        if (typeof p === "undefined") continue;
-        questionDict[p].push(sq);
-      }
-      // Select the questions that will always show
-      var alwaysShownQuestions = questionDict[-1];
-      // Filter questions by page
-      var filteredQuestions = questionDict[page];
-      filteredQuestions = filteredQuestions.concat(alwaysShownQuestions);
-      // Sort questions
-      // TODO: randomly sort the questions with the same order
-      periscope.util.sortArrayOfDictByKeyInPlace(filteredQuestions, "order");
-      // Create HTML elements
-      for (var j = 0; j < filteredQuestions.length; j++) {
-        var q = filteredQuestions[j]
-        if (q["question_type"] == null) {
-          var $q = createScenarioTextHTML(q["text"]);
-        } else {
-          var $q = createScenarioQuestionHTML("sq-" + q["id"], q);
-          $q.data("raw", q);
+    this.addScenarioQuestionsToContainer = function ($container, scenarioId, page, success) {
+      var pageNumberList = [-1, page];
+      var questions = []
+      $.when.apply($, pageNumberList.map(function (pageNumber) {
+        return getQuestionByScenarioId(scenarioId, pageNumber, function (returnData) {
+          questions = questions.concat(returnData["data"]);
+        });
+      })).done(function () {
+        // We need to first randomly shuffle the array
+        // So that questions with the same order will be randomly sorted later
+        periscope.util.shuffleArrayInPlace(questions);
+        // Sort questions by their order
+        periscope.util.sortArrayOfDictByKeyInPlace(questions, "order");
+        // Create HTML elements
+        for (var j = 0; j < questions.length; j++) {
+          var q = questions[j]
+          if (q["question_type"] == null) {
+            var $q = createScenarioTextHTML(q["text"]);
+          } else {
+            var $q = createScenarioQuestionHTML("sq-" + q["id"], q);
+            $q.data("raw", q);
+          }
+          $container.append($q);
         }
-        $container.append($q);
-      }
+        if (typeof success === "function") success(questions);
+      });
     };
 
     /**

@@ -57,7 +57,7 @@ class ScenarioSchema(ma.Schema):
     questions = ma.Nested(questions_schema)
     class Meta:
         model = Scenario
-        fields = ("id", "title", "description", "image", "topic_id", "questions", "mode")
+        fields = ("id", "title", "description", "image", "topic_id", "mode", "view")
 scenario_schema = ScenarioSchema()
 scenarios_schema = ScenarioSchema(many=True)
 

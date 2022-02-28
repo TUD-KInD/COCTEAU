@@ -24,8 +24,7 @@
       var d = $(this).data("raw");
       var scenarioId = d["id"];
       var topicId = d["topic_id"];
-      var mode = d["mode"];
-      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode;
+      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId;
       // Get the scenario answers
       envObj.getAnswerOfCurrentUserByScenarioId(scenarioId, function (data) {
         var answer = data["data"];
@@ -55,8 +54,7 @@
         for (var i = 0; i < scenarios.length; i++) {
           var d = scenarios[i];
           if (d["mode"] == 0) {
-            // Only show mode 0 for the index page
-            // Mode 0 means the deployment setting
+            // Only show mode 0 (i.e., the deployment setting) for the index page
             var $t = createScenarioHTML(d["title"], "img/" + d["image"]);
             $t.data("raw", d);
             addDeploymentScenarioClickEvent(envObj, $t);

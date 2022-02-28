@@ -128,6 +128,26 @@
         return 0;
       });
     };
+
+    /**
+     * Sort the elements in an array randomly.
+     * @public
+     * @param {Object[]} array - array of objects.
+     */
+    this.shuffleArrayInPlace = function (array) {
+      var currentIndex = array.length;
+      if (typeof currentIndex === "undefined" || typeof array === "string") return array;
+      var randomIndex;
+      // While there remain elements to shuffle
+      while (currentIndex != 0) {
+        // Pick a remaining element
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        // And swap it with the current element
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+      return array;
+    };
   };
 
   // Create the object and register it to window

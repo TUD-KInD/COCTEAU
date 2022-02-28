@@ -21,7 +21,7 @@
   function addExperimentScenarioClickEvent($element) {
     $element.on("click", function () {
       var d = $(this).data("raw");
-      var queryString = "?scenario_id=" + d["id"] + "&topic_id=" + d["topic_id"] + "&mode=" + d["mode"] + "&page=0";
+      var queryString = "?scenario_id=" + d["id"] + "&topic_id=" + d["topic_id"] + "&page=0";
       window.location.href = "experiment-opinion.html" + queryString;
     });
   }
@@ -42,7 +42,7 @@
           var d = scenarios[i];
           if (d["mode"] >= 1) {
             // Only show the scenarios that are for experiments (mode 0 means the normal interaction mode)
-            var $t = createScenarioHTML(d["title"] + " (mode " + mode + ")", "img/" + d["image"]);
+            var $t = createScenarioHTML(d["title"] + " (mode " + d["mode"] + ", view " + d["view"] + ")", "img/" + d["image"]);
             $t.data("raw", d);
             addExperimentScenarioClickEvent($t);
             $scenario.append($t);

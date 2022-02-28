@@ -626,6 +626,7 @@
    * @param {Object} envObj - environment object (in environment.js).
    */
   function deleteAllData(envObj) {
+    // TODO: make this function not depend on the timer
     console.log("Start deleting data...");
     // Delete all games
     envObj.getAllGame(function (returnData) {
@@ -679,7 +680,7 @@
           });
         }
       });
-    }, 8000);
+    }, 14000);
     // Delete all topics
     window.setTimeout(function () {
       envObj.getAllTopic(function (returnData) {
@@ -690,7 +691,7 @@
           });
         }
       });
-    }, 9000);
+    }, 15000);
     // Delete all moods
     window.setTimeout(function () {
       envObj.getAllMood(function (returnData) {
@@ -701,7 +702,7 @@
           });
         }
       });
-    }, 10000);
+    }, 16000);
   }
 
   /**
@@ -711,7 +712,7 @@
    */
   function addDataSet(envObj, topicId, scenarioPath, scenarioQuestionPath, moodId, visionPath) {
     $.getJSON(scenarioPath, function (s) {
-      envObj.createScenario(s["title"], s["description"], s["image"], topicId, s["mode"], function (scenarioData) {
+      envObj.createScenario(s["title"], s["description"], s["image"], topicId, s["mode"], s["view"], function (scenarioData) {
         console.log("Scenario created", scenarioData);
         var scenarioId = scenarioData["data"]["id"];
         addQuestion(envObj, scenarioQuestionPath, undefined, scenarioId); // scenario questions
@@ -844,14 +845,25 @@
         });
       });
       // Add the crowdscouring experiments
-      $.getJSON("file/topic_4.json", function (t) {
-        envObj.createTopic(t["title"], t["description"], function (topicData) {
-          console.log("Topic created", topicData);
-          var topicId = topicData["data"]["id"];
-          addQuestion(envObj, "file/topic_4_question.json", topicId, undefined); // topic questions
-          addDataSet(envObj, topicId, "file/scenario_4.json", "file/scenario_4_question.json", moodId, "file/empty.json");
+      var numOfModes = 3;
+      var numOfViews = 5;
+      var fileEndList = [];
+      for (var i = 1; i < numOfModes + 1; i++) {
+        for (var j = 1; j < numOfViews + 1; j++) {
+          fileEndList.push("_mode_" + i + "_view_" + j + ".json");
+        }
+      }
+      $.when.apply($, fileEndList.map(function (fileEnd) {
+        var filePath = "file/experiment/";
+        return $.getJSON(filePath + "topic_4" + fileEnd, function (t) {
+          envObj.createTopic(t["title"], t["description"], function (topicData) {
+            console.log("Topic created", topicData);
+            var topicId = topicData["data"]["id"];
+            addQuestion(envObj, filePath + "topic_4_question.json", topicId, undefined); // topic questions
+            addDataSet(envObj, topicId, filePath + "scenario_4" + fileEnd, filePath + "scenario_4_question" + fileEnd, moodId, "file/empty.json");
+          });
         });
-      });
+      }));
     });
   }
 
