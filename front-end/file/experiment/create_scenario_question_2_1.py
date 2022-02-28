@@ -99,10 +99,12 @@ demographic_questions = [
     },
 ]
 
+scenario_title = "Back to Campus from COVID"
+
 scenario_txt = "The COVID-19 situation is still full of uncertainties. Even with vaccinations and other measures, the growth of the number of cases is not slowing down enough. Universities have decided to keep in place agile working approaches. While suggesting to work and study from home as much as possible, they allow people to return to the shared workplace. However, facility managers and people responsible for on-campus activities need to define working policies that both satisfy people's needs and government guidelines. To do so, they asked people working and studying on campus to express their opinion on this matter."
 
 scenario = [
-    {"text": "<h2>Back to Campus from COVID</h2>", "is_just_description": True},
+    {"text": "<h2>" + scenario_title + "</h2>", "is_just_description": True},
     {"text": scenario_txt, "is_just_description": True},
 ]
 
@@ -827,112 +829,187 @@ def add_field_increase(array_of_dict, field_name, field_value_init):
     return cp
 
 
-####################
-# General pages
+consent_questions = [
+    {
+        "text": "<h3>Researchers</h3>",
+        "is_just_description": True,
+    },
+    {
+        "text": "Andrea Mauri (a.mauri@tudelft.nl), Yen-Chia Hsu (y.hsu-1@tudelft.nl), Alessandro Bozzon (a.bozzon@tudelft.nl), Himanshu Verma (H.Verma@tudelft.nl), Achilleas Psyllidis (a.psyllidis@tudelft.nl)",
+        "is_just_description": True,
+    },
+    {
+        "text": "<h3>Purpose of the study</h3>",
+        "is_just_description": True,
+    },
+    {
+        "text": "You are being invited to participate in a research study from the TU Delft. Participation is limited to adults (18 years of age and older). The purpose of this research study is to understand if our approach can effectively engage stakeholders in discussions of societal issues at scale. This study will take you approximately 15 minutes to complete. The data will be used to derive empirical design implications that can guide the development of our citizen engagement tool.",
+        "is_just_description": True,
+    },
+    {
+        "text": "<h3>Study procedure</h3>",
+        "is_just_description": True,
+    },
+    {
+        "text": "You will use a web-based tool to provide opinions about predefined scenarios and interact with other people’s opinions. At the beginning and the end of the study, you may be asked to fill out surveys. Please avoid putting personal identifiers in the web-based tool and survey.",
+        "is_just_description": True,
+    },
+    {
+        "text": "<h3>Benefits and risks of participation</h3>",
+        "is_just_description": True,
+    },
+    {
+        "text": "The risks associated with participation in this study are no greater than those ordinarily encountered in daily life or during other online activities. There may be no direct benefit to you. However, the research result that comes from your data can contribute knowledge to humanity.",
+        "is_just_description": True,
+    },
+    {
+        "text": "<h3>Procedures for withdrawal from the study</h3>",
+        "is_just_description": True,
+    },
+    {
+        "text": "Your participation in this study is entirely voluntary and you can withdraw at any time. You are free to omit any question.",
+        "is_just_description": True,
+    },
+    {
+        "text": "<h3>Data collection and processing</h3>",
+        "is_just_description": True,
+    },
+    {
+        "text": "We will not collect personal identifiers. When you interact with our tool, it will collect system usage data anonymously. We will process the anonymous data you contribute to the web-based tool and surveys. Your user ID (returned by the crowdsourcing platform) will be anonymized (by assigning an unidentifiable ID like a random string) as soon as possible. The raw demographic data that you provide will be deleted after the research is done. Only the aggregated demographic data will be kept. Since all data are anonymized, it is impossible to retract your data after the study is done.",
+        "is_just_description": True,
+    },
+    {
+        "text": "<h3>Data usage and privacy</h3>",
+        "is_just_description": True,
+    },
+    {
+        "text": "The analysis results and the data collection methodology may be published in research papers or technical reports. We will aim for open access publication. During the active phase of research, the project leader from TU Delft will oversee the access rights to data (and other outputs), as well as any requests for access from external parties. Sharing of data with others will only be done in such a manner that subjects will not be identified. We will host data on password-protected storages.",
+        "is_just_description": True,
+    },
+    {
+        "text": "<h3>Research participant rights</h3>",
+        "is_just_description": True,
+    },
+    {
+        "text": "If you have concerns or questions about this research study, or if you believe that you have been harmed due to participation in this study, please contact the researchers, listed at the beginning of this informed consent form.",
+        "is_just_description": True,
+    },
+    {
+        "text": "<h3>Provide your consent</h3>",
+        "is_just_description": True,
+    },
+    {
+        "text": "I have read and understood the study information. I consent voluntarily to participate in this study and understand that I can refuse to answer questions and I can withdraw from the study at any time, without having to give a reason. I understand that taking part in the study involves using a web-based tool and taking surveys. I understand that information I provide will be used for data analysis, and the anonymous data and the results may be released publicly in research papers or technical reports. I agree that the data I provided in the study can be quoted in research outputs. I give permission for the non-identifiable data that I provide to be archived into an anonymized dataset so it can be used for future research and learning.",
+        "is_just_description": True,
+    },
+    {
+        "text": "Please kindly let us know if you agree with all the above statements. We will only proceed if you answer YES.",
+        "choices": [{"text": "No", "value": 0}, {"text": "Yes", "value": 1}],
+    },
+]
 
-page_array = []
+#####################################
+# Dictionaries for all scenarios
+num_of_modes = 3
+num_of_views = len(view_array)
+topic_list = []
+topic_question_list = []
+scenario_list = []
+scenario_question_list = []
 
-# The page that explains the study and ask empathy-related questions
-page_0 = study_head + empathy_questions
-page_0 = add_field(page_0, "page", 0)
-page_array.append(page_0)
-
-# The page that asks demographic questions
-page_1 = demographic_questions
-page_1 = add_field(page_1, "page", 1)
-page_array.append(page_1)
-
-# The page that explains the scenario with different roles (i.e., views)
-page_2 = []
-page_2 += scenario
-for i in range(len(view_array)):
-    page_2 += add_field(view_array[i], "view", i)
-page_2 += opinion_before
-page_2 = add_field(page_2, "page", 2)
-page_array.append(page_2)
-
-##########################
-# Mode 1 specific pages
-
-mode_1_pages = []
-
-# The pages for selecting motivations
-for j in range(len(motivations_meme)):
-    mode_1_page_n = []
-    mode_1_page_n += motivation_header
-    for i in range(len(view_array_reminder)):
-        mode_1_page_n += add_field(view_array_reminder[i], "view", i)
-    mode_1_page_n.append(motivations_meme[j])
-    mode_1_pages.append(mode_1_page_n)
-
-# The page for re-selecting the opinion
-mode_1_pages.append(rethink)
-
-# The page that asks reflection questions
-mode_1_pages.append(reflection_head + reflection_vote + reflection_motivation + reflection_image)
-
-# The page that asks satisfaction questions
-mode_1_pages.append(satisfaction)
-
-for i in range(len(mode_1_pages)):
-    mode_1_pages[i] = add_field(mode_1_pages[i], "page", 3 + i)
-    mode_1_pages[i] = add_field(mode_1_pages[i], "mode", 1)
-page_array += mode_1_pages
-
-##########################
-# Mode 2 specific pages
-
-mode_2_pages = []
-
-# The pages for selecting motivations
-for j in range(len(motivations_text_only)):
-    mode_2_page_n = []
-    mode_2_page_n += motivation_header
-    for i in range(len(view_array_reminder)):
-        mode_2_page_n += add_field(view_array_reminder[i], "view", i)
-    mode_2_page_n.append(motivations_text_only[j])
-    mode_2_pages.append(mode_2_page_n)
-
-# The page for re-selecting the opinion
-mode_2_pages.append(rethink)
-
-# The page that asks reflection questions
-mode_2_pages.append(reflection_head + reflection_vote + reflection_motivation)
-
-# The page that asks satisfaction questions
-mode_2_pages.append(satisfaction)
-
-for i in range(len(mode_2_pages)):
-    mode_2_pages[i] = add_field(mode_2_pages[i], "page", 3 + i)
-    mode_2_pages[i] = add_field(mode_2_pages[i], "mode", 2)
-page_array += mode_2_pages
-
-##########################
-# Mode 3 specific pages
-
-mode_3_pages = []
-
-# The page for re-selecting the opinion
-mode_3_pages.append(rethink_no_scenario_txt)
-
-# The page that asks reflection questions
-mode_3_pages.append(reflection_head + reflection_vote)
-
-# The page that asks satisfaction questions
-mode_3_pages.append(satisfaction)
-
-for i in range(len(mode_3_pages)):
-    mode_3_pages[i] = add_field(mode_3_pages[i], "page", 3 + i)
-    mode_3_pages[i] = add_field(mode_3_pages[i], "mode", 3)
-page_array += mode_3_pages
-
-#################
-# Merge pages
-
-data = []
-for p in page_array:
-    data += p
-data = add_field_increase(data, "order", 0)
-
-with open("scenario_question_2_1.json", "w") as outfile:
-    json.dump(data, outfile)
+#####################################
+# Add data
+for i in range(num_of_modes):
+    for j in range(num_of_views):
+        # Define mode and view
+        m = i + 1
+        v = j + 1
+        # Add scenario
+        s = {"title": scenario_title, "description": scenario_txt, "image": "scenario_3.png", "mode": m, "view": v}
+        scenario_list.append(s)
+        # Save scenario
+        with open("scenario_2_%d_%d.json" % (m, v), "w") as outfile:
+            json.dump(scenario_list, outfile)
+        # Add topic
+        t = {"title": "Crowdsourcing Experiment", "description": "mode %d view %d" % (m, v)}
+        topic_list.append(t)
+        # Save topic
+        with open("topic_2_%d_%d.json" % (m, v), "w") as outfile:
+            json.dump(topic_list, outfile)
+        # Add topic questions
+        tq = add_field_increase(consent_questions, "order", 0)
+        topic_question_list.append(tq)
+        # Save topic questions
+        with open("topic_question_2_%d_%d.json" % (m, v), "w") as outfile:
+            json.dump(topic_question_list, outfile)
+        # Add scenario questions
+        page_array = []
+        # The page that explains the study and ask empathy-related questions
+        page_0 = study_head + empathy_questions
+        page_array.append(add_field(page_0, "page", 0))
+        # The page that asks demographic questions
+        page_1 = demographic_questions
+        page_array.append(add_field(page_1, "page", 1))
+        # The page that explains the scenario with different roles (i.e., views)
+        page_2 = scenario + view_array[j] + opinion_before
+        page_array.append(add_field(page_2, "page", 2))
+        # Mode specific pages
+        if i == 0:  # mode 1
+            mode_1_pages = []
+            # The pages for selecting motivations
+            for k in range(len(motivations_meme)):
+                mode_1_page_n = []
+                mode_1_page_n += motivation_header
+                mode_1_page_n += view_array_reminder[j]
+                mode_1_page_n.append(motivations_meme[k])
+                mode_1_pages.append(mode_1_page_n)
+            # The page for re-selecting the opinion
+            mode_1_pages.append(rethink)
+            # The page that asks reflection questions
+            mode_1_pages.append(reflection_head + reflection_vote + reflection_motivation + reflection_image)
+            # The page that asks satisfaction questions
+            mode_1_pages.append(satisfaction)
+            # Set up page numbers
+            for k in range(len(mode_1_pages)):
+                mode_1_pages[k] = add_field(mode_1_pages[k], "page", 3 + k)
+            page_array += mode_1_pages
+        elif i == 1:  # mode 2
+            mode_2_pages = []
+            # The pages for selecting motivations
+            for k in range(len(motivations_text_only)):
+                mode_2_page_n = []
+                mode_2_page_n += motivation_header
+                mode_2_page_n += view_array_reminder[j]
+                mode_2_page_n.append(motivations_text_only[k])
+                mode_2_pages.append(mode_2_page_n)
+            # The page for re-selecting the opinion
+            mode_2_pages.append(rethink)
+            # The page that asks reflection questions
+            mode_2_pages.append(reflection_head + reflection_vote + reflection_motivation)
+            # The page that asks satisfaction questions
+            mode_2_pages.append(satisfaction)
+            # Set up page numbers
+            for k in range(len(mode_2_pages)):
+                mode_2_pages[k] = add_field(mode_2_pages[k], "page", 3 + k)
+            page_array += mode_2_pages
+        elif i == 2:  # mode 3
+            mode_3_pages = []
+            # The page for re-selecting the opinion
+            mode_3_pages.append(rethink_no_scenario_txt)
+            # The page that asks reflection questions
+            mode_3_pages.append(reflection_head + reflection_vote)
+            # The page that asks satisfaction questions
+            mode_3_pages.append(satisfaction)
+            # Set up page numbers
+            for k in range(len(mode_3_pages)):
+                mode_3_pages[k] = add_field(mode_3_pages[k], "page", 3 + k)
+            page_array += mode_3_pages
+        # Merge scenario questions
+        sq = []
+        for p in page_array:
+            sq += p
+        sq = add_field_increase(sq, "order", 0)
+        scenario_question_list.append(sq)
+        # Save scenario questions
+        with open("scenario_question_2_%d_%d.json" % (m, v), "w") as outfile:
+            json.dump(scenario_question_list, outfile)

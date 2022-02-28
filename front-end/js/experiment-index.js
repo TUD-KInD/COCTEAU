@@ -21,11 +21,7 @@
   function addExperimentScenarioClickEvent($element) {
     $element.on("click", function () {
       var d = $(this).data("raw");
-      var scenarioId = d["id"];
-      var topicId = d["topic_id"];
-      var mode = d["mode"]; // system configuration
-      var view = d["view"]; // view of the questions to show (e.g., different character background stories)
-      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId + "&mode=" + mode + "&view=" + view + "&page=0";
+      var queryString = "?scenario_id=" + d["id"] + "&topic_id=" + d["topic_id"] + "&mode=" + d["mode"] + "&page=0";
       window.location.href = "experiment-opinion.html" + queryString;
     });
   }
@@ -44,24 +40,12 @@
         var $scenario = $("#scenario");
         for (var i = 0; i < scenarios.length; i++) {
           var d = scenarios[i];
-          if (d["mode"] == 1) {
-            // Only show mode 1 for the experiment page
-            // Mode 1 means the experiment setting
-            var numberOfViews = 5;
-            var numberOfConfigs = 3;
-            for (var i = 0; i < numberOfViews; i++) {
-              for (var j = 0; j < numberOfConfigs; j++) {
-                var view = i;
-                var mode = j + 1; // override the mode parameter  with different system configurations
-                var $t = createScenarioHTML(d["title"] + " (view " + view + ", mode " + mode + ")", "img/" + d["image"]);
-                var dCopy = JSON.parse(JSON.stringify(d));
-                dCopy["view"] = view
-                dCopy["mode"] = mode;
-                $t.data("raw", dCopy);
-                addExperimentScenarioClickEvent($t);
-                $scenario.append($t);
-              }
-            }
+          if (d["mode"] >= 1) {
+            // Only show the scenarios that are for experiments (mode 0 means the normal interaction mode)
+            var $t = createScenarioHTML(d["title"] + " (mode " + mode + ")", "img/" + d["image"]);
+            $t.data("raw", d);
+            addExperimentScenarioClickEvent($t);
+            $scenario.append($t);
           }
         }
         envObj.showPage();

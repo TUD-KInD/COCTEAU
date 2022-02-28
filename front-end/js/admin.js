@@ -102,13 +102,17 @@
       var $scenarioMode = $("#want-scenario-mode");
       var m = $scenarioMode.val();
       if (m == "") m = undefined;
-      envObj.createScenario(t, d, i, ti, m, function (returnData) {
+      var $scenarioView = $("#want-scenario-view");
+      var v = $scenarioView.val();
+      if (v == "") v = undefined;
+      envObj.createScenario(t, d, i, ti, m, v, function (returnData) {
         console.log(returnData);
         $scenarioTitle.val("");
         $scenarioDescription.val("");
         $scenarioImage.val("");
         $scenarioTopicId.val("");
         $scenarioMode.val("");
+        $scenarioView.val("");
       });
     });
     $("#update-scenario").on("click", function () {
@@ -130,7 +134,10 @@
       var $scenarioMode = $("#want-scenario-mode");
       var m = $scenarioMode.val();
       if (m == "") m = undefined;
-      envObj.updateScenario(si, t, d, i, ti, m, function (returnData) {
+      var $scenarioView = $("#want-scenario-view");
+      var v = $scenarioView.val();
+      if (v == "") v = undefined;
+      envObj.updateScenario(si, t, d, i, ti, m, v, function (returnData) {
         console.log(returnData);
         $scenarioTitle.val("");
         $scenarioDescription.val("");
@@ -138,6 +145,7 @@
         $scenarioTopicId.val("");
         $scenarioId.val("");
         $scenarioMode.val("");
+        $scenarioView.val("");
       });
     });
     $("#delete-scenario").on("click", function () {
@@ -155,17 +163,9 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      var $view = $("#want-question-get-view");
-      var v = $view.val();
-      if (v == "") v = undefined;
-      var $mode = $("#want-question-get-mode");
-      var m = $mode.val();
-      if (m == "") m = undefined;
-      envObj.getAllQuestion(p, v, m, function (returnData) {
+      envObj.getAllQuestion(p, function (returnData) {
         console.log(returnData);
         $page.val("");
-        $view.val("");
-        $mode.val("");
       });
     });
     $("#get-question-by-topic-id").on("click", function () {
@@ -175,18 +175,10 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      var $view = $("#want-question-get-view");
-      var v = $view.val();
-      if (v == "") v = undefined;
-      var $mode = $("#want-question-get-mode");
-      var m = $mode.val();
-      if (m == "") m = undefined;
-      envObj.getQuestionByTopicId(ti, p, v, m, function (returnData) {
+      envObj.getQuestionByTopicId(ti, p, function (returnData) {
         console.log(returnData);
         $topicId.val("");
         $page.val("");
-        $view.val("");
-        $mode.val("");
       });
     });
     $("#get-question-by-scenario-id").on("click", function () {
@@ -196,18 +188,10 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      var $view = $("#want-question-get-view");
-      var v = $view.val();
-      if (v == "") v = undefined;
-      var $mode = $("#want-question-get-mode");
-      var m = $mode.val();
-      if (m == "") m = undefined;
-      envObj.getQuestionByScenarioId(si, p, v, m, function (returnData) {
+      envObj.getQuestionByScenarioId(si, p, function (returnData) {
         console.log(returnData);
         $scenarioId.val("");
         $page.val("");
-        $view.val("");
-        $mode.val("");
       });
     });
     $("#get-question-by-id").on("click", function () {
@@ -217,18 +201,10 @@
       var $page = $("#want-question-get-page");
       var p = $page.val();
       if (p == "") p = undefined;
-      var $view = $("#want-question-get-view");
-      var v = $view.val();
-      if (v == "") v = undefined;
-      var $mode = $("#want-question-get-mode");
-      var m = $mode.val();
-      if (m == "") m = undefined;
-      envObj.getQuestionById(qi, p, v, m, function (returnData) {
+      envObj.getQuestionById(qi, p, function (returnData) {
         console.log(returnData);
         $questionId.val("");
         $page.val("");
-        $view.val("");
-        $mode.val("");
       });
     });
     $("#question-choices-add-row").on("click", function () {
@@ -270,21 +246,13 @@
       var $questionPage = $("#want-question-order");
       var page = $questionPage.val();
       if (page == "") page = undefined;
-      var $questionView = $("#want-question-view");
-      var view = $questionView.val();
-      if (view == "") view = undefined;
-      var $questionMode = $("#want-question-mode");
-      var mode = $questionMode.val();
-      if (mode == "") mode = undefined;
-      envObj.createQuestion(t, choices, ti, si, mc, jd, order, page, view, mode, function (returnData) {
+      envObj.createQuestion(t, choices, ti, si, mc, jd, order, page, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
         $questionScenarioId.val("");
         $questionOrder.val("");
         $questionPage.val("");
-        $questionView.val("");
-        $questionMode.val("");
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -330,13 +298,7 @@
       var $questionPage = $("#want-question-order");
       var page = $questionPage.val();
       if (page == "") page = undefined;
-      var $questionView = $("#want-question-view");
-      var view = $questionView.val();
-      if (view == "") view = undefined;
-      var $questionMode = $("#want-question-mode");
-      var mode = $questionMode.val();
-      if (mode == "") mode = undefined;
-      envObj.updateQuestion(qi, t, choices, ti, si, order, page, view, mode, function (returnData) {
+      envObj.updateQuestion(qi, t, choices, ti, si, order, page, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
@@ -344,8 +306,6 @@
         $questionId.val("");
         $questionOrder.val("");
         $questionPage.val("");
-        $questionView.val("");
-        $questionMode.val("");
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -700,7 +660,7 @@
     }, 2000);
     // Delete all questions
     window.setTimeout(function () {
-      envObj.getAllQuestion(undefined, undefined, undefined, function (returnData) {
+      envObj.getAllQuestion(undefined, function (returnData) {
         var data = returnData["data"];
         for (var i = 0; i < data.length; i++) {
           envObj.deleteQuestion(data[i]["id"], function () {
@@ -853,7 +813,7 @@
       return true;
     } else {
       var q = questions[0];
-      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], q["order"], q["page"], q["view"], q["mode"], function (questionData) {
+      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], q["order"], q["page"], function (questionData) {
         console.log("Question created", questionData);
         questionList.push(questionData["data"]);
         addQuestionInOrder(envObj, questions.slice(1), questionList, topicId, scenarioId, success, error);
@@ -880,7 +840,7 @@
           addQuestion(envObj, "file/topic_question_1.json", topicId, undefined); // topic questions
           addDataSet(envObj, topicId, "file/scenario_1_1.json", "file/scenario_question_1_1.json", moodId, "file/vision_1_1.json");
           addDataSet(envObj, topicId, "file/scenario_1_2.json", "file/scenario_question_1_2.json", moodId, "file/vision_1_2.json");
-          //addDataSet(envObj, topicId, "file/scenario_1_3.json", "file/scenario_question_1_3.json", moodId, "file/vision_1_3.json");
+          //addDataSet(envObj, topicId, "file/scenario_1_3.json", "file/scenario_question_1_3.json", moodId, "file/vision_empty.json");
         });
       });
       // Add the crowdscouring experiments
@@ -889,7 +849,7 @@
           console.log("Topic created", topicData);
           var topicId = topicData["data"]["id"];
           addQuestion(envObj, "file/topic_question_2.json", topicId, undefined); // topic questions
-          addDataSet(envObj, topicId, "file/scenario_2_1.json", "file/scenario_question_2_1.json", moodId, "file/vision_2_1.json");
+          addDataSet(envObj, topicId, "file/scenario_2_1.json", "file/scenario_question_2_1.json", moodId, "file/vision_empty.json");
         });
       });
     });

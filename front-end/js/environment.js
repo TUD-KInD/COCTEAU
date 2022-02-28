@@ -26,7 +26,6 @@
    * @param {number} id - ID of the question.
    * @param {string} text - text of the question.
    * @param {number} page - page of the question.
-   * @param {number} view - view of the question.
    * @param {number} order - order of the question.
    * @param {number} topic_id - topic ID of the question.
    * @param {number} scenario_id - scenario ID of the question.
@@ -439,11 +438,12 @@
      * @param {string} description - description of the scenario.
      * @param {string} image - image URL of the scenario.
      * @param {number} topicId - topic ID that the scenario is in.
-     * @param {number} [mode] - system configuration of the scenario.
+     * @param {number} [mode] - system mode configuration of the scenario (that affects the interaction type).
+     * @param {number} [view] - system view configuration of the scenario (that affects the role of the users).
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createScenario = function (title, description, image, topicId, mode, success, error) {
+    this.createScenario = function (title, description, image, topicId, mode, view, success, error) {
       var data = {
         "title": title,
         "description": description,
@@ -452,6 +452,9 @@
       };
       if (typeof mode !== "undefined") {
         data["mode"] = mode;
+      }
+      if (typeof view !== "undefined") {
+        data["view"] = view;
       }
       generalPost("/scenario/", data, success, error);
     };
@@ -464,11 +467,12 @@
      * @param {string} [description] - description of the scenario.
      * @param {string} [image] - image URL of the scenario.
      * @param {number} [topicId] - topic ID that the scenario is in.
-     * @param {number} [mode] - system configuration of the scenario.
+     * @param {number} [mode] - system mode configuration of the scenario (that affects the interaction type).
+     * @param {number} [view] - system view configuration of the scenario (that affects the role of the users).
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.updateScenario = function (scenarioId, title, description, image, topicId, mode, success, error) {
+    this.updateScenario = function (scenarioId, title, description, image, topicId, mode, view, success, error) {
       var data = {
         "scenario_id": scenarioId
       };
@@ -486,6 +490,9 @@
       }
       if (typeof mode !== "undefined") {
         data["mode"] = mode;
+      }
+      if (typeof view !== "undefined") {
+        data["view"] = view;
       }
       generalPatch("/scenario/", data, success, error);
     };
@@ -508,21 +515,13 @@
      * Get a list of all questions.
      * @public
      * @param {number} [page] - page of the questions that we want to get.
-     * @param {number} [view] - view of the questions that we want to get.
-     * @param {number} [mode] - mode of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getAllQuestion = function (page, view, mode, success, error) {
+    this.getAllQuestion = function (page, success, error) {
       var path = "/question/?";
       if (typeof page !== "undefined") {
         path += "&page=" + page;
-      }
-      if (typeof view !== "undefined") {
-        path += "&view=" + view;
-      }
-      if (typeof mode !== "undefined") {
-        path += "&mode=" + mode;
       }
       generalGet(path, success, error);
     };
@@ -532,21 +531,13 @@
      * @public
      * @param {number} topicId - topic ID of questions that we wish to get.
      * @param {number} [page] - page of the questions that we want to get.
-     * @param {number} [view] - view of the questions that we want to get.
-     * @param {number} [mode] - mode of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    var getQuestionByTopicId = function (topicId, page, view, mode, success, error) {
+    var getQuestionByTopicId = function (topicId, page, success, error) {
       var path = "/question/?topic_id=" + topicId;
       if (typeof page !== "undefined") {
         path += "&page=" + page;
-      }
-      if (typeof view !== "undefined") {
-        path += "&view=" + view;
-      }
-      if (typeof mode !== "undefined") {
-        path += "&mode=" + mode;
       }
       generalGet(path, success, error);
     };
@@ -557,21 +548,13 @@
      * @public
      * @param {number} scenarioId - scenario ID of questions that we wish to get.
      * @param {number} [page] - page of the questions that we want to get.
-     * @param {number} [view] - view of the questions that we want to get.
-     * @param {number} [mode] - mode of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getQuestionByScenarioId = function (scenarioId, page, view, mode, success, error) {
+    this.getQuestionByScenarioId = function (scenarioId, page, success, error) {
       var path = "/question/?scenario_id=" + scenarioId;
       if (typeof page !== "undefined") {
         path += "&page=" + page;
-      }
-      if (typeof view !== "undefined") {
-        path += "&view=" + view;
-      }
-      if (typeof mode !== "undefined") {
-        path += "&mode=" + mode;
       }
       generalGet(path, success, error);
     };
@@ -581,21 +564,13 @@
      * @public
      * @param {number} questionId - ID of the question that we wish to get.
      * @param {number} [page] - page of the questions that we want to get.
-     * @param {number} [view] - view of the questions that we want to get.
-     * @param {number} [mode] - mode of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getQuestionById = function (questionId, page, view, mode, success, error) {
+    this.getQuestionById = function (questionId, page, success, error) {
       var path = "/question/?question_id=" + questionId;
       if (typeof page !== "undefined") {
         path += "&page=" + page;
-      }
-      if (typeof view !== "undefined") {
-        path += "&view=" + view;
-      }
-      if (typeof mode !== "undefined") {
-        path += "&mode=" + mode;
       }
       generalGet(path, success, error);
     };
@@ -618,12 +593,10 @@
      * @param {boolean} [isJustDescription] - indicate if the question is just a description but not a question.
      * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {number} [page] - page of the questions that we want to get.
-     * @param {number} [view] - view of the questions that we want to get.
-     * @param {number} [mode] - mode of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, page, view, mode, success, error) {
+    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, page, success, error) {
       var data = {
         "text": text
       };
@@ -655,12 +628,6 @@
       if (typeof page !== "undefined") {
         data["page"] = page;
       }
-      if (typeof view !== "undefined") {
-        data["view"] = view;
-      }
-      if (typeof mode !== "undefined") {
-        data["mode"] = mode;
-      }
       generalPost("/question/", data, success, error);
     };
 
@@ -674,12 +641,10 @@
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {number} [page] - page of the questions that we want to get.
-     * @param {number} [view] - view of the questions that we want to get.
-     * @param {number} [mode] - mode of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.updateQuestion = function (questionId, text, choices, topicId, scenarioId, order, page, view, mode, success, error) {
+    this.updateQuestion = function (questionId, text, choices, topicId, scenarioId, order, mode, success, error) {
       var data = {
         "question_id": questionId
       };
@@ -700,12 +665,6 @@
       }
       if (typeof page !== "undefined") {
         data["page"] = page;
-      }
-      if (typeof view !== "undefined") {
-        data["view"] = view;
-      }
-      if (typeof mode !== "undefined") {
-        data["mode"] = mode;
       }
       generalPatch("/question/", data, success, error);
     };
@@ -1445,17 +1404,11 @@
             // Also we need to store some extra experiment information in the text
             var queryParas = periscope.util.parseVars(window.location.search);
             var scenarioId = queryParas["scenario_id"];
-            var topicId = queryParas["topic_id"];
             var userPlatformId = queryParas["PROLIFIC_PID"];
-            var view = queryParas["view"];
-            var mode = queryParas["mode"];
-            if (typeof scenarioId !== "undefined" && typeof topicId !== "undefined" && typeof userPlatformId !== "undefined" && typeof view !== "undefined" && typeof mode !== "undefined") {
+            if (typeof scenarioId !== "undefined" && typeof userPlatformId !== "undefined") {
               var info = {
                 "scenario_id": scenarioId,
-                "topic_id": topicId,
-                "user_platform_id": userPlatformId,
-                "view": view,
-                "mode": mode
+                "user_platform_id": userPlatformId
               };
               answer["secret"] = JSON.stringify(info);
             }
@@ -1555,7 +1508,7 @@
      * @param {function} [submit] - callback function after answers are submitted successfully.
      */
     function createTopicQuestionDialog(topicId, create, submit) {
-      getQuestionByTopicId(topicId, undefined, undefined, undefined, function (data) {
+      getQuestionByTopicId(topicId, undefined, function (data) {
         // Add topic questions
         var topicQuestions = data["data"];
         periscope.util.sortArrayOfDictByKeyInPlace(topicQuestions, "order");
@@ -1716,30 +1669,20 @@
      * @param {Object} $container - the jQuery object of the question container.
      * @param {Question[]} questions - a list of the scenario question object.
      * @param {number} page - page of the scenario questions that we want to load.
-     * @param {number} view - view of the scenario questions that we want to load.
-     * @param {number} mode - mode of the scenario questions that we want to load.
      */
-    this.addScenarioQuestionsToContainer = function ($container, questions, page, view, mode) {
-      // Build a dictionary based on page and view
+    this.addScenarioQuestionsToContainer = function ($container, questions, page) {
+      // Build a dictionary based on page
       var questionDict = new DefaultDict(new DefaultDict(new DefaultDict(Array)))
       for (var i = 0; i < questions.length; i++) {
         var sq = questions[i];
         var p = sq["page"];
-        var v = sq["view"];
-        var m = sq["mode"];
-        if (typeof p === "undefined" || typeof v === "undefined" || typeof m === "undefined") continue;
-        questionDict[p][v][m].push(sq);
+        if (typeof p === "undefined") continue;
+        questionDict[p].push(sq);
       }
       // Select the questions that will always show
-      var alwaysShownQuestions = questionDict[-1][-1][-1];
-      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[-1][-1][mode]);
-      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[page][-1][-1]);
-      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[-1][view][-1]);
-      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[-1][view][mode]);
-      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[page][-1][mode]);
-      alwaysShownQuestions = alwaysShownQuestions.concat(questionDict[page][view][-1]);
-      // Filter questions by page and view
-      var filteredQuestions = questionDict[page][view][mode];
+      var alwaysShownQuestions = questionDict[-1];
+      // Filter questions by page
+      var filteredQuestions = questionDict[page];
       filteredQuestions = filteredQuestions.concat(alwaysShownQuestions);
       // Sort questions
       // TODO: randomly sort the questions with the same order

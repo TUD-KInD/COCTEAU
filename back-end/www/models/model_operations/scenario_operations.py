@@ -4,7 +4,7 @@ from models.model import db
 from models.model import Scenario
 
 
-def create_scenario(title, description, image, topic_id, mode=0):
+def create_scenario(title, description, image, topic_id, mode=0, view=0):
     """
     Create a scenario object.
 
@@ -19,9 +19,13 @@ def create_scenario(title, description, image, topic_id, mode=0):
     topic_id : int
         ID of the topic the scenario is related to.
     mode : int
-        The system configuration.
+        The system mode configuration (which affects the interaction type).
         (0 means the normal deployment mode)
         (other numbers mean different experiment modes)
+    view : int
+        The system view configuration (which affects the roles).
+        (0 means the normal deployment view)
+        (other numbers mean different experiment views)
 
     Returns
     ------
@@ -29,7 +33,7 @@ def create_scenario(title, description, image, topic_id, mode=0):
         The created scenario.
     """
     scenario = Scenario(title=title, description=description,
-            image=image, topic_id=topic_id, mode=mode)
+            image=image, topic_id=topic_id, mode=mode, view=view)
 
     db.session.add(scenario)
     db.session.commit()

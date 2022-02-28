@@ -93,9 +93,13 @@ class Scenario(db.Model):
     image : str
         A URL to an image describing the scenario.
     mode : int
-        The system configuration.
+        The system mode configuration (which affects the interaction type).
         (0 means the normal deployment mode)
         (other numbers mean different experiment modes)
+    view : int
+        The system view configuration (which affects the roles).
+        (0 means the normal deployment view)
+        (other numbers mean different experiment views)
     topic_id : int
         The ID of the parent Topic.
     questions : relationship
@@ -106,6 +110,7 @@ class Scenario(db.Model):
     description = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=False)
     mode = db.Column(db.Integer, nullable=False, server_default="0")
+    view = db.Column(db.Integer, nullable=False, server_default="0")
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"))
     questions = db.relationship("Question", backref=db.backref("scenario", lazy=True), lazy=True)
 

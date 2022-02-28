@@ -54,9 +54,14 @@ def scenario():
         (required for POST)
         (optional for PATCH)
     mode : int
-        The system configuration.
+        The system mode configuration (which affects the interaction type).
         (0 means the normal deployment mode)
         (other numbers mean different experiment modes)
+        (optional for POST and PATCH)
+    view : int
+        The system view configuration (which affects the roles).
+        (0 means the normal deployment view)
+        (other numbers mean different experiment views)
         (optional for POST and PATCH)
 
     Returns
@@ -100,11 +105,12 @@ def scenario():
         topic_id = rj.get("topic_id")
         image = rj.get("image")
         mode = rj.get("mode")
+        view = rj.get("view")
         if title is None or description is None or topic_id is None or image is None:
             e = InvalidUsage("Must have 'title', 'description', 'topic_id', and 'image'.", status_code=400)
             return handle_invalid_usage(e)
         else:
-            return try_create_scenario(title, description, image, topic_id, mode=mode)
+            return try_create_scenario(title, description, image, topic_id, mode=mode, view=view)
     elif request.method == "PATCH":
         # Update a scenario (admin only)
         scenario_id = rj.get("scenario_id")
@@ -117,11 +123,12 @@ def scenario():
             ti = rj.get("topic_id")
             i = rj.get("image")
             m = rj.get("mode")
-            if t is None and d is None and i is None and ti is None and m is None:
+            v = rj.get("view")
+            if t is None and d is None and i is None and ti is None and m is None and v is None:
                 e = InvalidUsage("Must have at least one field to update.", status_code=400)
                 return handle_invalid_usage(e)
             else:
-                return try_update_scenario(scenario_id, title=t, description=d, image=i, topic_id=ti, mode=m)
+                return try_update_scenario(scenario_id, title=t, description=d, image=i, topic_id=ti, mode=m, view=v)
     elif request.method == "DELETE":
         # Delete a scenario (admin only)
         scenario_id = rj.get("scenario_id")
@@ -155,15 +162,15 @@ def try_get_scenarios_by_topic(topic_id):
 
 
 @try_wrap_response
-def try_create_scenario(title, description, image, topic_id, mode=None):
-    data = create_scenario(title, description, image, topic_id, mode=mode)
+def try_create_scenario(title, description, image, topic_id, mode=0, view=0):
+    data = create_scenario(title, description, image, topic_id, mode=mode, view=view)
     return jsonify({"data": scenario_schema.dump(data)})
 
 
 @try_wrap_response
-def try_update_scenario(scenario_id, title=None, description=None, image=None, topic_id=None, mode=None):
+def try_update_scenario(scenario_id, title=None, description=None, image=None, topic_id=None, mode=None, view=None):
     data = update_scenario(scenario_id,
-            title=title, description=description, image=image, topic_id=topic_id, mode=mode)
+            title=title, description=description, image=image, topic_id=topic_id, mode=mode, view=view)
     return jsonify({"data": scenario_schema.dump(data)})
 
 

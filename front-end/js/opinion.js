@@ -8,21 +8,20 @@
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} scenarioId - the ID of the scenario.
    * @param {number} page - page of the scenario questions that we want to load.
-   * @param {number} view - view of the scenario questions that we want to load.
-   * @param {number} mode - the mode of the system configuration.
+   * @param {number} mode - system configuration of the scenario.
    */
-  function loadPageContent(envObj, scenarioId, page, view, mode) {
+  function loadPageContent(envObj, scenarioId, page, mode) {
     envObj.getScenarioById(scenarioId, function (data) {
       var scenario = data["data"];
       if ($.isEmptyObject(scenario)) {
         envObj.showErrorPage();
       } else {
         var $questionContainer = $("#scenario-questions");
-        envObj.addScenarioQuestionsToContainer($questionContainer, scenario["questions"], page, view, mode);
+        envObj.addScenarioQuestionsToContainer($questionContainer, scenario["questions"], page);
         $("#next-button").on("click", function () {
           envObj.submitScenarioAnswer($questionContainer, function () {
             if (mode == 0) {
-              // Mode 0 means the deployment setting
+              // Mode 0 means the deployment setting (normal user interactions)
               window.location.href = "vision.html" + window.location.search;
             } else {
               // Other modes mean the experiment settings
@@ -58,12 +57,11 @@
     var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
     var topicId = "topic_id" in queryParas ? queryParas["topic_id"] : undefined;
     var page = "page" in queryParas ? parseInt(queryParas["page"]) : 0;
-    var view = "view" in queryParas ? parseInt(queryParas["view"]) : 0;
     var mode = "mode" in queryParas ? parseInt(queryParas["mode"]) : 0;
     if (typeof scenarioId !== "undefined" && topicId !== "undefined") {
       envObj.checkUserConsent(topicId, function () {
         // The user has provided consent
-        loadPageContent(envObj, scenarioId, page, view, mode);
+        loadPageContent(envObj, scenarioId, page, mode);
       });
     } else {
       envObj.showErrorPage();
