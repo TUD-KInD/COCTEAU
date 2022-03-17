@@ -947,12 +947,17 @@ for i in range(num_of_modes):
         if i == 0:  # mode 1
             mode_1_pages = []
             # The pages for selecting motivations
+            # for k in range(len(motivations_meme)):
+            #    mode_1_page_n = []
+            #    mode_1_page_n += motivation_header
+            #    mode_1_page_n += view_array_reminder[j]
+            #    mode_1_page_n.append(motivations_meme[k])
+            #    mode_1_pages.append(mode_1_page_n)
+            # The page for selecting motivations
+            motivation = motivation_header + view_array_reminder[j]
             for k in range(len(motivations_meme)):
-                mode_1_page_n = []
-                mode_1_page_n += motivation_header
-                mode_1_page_n += view_array_reminder[j]
-                mode_1_page_n.append(motivations_meme[k])
-                mode_1_pages.append(mode_1_page_n)
+                motivation.append(motivations_meme[k])
+            mode_1_pages.append(motivation)
             # The page for re-selecting the opinion
             mode_1_pages.append(rethink)
             # The page that asks reflection questions
@@ -966,12 +971,17 @@ for i in range(num_of_modes):
         elif i == 1:  # mode 2
             mode_2_pages = []
             # The pages for selecting motivations
+            # for k in range(len(motivations_text_only)):
+            #    mode_2_page_n = []
+            #    mode_2_page_n += motivation_header
+            #    mode_2_page_n += view_array_reminder[j]
+            #    mode_2_page_n.append(motivations_text_only[k])
+            #    mode_2_pages.append(mode_2_page_n)
+            # The page for selecting motivations
+            motivation = motivation_header + view_array_reminder[j]
             for k in range(len(motivations_text_only)):
-                mode_2_page_n = []
-                mode_2_page_n += motivation_header
-                mode_2_page_n += view_array_reminder[j]
-                mode_2_page_n.append(motivations_text_only[k])
-                mode_2_pages.append(mode_2_page_n)
+                motivation.append(motivations_text_only[k])
+            mode_2_pages.append(motivation)
             # The page for re-selecting the opinion
             mode_2_pages.append(rethink)
             # The page that asks reflection questions
