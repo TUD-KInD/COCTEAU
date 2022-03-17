@@ -594,10 +594,11 @@
      * @param {boolean} [isJustDescription] - indicate if the question is just a description but not a question.
      * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {number} [page] - page of the questions that we want to get.
+     * @param {boolean} [shuffleChoices] - indicate if we want to randomly shuffle the choices.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, page, success, error) {
+    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, page, shuffleChoices, success, error) {
       var data = {
         "text": text
       };
@@ -629,6 +630,9 @@
       if (typeof page !== "undefined") {
         data["page"] = page;
       }
+      if (typeof shuffleChoices !== "undefined") {
+        data["shuffle_choices"] = shuffleChoices;
+      }
       return generalPost("/question/", data, success, error);
     };
 
@@ -642,10 +646,11 @@
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {number} [page] - page of the questions that we want to get.
+     * @param {boolean} [shuffleChoices] - indicate if we want to randomly shuffle the choices.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.updateQuestion = function (questionId, text, choices, topicId, scenarioId, order, mode, success, error) {
+    this.updateQuestion = function (questionId, text, choices, topicId, scenarioId, order, page, shuffleChoices, success, error) {
       var data = {
         "question_id": questionId
       };
@@ -666,6 +671,9 @@
       }
       if (typeof page !== "undefined") {
         data["page"] = page;
+      }
+      if (typeof shuffleChoices !== "undefined") {
+        data["shuffle_choices"] = shuffleChoices;
       }
       return generalPatch("/question/", data, success, error);
     };
@@ -1691,6 +1699,10 @@
           if (q["question_type"] == null) {
             var $q = createScenarioTextHTML(q["text"]);
           } else {
+            // Shuffle the choices or not
+            if (q["shuffle_choices"]) {
+              periscope.util.shuffleArrayInPlace(q["choices"]);
+            }
             var $q = createScenarioQuestionHTML("sq-" + q["id"], q);
             $q.data("raw", q);
           }

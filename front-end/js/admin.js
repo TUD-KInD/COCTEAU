@@ -246,13 +246,18 @@
       var $questionPage = $("#want-question-order");
       var page = $questionPage.val();
       if (page == "") page = undefined;
-      envObj.createQuestion(t, choices, ti, si, mc, jd, order, page, function (returnData) {
+      var $questionShuffleChoices = $("#want-question-shuffle-choices");
+      var shuffle = $questionShuffleChoices.is(":checked");
+      envObj.createQuestion(t, choices, ti, si, mc, jd, order, page, shuffle, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
         $questionScenarioId.val("");
         $questionOrder.val("");
         $questionPage.val("");
+        $isMultipleChoice.prop("checked", false);
+        $isJustDescription.prop("checked", false);
+        $questionShuffleChoices.prop("checked", false);
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -263,7 +268,6 @@
           }
         });
         deleteRow("choices-table");
-        $isMultipleChoice.prop("checked", false);
       });
     });
     $("#update-question").on("click", function () {
@@ -298,7 +302,9 @@
       var $questionPage = $("#want-question-order");
       var page = $questionPage.val();
       if (page == "") page = undefined;
-      envObj.updateQuestion(qi, t, choices, ti, si, order, page, function (returnData) {
+      var $questionShuffleChoices = $("#want-question-shuffle-choices");
+      var shuffle = $questionShuffleChoices.is(":checked");
+      envObj.updateQuestion(qi, t, choices, ti, si, order, page, shuffle, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
@@ -306,6 +312,7 @@
         $questionId.val("");
         $questionOrder.val("");
         $questionPage.val("");
+        $questionShuffleChoices.prop("checked", false);
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -316,7 +323,6 @@
           }
         });
         deleteRow("choices-table");
-        $("#want-multiple-choice").prop("checked", false);
       });
     });
     $("#delete-question").on("click", function () {
@@ -814,7 +820,7 @@
       return true;
     } else {
       var q = questions[0];
-      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], q["order"], q["page"], function (questionData) {
+      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], q["order"], q["page"], q["shuffle_choices"], function (questionData) {
         console.log("Question created", questionData);
         questionList.push(questionData["data"]);
         addQuestionInOrder(envObj, questions.slice(1), questionList, topicId, scenarioId, success, error);

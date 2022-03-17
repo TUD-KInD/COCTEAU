@@ -4,6 +4,7 @@ import enum
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from sqlalchemy import MetaData
+from sqlalchemy.sql import expression
 
 
 # Set the naming convention for database columns
@@ -150,6 +151,9 @@ class Question(db.Model):
         The page number for the question.
         (for creating questions on different pages on the front-end side)
         Page -1 means the question will appear on any page.
+    shuffle_choices : bool
+        Whether we want to randomly shuffle the choices or not.
+        (for the front-end to decide how to handle this parameter)
     scenario_id : int
         ID of the Scenario the question belongs to.
         Either the scenario_id or topic_id must be set, not both.
@@ -166,6 +170,7 @@ class Question(db.Model):
     question_type = db.Column(db.Enum(QuestionTypeEnum))
     order = db.Column(db.Integer, nullable=False, server_default="0")
     page = db.Column(db.Integer, nullable=False, server_default="-1")
+    shuffle_choices = db.Column(db.Boolean, server_default=expression.false())
     scenario_id = db.Column(db.Integer, db.ForeignKey("scenario.id"))
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"))
     choices = db.relationship("Choice", backref=db.backref("question", lazy=True), lazy=True)

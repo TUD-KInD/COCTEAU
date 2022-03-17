@@ -959,6 +959,7 @@ for i in range(num_of_modes):
             for k in range(len(motivations_meme)):
                 motivation_2.append(motivations_meme[k])
             motivation_2 = add_field(motivation_2, "order", 99)
+            motivation_2 = add_field(motivation_2, "shuffle_choices", True)
             mode_1_pages.append(motivation_1 + motivation_2)
             # The page for re-selecting the opinion
             rethink = add_field_increase(rethink, "order", 0)
@@ -983,6 +984,7 @@ for i in range(num_of_modes):
             for k in range(len(motivations_text_only)):
                 motivation_2.append(motivations_text_only[k])
             motivation_2 = add_field(motivation_2, "order", 99)
+            motivation_2 = add_field(motivation_2, "shuffle_choices", True)
             mode_2_pages.append(motivation_1 + motivation_2)
             # The page for re-selecting the opinion
             rethink = add_field_increase(rethink, "order", 0)

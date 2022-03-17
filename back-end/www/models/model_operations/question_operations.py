@@ -107,7 +107,8 @@ def create_free_text_question(text, topic_id=None, scenario_id=None, order=0, pa
     return question
 
 
-def create_single_choice_question(text, choices, topic_id=None, scenario_id=None, order=0, page=-1):
+def create_single_choice_question(text, choices, topic_id=None, scenario_id=None,
+        order=0, page=-1, shuffle_choices=False):
     """
     Create a single choice question for either a topic *or* a scenario.
 
@@ -127,6 +128,9 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
     page : int
         The page number that the question belongs to.
         (for creating questions on different pages on the front-end)
+    shuffle_choices : bool
+        Whether we want to randomly shuffle the choices or not.
+        (for the front-end to decide how to handle this parameter)
 
     Returns
     -------
@@ -155,7 +159,8 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
         raise Exception("Choices need to be a list.")
 
     question = Question(text=text, question_type=QuestionTypeEnum.SINGLE_CHOICE,
-            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
+            topic_id=topic_id, scenario_id=scenario_id,
+            order=order, page=page, shuffle_choices=shuffle_choices)
 
     for c in choices:
         question.choices.append(create_choice(c))
@@ -166,7 +171,8 @@ def create_single_choice_question(text, choices, topic_id=None, scenario_id=None
     return question
 
 
-def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None, order=0, page=-1):
+def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None,
+        order=0, page=-1, shuffle_choices=False):
     """
     Create a single choice question for either a topic *or* a scenario.
 
@@ -186,6 +192,9 @@ def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None,
     page : int
         The page number that the question belongs to.
         (for creating questions on different pages on the front-end)
+    shuffle_choices : bool
+        Whether we want to randomly shuffle the choices or not.
+        (for the front-end to decide how to handle this parameter)
 
     Returns
     -------
@@ -212,7 +221,8 @@ def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None,
         raise Exception("Choices need to be a list.")
 
     question = Question(text=text, question_type=QuestionTypeEnum.MULTI_CHOICE,
-            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
+            topic_id=topic_id, scenario_id=scenario_id,
+            order=order, page=page, shuffle_choices=shuffle_choices)
 
     for c in choices:
         question.choices.append(create_choice(c))
@@ -328,7 +338,7 @@ def get_all_questions(page=None):
 
 
 def update_question(question_id, text=None, choices=None, topic_id=None, scenario_id=None,
-        order=None, page=None):
+        order=None, page=None, shuffle_choices=None):
     """
     Modify a question text or choices.
 
@@ -347,6 +357,9 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
     page : int
         The page number that the question belongs to.
         (for creating questions on different pages on the front-end)
+    shuffle_choices : bool
+        Whether we want to randomly shuffle the choices or not.
+        (for the front-end to decide how to handle this parameter)
 
     Returns
     -------
@@ -386,6 +399,9 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
 
     if page is not None:
         question.page = page
+
+    if shuffle_choices is not None:
+        question.shuffle_choices = shuffle_choices
 
     if topic_id is not None:
         if scenario_id is not None:
