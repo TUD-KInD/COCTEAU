@@ -1016,10 +1016,17 @@ for i in range(num_of_modes):
             for k in range(len(mode_3_pages)):
                 mode_3_pages[k] = add_field(mode_3_pages[k], "page", 3 + k)
             page_array += mode_3_pages
-        # Merge scenario questions
+        # Merge scenario questions and add page number prompt
         sq = []
-        for p in page_array:
-            sq += p
+        page_length = len(page_array)
+        for z in range(page_length):
+            page_num_prompt = {
+                "text": "Thank you! This is page %d/%d." % (z + 1, page_length),
+                "is_just_description": True,
+                "order": 100,
+                "page": z,
+            }
+            sq += page_array[z] + [page_num_prompt]
         # Save scenario questions
         with open("scenario_4_question_mode_%d_view_%d.json" % (m, v), "w") as outfile:
             json.dump(sq, outfile)
