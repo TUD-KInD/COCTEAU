@@ -21,6 +21,7 @@ empathy_questions = [
     {"text": "I would describe myself as a pretty soft-hearted person."},
     {"text": "I sometimes find it difficult to see things from the other person's point of view."},
     {"text": "Sometimes I don't feel sorry for other people when they are having problems."},
+    {"text": "I do not try to imagine how I would feel if I were in somebody's place before criticizing them."},
     {"text": "I try to look at everybody's side of a disagreement before I make a decision."},
     {"text": "Other people's misfortunes do not usually disturb me a great deal."},
     {"text": "When I'm upset at someone, I usually try to put myself in their shoes for a while."},
