@@ -20,3 +20,6 @@ pip install --upgrade google-api-python-client==2.9.0
 
 # JSON Web Token
 pip install --upgrade pyjwt==2.1.0
+
+# Analysis
+pip install --upgrade pandas==1.4.1

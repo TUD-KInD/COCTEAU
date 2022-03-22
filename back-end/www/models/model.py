@@ -177,8 +177,8 @@ class Question(db.Model):
     answers = db.relationship("Answer", backref=db.backref("question", lazy=True), lazy=True)
 
     def __repr__(self):
-        return "<Question id=%r text=%r question_type=%r scenario_id=%r topic_id=%r choices=%r>" % (
-                self.id, self.text, self.question_type, self.scenario_id, self.topic_id, self.choices)
+        return "<Question id=%r text=%r question_type=%r scenario_id=%r topic_id=%r>" % (
+                self.id, self.text, self.question_type, self.scenario_id, self.topic_id)
 
 
 answer_choice_table = db.Table("answers_choice_table", db.Model.metadata,
