@@ -653,7 +653,7 @@
           });
         }
       });
-    }, 4000);
+    }, 1000);
     // Delete all visions
     window.setTimeout(function () {
       envObj.getAllVision(function (returnData) {
