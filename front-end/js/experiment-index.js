@@ -22,7 +22,12 @@
     $element.on("click", function () {
       var d = $(this).data("raw");
       var queryString = "?scenario_id=" + d["id"] + "&topic_id=" + d["topic_id"] + "&page=0";
-      window.location.href = "experiment-opinion.html" + queryString;
+      var fullURL = "experiment-opinion.html" + queryString;
+
+      // The following line is just for testing usage (DO NOT USE for production)
+      //fullURL += "&PROLIFIC_PID=test." + new Date().getTime() + "." + Math.random().toString(36).substring(2)
+
+      window.location.href = fullURL;
     });
   }
 

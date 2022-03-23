@@ -653,7 +653,7 @@
           });
         }
       });
-    }, 1000);
+    }, 4000);
     // Delete all visions
     window.setTimeout(function () {
       envObj.getAllVision(function (returnData) {
@@ -664,7 +664,7 @@
           });
         }
       });
-    }, 2000);
+    }, 5000);
     // Delete all questions
     window.setTimeout(function () {
       envObj.getAllQuestion(undefined, function (returnData) {
@@ -675,7 +675,7 @@
           });
         }
       });
-    }, 3000);
+    }, 6000);
     // Delete all scenarios
     window.setTimeout(function () {
       envObj.getAllScenario(function (returnData) {
@@ -686,7 +686,7 @@
           });
         }
       });
-    }, 18000);
+    }, 21000);
     // Delete all topics
     window.setTimeout(function () {
       envObj.getAllTopic(function (returnData) {
@@ -697,7 +697,7 @@
           });
         }
       });
-    }, 19000);
+    }, 22000);
     // Delete all moods
     window.setTimeout(function () {
       envObj.getAllMood(function (returnData) {
@@ -708,7 +708,7 @@
           });
         }
       });
-    }, 20000);
+    }, 23000);
   }
 
   /**
