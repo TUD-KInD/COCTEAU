@@ -231,7 +231,7 @@ rethink = [
         "is_just_description": True,
     },
     {
-        "text": "Now that you have looked at other people's motivations. Based on your assigned role, what is your opinion on the scenario?",
+        "text": "Based on your assigned role, what is your opinion on the scenario?",
         "choices": opinion_after,
     },
 ]
@@ -756,7 +756,7 @@ rethink_no_scenario_txt = [
         "is_just_description": True,
     },
     {
-        "text": "What is your opinion on the scenario, based on your assigned role, and after you take a look at other people's votes?",
+        "text": "Based on your assigned role, what is your opinion on the scenario?",
         "choices": opinion_after,
     },
 ]
