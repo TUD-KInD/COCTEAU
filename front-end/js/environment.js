@@ -1595,7 +1595,7 @@
       }
       // Construct the HTML
       var html = '';
-      html += '<div class="custom-survey add-top-margin add-bottom-margin" id="scenario-question-' + uniqueId + '">';
+      html += '<div class="custom-survey add-top-margin add-bottom-margin" id="' + uniqueId + '">';
       html += '  <span class="text">' + question["text"] + '</span>';
       if (isImageOnly) {
         html += '  <div class="custom-radio-group-survey image-only add-top-margin">';
@@ -1678,9 +1678,10 @@
      * @param {Object} $container - the jQuery object of the question container.
      * @param {number} scenarioId - ID of the scenario that we wish to get the corresponding questions.
      * @param {number} page - page number of the scenario questions that we want to load.
+     * @param {bool} oneByOne - a special setting to show the questions one-by-one after the user answers one question.
      * @param {function} [success] - callback function when the operation is successful.
      */
-    this.addScenarioQuestionsToContainer = function ($container, scenarioId, page, success) {
+    this.addScenarioQuestionsToContainer = function ($container, scenarioId, page, oneByOne, success) {
       var pageNumberList = [-1, page];
       var questions = []
       $.when.apply($, pageNumberList.map(function (pageNumber) {
@@ -1694,6 +1695,8 @@
         // Sort questions by their order
         periscope.util.sortArrayOfDictByKeyInPlace(questions, "order");
         // Create HTML elements
+        var questionNumer = 0;
+        var $previousQuestion;
         for (var j = 0; j < questions.length; j++) {
           var q = questions[j]
           if (q["question_type"] == null) {
@@ -1703,8 +1706,55 @@
             if (q["shuffle_choices"]) {
               periscope.util.shuffleArrayInPlace(q["choices"]);
             }
-            var $q = createScenarioQuestionHTML("sq-" + q["id"], q);
+            var qid = "sq-" + q["id"];
+            var $q = createScenarioQuestionHTML(qid, q);
             $q.data("raw", q);
+            // Show all the questions or one-by-one
+            if (oneByOne == true) {
+              $q.data("isFinalQuestion", true);
+              // Hide the questions except the first one
+              if (questionNumer > 0) {
+                $q.hide();
+              }
+              // Hide the footer that has the button to go to the next page
+              $("#footer").hide();
+              // Create the next button for the previous question
+              if (typeof $previousQuestion !== "undefined") {
+                $previousQuestion.data("isFinalQuestion", false);
+                var nextButtonHTML = "";
+                nextButtonHTML += '<div class="control-group">';
+                nextButtonHTML += '  <buttton id="next-question-button-' + questionNumer + '" class="custom-button-flat large pulse-primary stretch-on-mobile">';
+                nextButtonHTML += '    <img src="img/next.png"><span>Next Question</span>';
+                nextButtonHTML += '  </buttton>';
+                nextButtonHTML += '</div>';
+                var $nextButtonContainer = $(nextButtonHTML);
+                var $nextButton = $nextButtonContainer.find(".custom-button-flat");
+                $nextButton.data("qid", qid);
+                $nextButton.on("click", function () {
+                  var $this = $(this);
+                  // Hide the button
+                  $this.hide();
+                  // Show the next question
+                  var $nextQuestion = $("#" + $this.data("qid"));
+                  $nextQuestion.show();
+                  // Show the button to go to the next page or not
+                  if ($nextQuestion.data("isFinalQuestion") == true) {
+                    $("#footer").show();
+                  }
+                  // Hide current question and scroll to the top of it
+                  var $currentQuestion = $this.parent().parent();
+                  periscope.util.scrollTop($currentQuestion);
+                  $currentQuestion.children().hide();
+                  $currentQuestion.append($('<span class="text-no-margin">Completed Question</span>'));
+                });
+                $previousQuestion.append($nextButtonContainer);
+              }
+            }
+            questionNumer += 1;
+            $previousQuestion = $q;
+          }
+          if (oneByOne && questionNumer == 1) {
+            $("#footer").show();
           }
           $container.append($q);
         }

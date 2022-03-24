@@ -1022,7 +1022,7 @@ for i in range(num_of_modes):
         page_length = len(page_array)
         for z in range(page_length):
             page_num_prompt = {
-                "text": "Thank you! This is page %d/%d." % (z + 1, page_length),
+                "text": "This is page %d/%d." % (z + 1, page_length),
                 "is_just_description": True,
                 "order": 100,
                 "page": z,

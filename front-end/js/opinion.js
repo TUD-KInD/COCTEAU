@@ -17,32 +17,40 @@
         envObj.showErrorPage();
       } else {
         var $questionContainer = $("#scenario-questions");
-        envObj.addScenarioQuestionsToContainer($questionContainer, scenarioId, page);
-        $("#next-button").on("click", function () {
-          envObj.submitScenarioAnswer($questionContainer, function () {
-            if (mode == 0) {
-              // Mode 0 means the deployment setting (normal user interactions)
-              window.location.href = "vision.html" + window.location.search;
-            } else {
-              // Other modes mean the experiment settings
-              var queryString = window.location.search;
-              if (queryString.indexOf("page=" + page) !== -1) {
-                // Increase the page number
-                queryString = queryString.replace("page=" + page, "page=" + (page + 1));
-              }
-              // IMPORTANT: below is hard-coded for our experiments and is not intended for general use.
-              if ((mode == 1 && page == 6) || (mode == 2 && page == 6) || (mode == 3 && page == 5)) {
-                // For the last page, we need to go to the thank you page
-                window.location.href = "experiment-thanks.html" + queryString;
+        var oneByOne = false;
+        if ((mode == 1 && page == 3) || (mode == 2 && page == 3)) {
+          // IMPORTANT: this if-else statement is hard-coded for our experiments and is not intended for general use.
+          oneByOne = true;
+        }
+        envObj.addScenarioQuestionsToContainer($questionContainer, scenarioId, page, oneByOne, function () {
+          $("#next-button").on("click", function () {
+            envObj.submitScenarioAnswer($questionContainer, function () {
+              if (mode == 0) {
+                // Mode 0 means the deployment setting (normal user interactions)
+                window.location.href = "vision.html" + window.location.search;
               } else {
-                window.location.href = "experiment-opinion.html" + queryString;
+                // Other modes mean the experiment settings
+                var queryString = window.location.search;
+                if (queryString.indexOf("page=" + page) !== -1) {
+                  // Increase the page number
+                  queryString = queryString.replace("page=" + page, "page=" + (page + 1));
+                }
+                if ((mode == 1 && page == 6) || (mode == 2 && page == 6) || (mode == 3 && page == 5)) {
+                  // IMPORTANT: this if-else statement is hard-coded for our experiments and is not intended for general use.
+                  // For the last page, we need to go to the thank you page
+                  window.location.href = "experiment-thanks.html" + queryString;
+                } else {
+                  // IMPORTANT: this if-else statement is hard-coded for our experiments and is not intended for general use.
+                  window.location.href = "experiment-opinion.html" + queryString;
+                }
               }
-            }
-          }, function (errorMessage) {
-            $("#submit-survey-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
+            }, function (errorMessage) {
+              $("#submit-survey-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
+            });
           });
+          envObj.showPage();
         });
-        envObj.showPage();
+
       }
     });
   }
