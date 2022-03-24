@@ -669,11 +669,13 @@
     window.setTimeout(function () {
       envObj.getAllQuestion(undefined, function (returnData) {
         var data = returnData["data"];
+        var questionIdList = [];
         for (var i = 0; i < data.length; i++) {
-          envObj.deleteQuestion(data[i]["id"], function () {
-            console.log("Question deleted");
-          });
+          questionIdList.push(data[i]["id"]);
         }
+        envObj.deleteQuestionList(questionIdList, function () {
+          console.log("Question deleted");
+        });
       });
     }, 6000);
     // Delete all scenarios
@@ -805,30 +807,14 @@
    */
   function addQuestion(envObj, questionPath, topicId, scenarioId, success, error) {
     $.getJSON(questionPath, function (questions) {
-      addQuestionInOrder(envObj, questions, [], topicId, scenarioId, success, error);
+      for (var i = 0; i < questions.length; i++) {
+        questions[i]["topic_id"] = topicId;
+        questions[i]["scenario_id"] = scenarioId;
+      }
+      envObj.createQuestionList(questions, function (returnData) {
+        console.log("Questions created", returnData);
+      }, error);
     });
-  }
-
-  /**
-   * Add questions in the specified order.
-   * @private
-   * @param {Object} envObj - environment object (in environment.js).
-   */
-  function addQuestionInOrder(envObj, questions, questionList, topicId, scenarioId, success, error) {
-    if (questions.length == 0) {
-      if (typeof success === "function") success(questionList);
-      return true;
-    } else {
-      var q = questions[0];
-      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, q["is_mulitple_choice"], q["is_just_description"], q["order"], q["page"], q["shuffle_choices"], function (questionData) {
-        console.log("Question created", questionData);
-        questionList.push(questionData["data"]);
-        addQuestionInOrder(envObj, questions.slice(1), questionList, topicId, scenarioId, success, error);
-      }, function () {
-        if (typeof error === "function") error();
-        return false;
-      });
-    }
   }
 
   /**

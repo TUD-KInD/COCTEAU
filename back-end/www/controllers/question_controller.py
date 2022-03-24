@@ -9,16 +9,13 @@ from util.util import handle_invalid_usage
 from util.util import decode_user_token
 from util.util import try_wrap_response
 from config.config import config
-from models.model_operations.question_operations import create_free_text_question
-from models.model_operations.question_operations import create_description
-from models.model_operations.question_operations import create_single_choice_question
-from models.model_operations.question_operations import create_multi_choice_question
+from models.model_operations.question_operations import create_question_list
 from models.model_operations.question_operations import get_question_by_id
 from models.model_operations.question_operations import get_questions_by_topic
 from models.model_operations.question_operations import get_questions_by_scenario
 from models.model_operations.question_operations import get_all_questions
 from models.model_operations.question_operations import update_question
-from models.model_operations.question_operations import remove_question
+from models.model_operations.question_operations import remove_question_list
 from models.schema import question_schema
 from models.schema import questions_schema
 
@@ -112,49 +109,12 @@ def question():
             e = InvalidUsage("Too many query parameters.", status_code=400)
             return handle_invalid_usage(e)
     elif request.method == "POST":
-        # Create a question (admin only)
-        text = rj.get("text")
-        if text is None:
-            e = InvalidUsage("Must have 'text'.", status_code=400)
-            return handle_invalid_usage(e)
-        choices = rj.get("choices")
-        is_just_description = rj.get("is_just_description")
-        if is_just_description is True:
-            f = try_create_description
-        else:
-            f = try_create_free_text_question
-        if choices is not None:
-            is_mulitple_choice = rj.get("is_mulitple_choice")
-            if is_mulitple_choice is True:
-                f = try_create_multi_choice_question
-            else:
-                f = try_create_single_choice_question
-        topic_id = rj.get("topic_id")
-        scenario_id = rj.get("scenario_id")
-        order = rj.get("order")
-        page = rj.get("page")
-        shuffle_choices = rj.get("shuffle_choices")
-        if topic_id is None:
-            if scenario_id is None:
-                e = InvalidUsage("Must have either 'topic_id' or 'scenario_id'.", status_code=400)
-                return handle_invalid_usage(e)
-            else:
-                # This means that it is a scenario question
-                return f(text, choices, scenario_id=scenario_id,
-                        order=order, page=page, shuffle_choices=shuffle_choices)
-        else:
-            if scenario_id is None:
-                # This means that it is a demographic question
-                return f(text, choices, topic_id=topic_id, order=order, page=page)
-            else:
-                e = InvalidUsage("Cannot have both 'topic_id' and 'scenario_id'.", status_code=400)
-                return handle_invalid_usage(e)
+        # Create questions in batch (admin only)
+        questions = rj.get("data", [])
+        return try_create_question_list(questions)
     elif request.method == "PATCH":
         # Update a question (admin only)
         question_id = rj.get("question_id")
-        if question_id is None:
-            e = InvalidUsage("Must have 'question_id'.", status_code=400)
-            return handle_invalid_usage(e)
         t = rj.get("text")
         c = rj.get("choices")
         si = rj.get("scenario_id")
@@ -170,12 +130,8 @@ def question():
                     topic_id=ti, scenario_id=si, order=o, page=p, shuffle_choices=shuffle_choices)
     elif request.method == "DELETE":
         # Delete a question (admin only)
-        question_id = rj.get("question_id")
-        if question_id is None:
-            e = InvalidUsage("Must have 'question_id'.", status_code=400)
-            return handle_invalid_usage(e)
-        else:
-            return try_remove_question(question_id)
+        question_id_list = rj.get("data", [])
+        return try_remove_question_list(question_id_list)
     else:
         # Wrong methods
         e = InvalidUsage("Method not allowed.", status_code=405)
@@ -207,46 +163,14 @@ def try_get_questions_by_topic(topic_id, page=None):
 
 
 @try_wrap_response
-def try_create_multi_choice_question(text, choices,
-        topic_id=None, scenario_id=None, order=None, page=None, shuffle_choices=None):
-    data = create_multi_choice_question(text, choices,
-            topic_id=topic_id, scenario_id=scenario_id,
-            order=order, page=page, shuffle_choices=shuffle_choices)
-    return jsonify({"data": question_schema.dump(data)})
+def try_create_question_list(questions):
+    data = create_question_list(questions)
+    return jsonify({"data": questions_schema.dump(data)})
 
 
 @try_wrap_response
-def try_create_single_choice_question(text, choices,
-        topic_id=None, scenario_id=None, order=None, page=None, shuffle_choices=None):
-    data = create_single_choice_question(text, choices,
-            topic_id=topic_id, scenario_id=scenario_id,
-            order=order, page=page, shuffle_choices=shuffle_choices)
-    return jsonify({"data": question_schema.dump(data)})
-
-
-@try_wrap_response
-def try_create_free_text_question(text, choices,
-        topic_id=None, scenario_id=None, order=None, page=None, shuffle_choices=None):
-    # IMPORTANT: choices is a dummy parameter for formatting, do not remove it
-    # IMPORTANT: shuffle_choices is a dummy parameter for formatting, do not remove it
-    data = create_free_text_question(text,
-            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
-    return jsonify({"data": question_schema.dump(data)})
-
-
-@try_wrap_response
-def try_create_description(text, choices,
-        topic_id=None, scenario_id=None, order=None, page=None, shuffle_choices=None):
-    # IMPORTANT: choices is a dummy parameter for formatting, do not remove it
-    # IMPORTANT: shuffle_choices is a dummy parameter for formatting, do not remove it
-    data = create_description(text,
-            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
-    return jsonify({"data": question_schema.dump(data)})
-
-
-@try_wrap_response
-def try_remove_question(question_id):
-    remove_question(question_id)
+def try_remove_question_list(question_id_list):
+    remove_question_list(question_id_list)
     return make_response("", 204)
 
 

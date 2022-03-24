@@ -6,16 +6,51 @@ from models.model import QuestionTypeEnum
 from models.model import Choice
 
 
-def create_description(text, topic_id=None, scenario_id=None, order=0, page=-1):
+def create_question_list(questions):
     """
-    Create only the description for either a topic *or* a scenario.
+    Create a list of questions.
 
-    The client will treat this as a text description rather than a question.
+    Parameters
+    ----------
+    questions : list of dict
+        A list of dictionaries.
+        Each dictionary has the fields specified in the _create_question function.
+
+    Returns
+    -------
+    question_list : list of Question
+        The list of created questions as Question objects.
+
+    Raises
+    ------
+    exception : Exception
+        When the input is not a list.
+    """
+    if type(questions) is not list:
+        raise Exception("The input must be a list of questions.")
+
+    question_list = []
+    for q in questions:
+        question_list.append(_create_question(**q))
+
+    db.session.add_all(question_list)
+    db.session.commit()
+
+    return question_list
+
+
+def _create_question(text=None, choices=None, topic_id=None, scenario_id=None, order=0, page=-1,
+        shuffle_choices=False, is_just_description=False, is_mulitple_choice=False):
+    """
+    Create a question object for either a topic or a scenario.
 
     Parameters
     ----------
     text : str
         Body of the question.
+    choices : list
+        List of question choices.
+        It must be a list of objects with the structure {"text:"option label","value":option_value}.
     topic_id : int
         ID of the topic the question is related to.
     scenario_id : int
@@ -25,6 +60,13 @@ def create_description(text, topic_id=None, scenario_id=None, order=0, page=-1):
     page : int
         The page number that the question belongs to.
         (for creating questions on different pages on the front-end)
+    shuffle_choices : bool
+        Whether we want to randomly shuffle the choices or not.
+        (for the front-end to decide how to handle this parameter)
+    is_just_description : bool
+        Indicate if the question is just a description (but not a question).
+    is_mulitple_choice : bool
+        Indicate if the question allows multiple choices.
 
     Returns
     -------
@@ -34,203 +76,100 @@ def create_description(text, topic_id=None, scenario_id=None, order=0, page=-1):
     Raises
     ------
     exception : Exception
+        In case the text is None.
+    exception : Exception
         In case both topic ID and scenario ID are None.
     exception : Exception
         In case both topic ID and scenario ID are passed to the function.
+    exception : Exception
+        In case that the choices parameter is not None and not a list.
     """
-    # TODO: need a testing case
-    # Raise an error if both scenario and topic are specified.
-    # (or if neither of them are specified)
+    if text is None:
+        raise Exception("Question body text cannot be None.")
+
     if topic_id is None and scenario_id is None:
         raise Exception("Topic ID and Scenario ID cannot be both None.")
 
     if topic_id is not None and scenario_id is not None:
         raise Exception("Specify only the Topic ID or the Scenario ID (not both).")
 
-    question = Question(text=text, topic_id=topic_id, scenario_id=scenario_id,
-            order=order, page=page)
-
-    db.session.add(question)
-    db.session.commit()
+    if is_just_description:
+        # Create only the description (but not a question)
+        question = Question(text=text, topic_id=topic_id,
+                scenario_id=scenario_id, order=order, page=page)
+    else:
+        if choices is None:
+            # Create a free text question
+            # Questions for a topic is used as user consent
+            # Questions for a scenario is used as survey questions
+            question = Question(text=text, question_type=QuestionTypeEnum.FREE_TEXT,
+                    topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
+        else:
+            if type(choices) != list:
+                raise Exception("Choices need to be a list.")
+            if is_mulitple_choice:
+                # Create a multiple choice question
+                question = Question(text=text, question_type=QuestionTypeEnum.MULTI_CHOICE,
+                        topic_id=topic_id, scenario_id=scenario_id,
+                        order=order, page=page, shuffle_choices=shuffle_choices)
+            else:
+                # Create a single choice question
+                question = Question(text=text, question_type=QuestionTypeEnum.SINGLE_CHOICE,
+                        topic_id=topic_id, scenario_id=scenario_id,
+                        order=order, page=page, shuffle_choices=shuffle_choices)
+            # Add choices
+            for c in choices:
+                question.choices.append(create_choice(c))
 
     return question
+
+
+def create_description(text, topic_id=None, scenario_id=None, order=0, page=-1):
+    """
+    Create only the description.
+
+    This function is for backward compatibility.
+    """
+    q = {"text": text, "topic_id": topic_id, "scenario_id": scenario_id, "order": order, "page": page}
+    q["is_just_description"] = True
+    return create_question_list([q])[0]
 
 
 def create_free_text_question(text, topic_id=None, scenario_id=None, order=0, page=-1):
     """
-    Create a free text question for either a topic *or* a scenario.
+    Create a free text question.
 
-    Questions for a topic is used as demographic questions.
-    Questions for a scenario is used as survey questions.
-
-    Parameters
-    ----------
-    text : str
-        Body of the question.
-    topic_id : int
-        ID of the topic the question is related to.
-    scenario_id : int
-        ID of the topic the question is related to.
-    order : int
-        Order of the question relative to others.
-    page : int
-        The page number that the question belongs to.
-        (for creating questions on different pages on the front-end)
-
-    Returns
-    -------
-    question : Question
-        The created question as a Question object.
-
-    Raises
-    ------
-    exception : Exception
-        In case both topic ID and scenario ID are None.
-    exception : Exception
-        In case both topic ID and scenario ID are passed to the function.
+    This function is for backward compatibility.
     """
-    # TODO: need to improve the testing case
-    # Raise an error if both scenario and topic are specified.
-    # (or if neither of them are specified)
-    if topic_id is None and scenario_id is None:
-        raise Exception("Topic ID and Scenario ID cannot be both None.")
-
-    if topic_id is not None and scenario_id is not None:
-        raise Exception("Specify only the Topic ID or the Scenario ID (not both).")
-
-    question = Question(text=text, question_type=QuestionTypeEnum.FREE_TEXT,
-            topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
-
-    db.session.add(question)
-    db.session.commit()
-
-    return question
+    q = {"text": text, "topic_id": topic_id, "scenario_id": scenario_id, "order": order, "page": page}
+    return create_question_list([q])[0]
 
 
 def create_single_choice_question(text, choices, topic_id=None, scenario_id=None,
         order=0, page=-1, shuffle_choices=False):
     """
-    Create a single choice question for either a topic *or* a scenario.
+    Create a single choice question.
 
-    Parameters
-    ----------
-    text : str
-        Body of the question.
-    choices : list
-        List of question choices.
-        It must be a list of objects with the structure {"text:"option label","value":option_value}.
-    topic_id : int
-        ID of the topic the question is related to.
-    scenario_id : int
-        ID of the topic the question is related to.
-    order : int
-        Order of the question relative to others.
-    page : int
-        The page number that the question belongs to.
-        (for creating questions on different pages on the front-end)
-    shuffle_choices : bool
-        Whether we want to randomly shuffle the choices or not.
-        (for the front-end to decide how to handle this parameter)
-
-    Returns
-    -------
-    question : Question
-        The created question as a Question object.
-
-    Raises
-    ------
-    exception : Exception
-        In case both topic ID and scenario ID are None.
-    exception : Exception
-        In case both topic ID and scenario ID are passed to the function.
-    exception : Exception
-        In case that the choices parameter is not a list.
+    This function is for backward compatibility.
     """
-    # TODO: need to improve the testing case
-    # Raise an error if both scenario and topic are specified.
-    # (or if neither of them are specified)
-    if topic_id is None and scenario_id is None:
-        raise Exception("Topic ID and Scenario ID cannot be both None.")
-
-    if topic_id is not None and scenario_id is not None:
-        raise Exception("Specify only the Topic ID or the Scenario ID.")
-
-    if type(choices) != list:
-        raise Exception("Choices need to be a list.")
-
-    question = Question(text=text, question_type=QuestionTypeEnum.SINGLE_CHOICE,
-            topic_id=topic_id, scenario_id=scenario_id,
-            order=order, page=page, shuffle_choices=shuffle_choices)
-
-    for c in choices:
-        question.choices.append(create_choice(c))
-
-    db.session.add(question)
-    db.session.commit()
-
-    return question
+    q = {"text": text, "topic_id": topic_id, "scenario_id": scenario_id, "order": order, "page": page}
+    q["choices"] = choices
+    q["shuffle_choices"] = shuffle_choices
+    return create_question_list([q])[0]
 
 
 def create_multi_choice_question(text, choices, topic_id=None, scenario_id=None,
         order=0, page=-1, shuffle_choices=False):
     """
-    Create a single choice question for either a topic *or* a scenario.
+    Create a multiple choice question.
 
-    Parameters
-    ----------
-    text : str
-        Body of the question.
-    choices : list
-        List of question choices.
-        It must be a list of objects with the structure {"text:"option label","value":option_value}.
-    topic_id : int
-        ID of the topic the question is related to.
-    scenario_id : str
-        ID of the topic the question is related to.
-    order : int
-        Order of the question relative to others.
-    page : int
-        The page number that the question belongs to.
-        (for creating questions on different pages on the front-end)
-    shuffle_choices : bool
-        Whether we want to randomly shuffle the choices or not.
-        (for the front-end to decide how to handle this parameter)
-
-    Returns
-    -------
-    question : Question
-        The created question as a Question object.
-
-    Raises
-    ------
-    exception : Exception
-        In case both topic ID and scenario ID are None.
-    exception : Exception
-        In case both topic ID and scenario ID are passed to the function.
-    exception : Exception
-        In case that the choices parameter is not a list.
+    This function is for backward compatibility.
     """
-    # TODO: need to improve the testing case
-    if topic_id is None and scenario_id is None:
-        raise Exception("Topic ID and Scenario ID cannot be both None.")
-
-    if topic_id is not None and scenario_id is not None:
-        raise Exception("Specify only the Topic ID or the Scenario ID.")
-
-    if type(choices) != list:
-        raise Exception("Choices need to be a list.")
-
-    question = Question(text=text, question_type=QuestionTypeEnum.MULTI_CHOICE,
-            topic_id=topic_id, scenario_id=scenario_id,
-            order=order, page=page, shuffle_choices=shuffle_choices)
-
-    for c in choices:
-        question.choices.append(create_choice(c))
-
-    db.session.add(question)
-    db.session.commit()
-
-    return question
+    q = {"text": text, "topic_id": topic_id, "scenario_id": scenario_id, "order": order, "page": page}
+    q["choices"] = choices
+    q["shuffle_choices"] = shuffle_choices
+    q["is_mulitple_choice"] = True
+    return create_question_list([q])[0]
 
 
 def get_question_by_id(question_id, page=None):
@@ -369,6 +308,8 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
     Raises
     ------
     exception : Exception
+        When question ID is None.
+    exception : Exception
         When no question is found.
     exception : Exception
        In case you attempt to add Choices to a FREE_TEXT question.
@@ -386,6 +327,9 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
         In case of updating the scenario ID when the original one is None.
     """
     # TODO: need to improve the testing case
+    if question_id is None:
+        raise Exception("Question ID cannot be None.")
+
     question = get_question_by_id(question_id)
 
     if question is None:
@@ -444,9 +388,9 @@ def update_question(question_id, text=None, choices=None, topic_id=None, scenari
     return question
 
 
-def remove_question(question_id):
+def remove_question_list(question_id_list):
     """
-    Remove a question.
+    Remove a list of questions.
 
     Parameters
     ----------
@@ -456,19 +400,36 @@ def remove_question(question_id):
     Raises
     ------
     exception : Exception
-        When no question is found.
+        When the input is not a list.
     """
-    question = get_question_by_id(question_id)
+    if type(question_id_list) is not list:
+        raise Exception("The input must be a list of question IDs.")
 
-    if question is None:
-        raise Exception("No question found in the database to delete.")
+    questions = []
+    for qid in question_id_list:
+        q = get_question_by_id(qid)
+        if q is None: continue
+        # Delete existing choices
+        for c in q.choices:
+            db.session.delete(c)
+        # Delete the question
+        db.session.delete(q)
 
-    # Delete existing choices
-    for c in question.choices:
-        db.session.delete(c)
-
-    db.session.delete(question)
     db.session.commit()
+
+
+def remove_question(question_id):
+    """
+    Remove a question.
+
+    This function is for backward compatibility.
+
+    Parameters
+    ----------
+    question_id : int
+        ID of the question.
+    """
+    remove_question_list([question_id])
 
 
 def create_choice(c):

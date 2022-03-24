@@ -584,8 +584,8 @@
      */
 
     /**
-     * Create a question.
-     * @private
+     * The object for the "Question" database table.
+     * @typedef {Object} Question
      * @param {string} text - text of the question.
      * @param {Choice[]} [choices] - choices of the question.
      * @param {number} [topicId] - topic ID that the question is in (for topic questions).
@@ -595,6 +595,11 @@
      * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {number} [page] - page of the questions that we want to get.
      * @param {boolean} [shuffleChoices] - indicate if we want to randomly shuffle the choices.
+     */
+
+    /**
+     * Create a question.
+     * @private
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
@@ -633,7 +638,34 @@
       if (typeof shuffleChoices !== "undefined") {
         data["shuffle_choices"] = shuffleChoices;
       }
-      return generalPost("/question/", data, success, error);
+      return generalPost("/question/", {
+        "data": [data]
+      }, success, error);
+    };
+
+    /**
+     * Create a list of questions.
+     * @private
+     * @param {Question[]} questions - list of questions.
+     * @param {function} [success] - callback function when the operation is successful.
+     * @param {function} [error] - callback function when the operation is failing.
+     */
+    this.createQuestionList = function (questions, success, error) {
+      for (var j = 0; j < questions.length; j++) {
+        var choices = questions[j]["choices"];
+        if (typeof choices !== "undefined") {
+          for (var i = 0; i < choices.length; i++) {
+            var c = choices[i]["text"];
+            if (typeof c === "object") {
+              // If the choice text turns out to be a dictionary, we need to encode it into a string that can be decoded later.
+              questions[j]["choices"][i]["text"] = encodeURIComponent(JSON.stringify(c));
+            }
+          };
+        }
+      }
+      return generalPost("/question/", {
+        "data": questions
+      }, success, error);
     };
 
     /**
@@ -687,7 +719,21 @@
      */
     this.deleteQuestion = function (questionId, success, error) {
       var data = {
-        "question_id": questionId
+        "data": [questionId]
+      };
+      return generalDelete("/question/", data, success, error);
+    };
+
+    /**
+     * Delete a list of questions by their IDs.
+     * @public
+     * @param {number[]} questionIdList - list of the IDs of the questions.
+     * @param {function} [success] - callback function when the operation is successful.
+     * @param {function} [error] - callback function when the operation is failing.
+     */
+    this.deleteQuestionList = function (questionIdList, success, error) {
+      var data = {
+        "data": questionIdList
       };
       return generalDelete("/question/", data, success, error);
     };
