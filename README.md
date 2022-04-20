@@ -87,7 +87,10 @@ For Mac OS, I recommend installing postgresql by using [Homebrew](https://brew.s
 brew install postgresql@13
 
 # Start the service
-brew services start postgresql
+brew services start postgresql@13
+
+# Add to path
+echo 'export PATH="/usr/local/opt/postgresql@13/bin:$PATH"' >> ~/.zshrc
 ```
 Enter the postgres shell.
 ```sh
@@ -100,7 +103,7 @@ psql postgres
 In the psql shell, create a project user, create a database for the user with a password, and check if the user and database exist. Replace the [SECRET_PROJECT_PASSWORD] with the project user password. IMPORTANT: do not forget the semicolon and the end of the commands.
 ```sh
 # Set the password encryption method
-SET password_encryption = 'md5';
+SET password_encryption = 'scram-sha-256';
 # Give the project user with a password
 CREATE USER public_engagement_tool PASSWORD '[SECRET_PROJECT_PASSWORD]';
 
@@ -131,26 +134,26 @@ Edit the "pg_hba.conf" file to set the authentication methods to the ones that r
 ```sh
 # For Ubuntu
 sudo vim /etc/postgresql/13/main/pg_hba.conf
-# Scroll to the end and relace all "peer" with "md5", except those for the local connections
+# Scroll to the end and relace all "peer" with "scram-sha-256", except those for the local connections
 # Below are examples
 local   all             postgres                                peer
 local   all             all                                     peer
-host    all             all             127.0.0.1/32            md5
-host    all             all             ::1/128                 md5
+host    all             all             127.0.0.1/32            scram-sha-256
+host    all             all             ::1/128                 scram-sha-256
 local   replication     all                                     peer
-host    replication     all             127.0.0.1/32            md5
-host    replication     all             ::1/128                 md5
+host    replication     all             127.0.0.1/32            scram-sha-256
+host    replication     all             ::1/128                 scram-sha-256
 
 # For Mac OS
-vim /usr/local/var/postgres/pg_hba.conf
-# Scroll to the end and relace all "trust" with "md5", except those for the local connections
+vim /usr/local/var/postgresql@13/pg_hba.conf
+# Scroll to the end and relace all "trust" with "scram-sha-256", except those for the local connections
 # Below are examples
 local   all             all                                     trust
-host    all             all             127.0.0.1/32            md5
-host    all             all             ::1/128                 md5
+host    all             all             127.0.0.1/32            scram-sha-256
+host    all             all             ::1/128                 scram-sha-256
 local   replication     all                                     trust
-host    replication     all             127.0.0.1/32            md5
-host    replication     all             ::1/128                 md5
+host    replication     all             127.0.0.1/32            scram-sha-256
+host    replication     all             ::1/128                 scram-sha-256
 ```
 If you want to delete a user or a database, enter the postgres shell and use the following:
 ```sh
