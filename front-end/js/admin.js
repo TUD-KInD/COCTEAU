@@ -834,6 +834,7 @@
           addDataSet(envObj, topicId, "file/scenario_1.json", "file/scenario_1_question.json", moodId, "file/scenario_1_vision.json");
           addDataSet(envObj, topicId, "file/scenario_2.json", "file/scenario_2_question.json", moodId, "file/scenario_2_vision.json");
           //addDataSet(envObj, topicId, "file/scenario_3.json", "file/scenario_3_question.json", moodId, "file/empty.json");
+          addDataSet(envObj, topicId, "file/scenario_4.json", "file/scenario_4_question.json", moodId, "file/empty.json");
         });
       });
       // Add the crowdscouring experiments

@@ -40,7 +40,7 @@ def create_question_list(questions):
 
 
 def _create_question(text=None, choices=None, topic_id=None, scenario_id=None, order=0, page=-1,
-        shuffle_choices=False, is_just_description=False, is_mulitple_choice=False):
+        shuffle_choices=False, is_just_description=False, is_mulitple_choice=False, is_create_vision=False):
     """
     Create a question object for either a topic or a scenario.
 
@@ -67,6 +67,8 @@ def _create_question(text=None, choices=None, topic_id=None, scenario_id=None, o
         Indicate if the question is just a description (but not a question).
     is_mulitple_choice : bool
         Indicate if the question allows multiple choices.
+    is_create_vision : bool
+        Indicate if the question is the interactive UI for creating visions.
 
     Returns
     -------
@@ -97,29 +99,36 @@ def _create_question(text=None, choices=None, topic_id=None, scenario_id=None, o
         # Create only the description (but not a question)
         question = Question(text=text, topic_id=topic_id,
                 scenario_id=scenario_id, order=order, page=page)
+        return question
+
+    if is_create_vision:
+        # Indicate that the front-end needs to add the UI for creating visions
+        question = Question(text=text, question_type=QuestionTypeEnum.CREATE_VISION,
+                topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
+        return question
+
+    if choices is None:
+        # Create a free text question
+        # Questions for a topic is used as user consent
+        # Questions for a scenario is used as survey questions
+        question = Question(text=text, question_type=QuestionTypeEnum.FREE_TEXT,
+                topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
     else:
-        if choices is None:
-            # Create a free text question
-            # Questions for a topic is used as user consent
-            # Questions for a scenario is used as survey questions
-            question = Question(text=text, question_type=QuestionTypeEnum.FREE_TEXT,
-                    topic_id=topic_id, scenario_id=scenario_id, order=order, page=page)
+        if type(choices) != list:
+            raise Exception("Choices need to be a list.")
+        if is_mulitple_choice:
+            # Create a multiple choice question
+            question = Question(text=text, question_type=QuestionTypeEnum.MULTI_CHOICE,
+                    topic_id=topic_id, scenario_id=scenario_id,
+                    order=order, page=page, shuffle_choices=shuffle_choices)
         else:
-            if type(choices) != list:
-                raise Exception("Choices need to be a list.")
-            if is_mulitple_choice:
-                # Create a multiple choice question
-                question = Question(text=text, question_type=QuestionTypeEnum.MULTI_CHOICE,
-                        topic_id=topic_id, scenario_id=scenario_id,
-                        order=order, page=page, shuffle_choices=shuffle_choices)
-            else:
-                # Create a single choice question
-                question = Question(text=text, question_type=QuestionTypeEnum.SINGLE_CHOICE,
-                        topic_id=topic_id, scenario_id=scenario_id,
-                        order=order, page=page, shuffle_choices=shuffle_choices)
-            # Add choices
-            for c in choices:
-                question.choices.append(create_choice(c))
+            # Create a single choice question
+            question = Question(text=text, question_type=QuestionTypeEnum.SINGLE_CHOICE,
+                    topic_id=topic_id, scenario_id=scenario_id,
+                    order=order, page=page, shuffle_choices=shuffle_choices)
+        # Add choices
+        for c in choices:
+            question.choices.append(create_choice(c))
 
     return question
 

@@ -183,8 +183,8 @@ For Mac OS, I recommend installing conda by using [Homebrew](https://brew.sh/).
 ```sh
 # For Mac OS
 brew install --cask miniconda
-echo 'export PATH="/usr/local/Caskroom/miniconda/base/bin:$PATH"' >> ~/.bash_profile
-echo '. /usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh' >> ~/.bash_profile
+echo 'export PATH="/usr/local/Caskroom/miniconda/base/bin:$PATH"' >> ~/.zshrc
+echo '. /usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh' >> ~/.zshrc
 source ~/.bash_profile
 ```
 Clone this repository

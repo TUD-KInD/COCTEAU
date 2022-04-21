@@ -94,7 +94,7 @@ def get_all_scenarios():
     return scenarios
 
 
-def update_scenario(scenario_id, title=None, description=None, image=None, topic_id=None, mode=None):
+def update_scenario(scenario_id, title=None, description=None, image=None, topic_id=None, mode=None, view=None):
     """
     Modify scenario's title, description or image.
 
@@ -142,6 +142,9 @@ def update_scenario(scenario_id, title=None, description=None, image=None, topic
 
     if mode is not None:
         scenario.mode = mode
+
+    if view is not None:
+        scenario.view = view
 
     db.session.commit()
 
