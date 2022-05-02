@@ -24,7 +24,7 @@
         }
         envObj.addScenarioQuestionsToContainer($questionContainer, scenarioId, page, oneByOne, function () {
           $("#next-button").on("click", function () {
-            envObj.submitScenarioAnswer($questionContainer, function () {
+            envObj.submitScenarioAnswer($questionContainer, scenarioId, function () {
               if (mode == 0) {
                 // Mode 0 means the deployment setting (normal user interactions)
                 window.location.href = "vision.html" + window.location.search;

@@ -23,12 +23,10 @@
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} scenarioId - the desired scenario ID of the vision.
-   * @param {function} [callback] - callback function after creating the dialog.
+   * @returns {Object} - a jQuery object of the dialog.
    */
-  function createSubmitVisionDialog(envObj, scenarioId, callback) {
+  function createSubmitVisionDialog(envObj, scenarioId) {
     var widgets = new edaplotjs.Widgets();
-    // Set the image picker dialog
-    // We need to give the parent element so that on small screens, the dialog can be scrollable
     var $submitVisionDialog = widgets.createCustomDialog({
       "selector": "#dialog-submit-vision",
       "action_text": "Submit",
@@ -47,9 +45,7 @@
       periscope.util.fitDialogToScreen($submitVisionDialog);
     });
     periscope.util.fitDialogToScreen($submitVisionDialog);
-    if (typeof callback === "function") {
-      callback($submitVisionDialog);
-    }
+    return $submitVisionDialog;
   }
 
   /**
@@ -189,19 +185,17 @@
         loadMood(envObj);
         //var photoURL = undefined; // for testing
         var photoURL = envObj.getApiRootUrl() + "/photos/random?count=30";
-        widgets.createUnsplashPhotoPickerDialog("dialog-photo-picker", photoURL, function ($dialog) {
-          $("#vision-image-frame").on("click", function () {
-            $dialog.dialog("open");
-          });
-        }, function (d) {
+        var $photoPickerDialog = widgets.createUnsplashPhotoPickerDialog("dialog-photo-picker", undefined, photoURL, function (d) {
           $("#vision-image").data("raw", d).prop("src", d["urls"]["regular"]);
         });
-        createSubmitVisionDialog(envObj, scenarioId, function ($dialog) {
-          $("#submit-vision-button").on("click", function () {
-            if (submitVisionSanityCheck()) {
-              $dialog.dialog("open");
-            }
-          });
+        $("#vision-image-frame").on("click", function () {
+          $photoPickerDialog.dialog("open");
+        });
+        var $submitVisionDialog = createSubmitVisionDialog(envObj, scenarioId);
+        $("#submit-vision-button").on("click", function () {
+          if (submitVisionSanityCheck()) {
+            $submitVisionDialog.dialog("open");
+          }
         });
         $("#game-button").on("click", function () {
           window.location.href = "game.html" + window.location.search;

@@ -525,55 +525,6 @@ ul {
   background: #dddddd;
 }
 
-.painting-frame {
-  margin: 15px 0;
-  width: 100%;
-  justify-content: center;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  display: flex;
-  position: relative;
-}
-
-.painting-frame .painting-frame-item {
-  position: relative;
-}
-
-.painting-frame .painting-frame-image {
-  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.32), 0 0px 10px rgba(0, 0, 0, 0.23);
-  border: 8px solid white;
-  border-radius: 0;
-  max-height: 600px;
-  max-width: 100%;
-  width: auto;
-  height: auto;
-  box-sizing: border-box;
-  display: table-cell;
-  overflow: hidden;
-}
-
-.painting-frame .painting-frame-caption {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  left: 50%;
-  box-sizing: border-box;
-  transform: translate(-50%, 0);
-  -ms-transform: translate(-50%, 0);
-  padding: 15px 25x;
-  padding: max(min(2vw, 15px), 10px) max(min(3vw, 25px), 15px);
-  font-size: 25px;
-  font-size: max(min(6vw, 25px), 16px);
-  line-height: 1.3;
-  color: white;
-  text-align: center;
-  text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
-}
-
 .control-group .custom-button-flat {
   margin: 15px 0 15px 0;
 }

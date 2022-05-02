@@ -402,12 +402,12 @@
      * Create and display the image picker dialog (customized for Unsplash API).
      * @public
      * @param {string} uniqueId - the unique ID for the DOM elements.
+     * @param {Object} dialogData - the dictionary to store in the "raw" field of the dialog DOM.
      * @param {string} photoURL - the URL to get the json returned by the Unsplash API.
-     * @param {function} [oncreate] - callback function after creating the dialog.
      * @param {function} [onselect] - callback function after confirming photo selection.
-     * @returns {Object} - a jQuery DOM object.
+     * @returns {Object} - a jQuery object of the dialog.
      */
-    function createUnsplashPhotoPickerDialog(uniqueId, photoURL, oncreate, onselect) {
+    function createUnsplashPhotoPickerDialog(uniqueId, dialogData, photoURL, onselect) {
       // Create HTML
       var html = '';
       html += '<div id="' + uniqueId + '" title="Photo Picker" data-role="none" style="display: none;">';
@@ -438,11 +438,12 @@
         "action_callback": function () {
           var d = $($html.find(".masonry").find(".selected")[0]).data("raw");
           if (typeof onselect == "function") {
-            onselect(d);
+            onselect(d, $imagePickerDialog);
           }
         }
       });
       $imagePickerDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
+      $imagePickerDialog.data("raw", dialogData);
 
       // Handle photo search
       $html.find(".search-box-container").on("submit", function (event) {
@@ -493,11 +494,7 @@
       });
       fitDialogToScreen($imagePickerDialog);
 
-      // Callback when ready
-      if (typeof oncreate === "function") {
-        oncreate($imagePickerDialog);
-      }
-      return $html;
+      return $imagePickerDialog;
     }
     this.createUnsplashPhotoPickerDialog = createUnsplashPhotoPickerDialog;
   };

@@ -750,9 +750,10 @@
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getAllMood = function (success, error) {
+    var getAllMood = function (success, error) {
       return generalGet("/mood/", success, error);
     };
+    this.getAllMood = getAllMood;
 
     /**
      * Get a mood by ID.
@@ -879,7 +880,7 @@
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createVision = function (moodId, scenarioId, description, url, unsplashImageId, unsplashCreatorName, unsplashCreatorUrl, success, error) {
+    var createVision = function (moodId, scenarioId, description, url, unsplashImageId, unsplashCreatorName, unsplashCreatorUrl, success, error) {
       var data = {
         "mood_id": moodId,
         "medias": [{
@@ -894,6 +895,7 @@
       };
       return generalPost("/vision/", data, success, error);
     };
+    this.createVision = createVision;
 
     /**
      * Update a vision.
@@ -1579,7 +1581,8 @@
           if (q["question_type"] == null) {
             var $q = createTopicTextHTML(q["text"]);
           } else if (q["question_type"] == "CREATE_VISION") {
-            var $q = createVisionAddHTML(q["id"], q["text"]);
+            var $q = createImageCaptionHTML(q["id"], q["text"]);
+            $q.data("raw", q);
           } else {
             var $q = createTopicQuestionHTML("dq" + i, q);
             $q.data("raw", q);
@@ -1733,16 +1736,16 @@
      * @param {string} text - the text description.
      * @returns {Object} - a jQuery DOM object.
      */
-    function createVisionAddHTML(uniqueIdSuffix, text) {
+    function createImageCaptionHTML(uniqueIdSuffix, text) {
       var html = '';
       html += '<div class="custom-survey add-top-margin add-bottom-margin" id="create-vision-' + uniqueIdSuffix + '">';
       html += '  <span class="text break-long-url">' + text + '</span>';
-      html += '  <a id="vision-image-frame-' + uniqueIdSuffix + '" class="painting-frame" href="javascript:void(0)" style="margin-top: 25px;">';
+      html += '  <a class="painting-frame" href="javascript:void(0)" style="margin-top: 25px;">';
       html += '    <div class="painting-frame-item">';
-      html += '      <img id="vision-image-' + uniqueIdSuffix + '" class="painting-frame-image" style="max-height: 300px;" src="img/dummy_image.png">';
+      html += '      <img class="painting-frame-image" style="max-height: 300px;" src="img/dummy_image.png">';
       html += '    </div>';
       html += '  </a>';
-      html += '  <textarea class="custom-textbox-survey add-top-margin" style="min-height: 100px;" id="vision-description-' + uniqueIdSuffix + '" placeholder="Your caption about this image (max 140 characters)" maxlength="140"></textarea>';
+      html += '  <textarea class="custom-textbox-survey add-top-margin" style="min-height: 100px;" placeholder="Your caption about this image (max 140 characters)" maxlength="140"></textarea>';
       html += '</div>';
       var $html = $(html);
       return $html;
@@ -1777,8 +1780,19 @@
           var q = questions[j]
           if (q["question_type"] == null) {
             var $q = createScenarioTextHTML(q["text"]);
+            $container.append($q);
           } else if (q["question_type"] == "CREATE_VISION") {
-            var $q = createVisionAddHTML(q["id"], q["text"]);
+            var widgets = new edaplotjs.Widgets();
+            var $q = createImageCaptionHTML(q["id"], q["text"]);
+            $q.data("raw", q);
+            $container.append($q);
+            var photoURL = getApiRootUrl() + "/photos/random?count=30";
+            var $photoPickerDialog = widgets.createUnsplashPhotoPickerDialog("dialog-photo-picker-" + q["id"], q, photoURL, function (d, $dialog) {
+              $("#create-vision-" + $dialog.data("raw")["id"] + " .painting-frame-image").data("raw", d).prop("src", d["urls"]["regular"]);
+            });
+            $q.find(".painting-frame").on("click", function () {
+              $photoPickerDialog.dialog("open");
+            });
           } else {
             // Shuffle the choices or not
             if (q["shuffle_choices"]) {
@@ -1830,11 +1844,11 @@
             }
             questionNumer += 1;
             $previousQuestion = $q;
+            $container.append($q);
           }
           if (oneByOne && questionNumer == 1) {
             $("#footer").show();
           }
-          $container.append($q);
         }
         if (typeof success === "function") success(questions);
       });
@@ -1844,12 +1858,15 @@
      * Submit the scenario answers to the back-end.
      * @public
      * @param {Object} $container - the jQuery object of the container for putting scenario questions.
+     * @param {number} scenarioId - the ID of the scenario.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.submitScenarioAnswer = function ($container, success, error) {
+    this.submitScenarioAnswer = function ($container, scenarioId, success, error) {
       var answers = [];
       var areAllQuestionsAnswered = true;
+      var errorMessage;
+      var visions = [];
       $container.find(".custom-survey").each(function () {
         var $this = $(this);
         var $allChoices = $this.find("input[type='radio'], input[type='checkbox']");
@@ -1871,17 +1888,54 @@
             if ($allChoices.attr("type") == "radio") {
               // Only do the answer check for radio (not checkbox)
               areAllQuestionsAnswered = false;
+              errorMessage = "(Would you please select an answer for all questions that have choices?)";
             }
           }
         } else {
-          // This condition means that this is a free text question
-          answers.push(answer);
+          var $image = $this.find(".painting-frame-image");
+          if ($image.length == 0) {
+            // This condition means that this is a free text question
+            answers.push(answer);
+          } else {
+            // This condition means that this is a vision creation UI
+            var imageData = $image.data("raw");
+            if (typeof imageData === "undefined") {
+              areAllQuestionsAnswered = false;
+              errorMessage = "(Would you please select an image and provide the caption?)"
+            } else {
+              var vision = {
+                "url": imageData["urls"]["regular"],
+                "unsplash_image_id": imageData["id"],
+                "unsplash_creator_name": imageData["user"]["name"],
+                "unsplash_creator_url": imageData["user"]["links"]["html"],
+                "description": $this.find("textarea").val()
+              };
+              visions.push(vision);
+            }
+          }
         }
       });
       if (areAllQuestionsAnswered) {
+        // Create answers
         createAnswersInOrder(answers, [], success, error);
+        // Create visions
+        if (visions.length > 0) {
+          getAllMood(function (data) {
+            var moodList = data["data"];
+            periscope.util.sortArrayOfDictByKeyInPlace(moodList, "order");
+            for (var i = 0; i < visions.length; i++) {
+              var v = visions[i];
+              var moodId = moodList[(moodList.length - 1) / 2]["id"]; // ID of the "Neutral" mood
+              var d = v["description"];
+              var url = v["url"];
+              var iid = v["unsplash_image_id"];
+              var cn = v["unsplash_creator_name"];
+              var cu = v["unsplash_creator_url"];
+              createVision(moodId, scenarioId, d, url, iid, cn, cu);
+            }
+          });
+        }
       } else {
-        var errorMessage = "(Would you please select an answer for all questions that have choices?)";
         console.error(errorMessage);
         if (typeof error === "function") error(errorMessage);
       }
