@@ -53,72 +53,6 @@
   }
 
   /**
-   * Create and display the image picker dialog.
-   * @private
-   * @param {Object} envObj - environment object (in environment.js).
-   * @param {function} [callback] - callback function after creating the dialog.
-   */
-  function createPhotoPickerDialog(envObj, callback) {
-    var widgets = new edaplotjs.Widgets();
-    // Set the image picker dialog
-    // We need to give the parent element so that on small screens, the dialog can be scrollable
-    var $imagePickerDialog = widgets.createCustomDialog({
-      "selector": "#dialog-photo-picker",
-      "action_text": "Select",
-      "width": 290,
-      "class": "dialog-container-photo-picker",
-      "show_cancel_btn": false,
-      "action_callback": function () {
-        var d = $($("#photos-masonry").find(".selected")[0]).data("raw");
-        $("#vision-image").data("raw", d).prop("src", d["urls"]["regular"]);
-      }
-    });
-    $imagePickerDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
-    $("#photo-search-form").on("submit", function (event) {
-      event.preventDefault();
-      var search = $("#photo-search-query").blur().val();
-      if (search == "") {
-        console.log("no search term");
-      } else {
-        //var url = "file/photo.json";
-        var url = envObj.getApiRootUrl() + "/photos/random?query=" + search + "&count=30";
-        $.getJSON(url, function (data) {
-          $("#photos-masonry-error-message").hide();
-          var $photos = $("#photos-masonry").empty().show();
-          for (var i = 0; i < data.length; i++) {
-            var d = data[i];
-            var imageUrl = d["urls"]["regular"];
-            var credit = 'Credit: <a href="' + d["user"]["links"]["html"] + '" target="_blank">' + d["user"]["name"] + '</a>';
-            var $d = createPhotoHTML(credit, imageUrl);
-            $d.data("raw", d);
-            $photos.append($d);
-          }
-          $photos.find("figure").on("click", function () {
-            if ($(this).hasClass("selected")) {
-              $(this).removeClass("selected");
-              $imagePickerDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
-            } else {
-              $photos.find(".selected").removeClass("selected");
-              $(this).addClass("selected");
-              $imagePickerDialog.dialog("widget").find("button.ui-action-button").prop("disabled", false);
-            }
-          });
-        }).fail(function () {
-          $("#photos-masonry").empty().hide();
-          $("#photos-masonry-error-message").show();
-        });
-      }
-    });
-    $(window).resize(function () {
-      periscope.util.fitDialogToScreen($imagePickerDialog);
-    });
-    periscope.util.fitDialogToScreen($imagePickerDialog);
-    if (typeof callback === "function") {
-      callback($imagePickerDialog);
-    }
-  }
-
-  /**
    * Create the html elements for a mood.
    * @private
    * @param {number} moodId - the ID of the mood.
@@ -130,23 +64,6 @@
     var radioId = "express-emotion-item-" + moodId;
     var html = '<div><input type="radio" name="express-emotion-scale" value="' + moodId + '" id="' + radioId + '"><label for="' + radioId + '">' + name + '<img src="' + imageUrl + '" /></label></div>';
     return $(html);
-  }
-
-  /**
-   * Create the html elements for a photo.
-   * @private
-   * @param {string} credit - the credit of the photo.
-   * @param {string} imageUrl - the source URL of an image for the photo.
-   * @returns {Object} - a jQuery DOM object.
-   */
-  function createPhotoHTML(credit, imageUrl) {
-    var html = '<figure style="display: none;"><img src="' + imageUrl + '"><div>' + credit + '</div></figure>';
-    var $html = $(html);
-    $html.find("img").one("load", function () {
-      // Only show the figure when the image is loaded
-      $(this).parent().show();
-    });
-    return $html;
   }
 
   /**
@@ -261,6 +178,7 @@
    * @param {number} scenarioId - the ID of the scenario.
    */
   function loadPageContent(envObj, scenarioId) {
+    var widgets = new edaplotjs.Widgets();
     envObj.getScenarioById(scenarioId, function (data) {
       var scenario = data["data"];
       if ($.isEmptyObject(scenario)) {
@@ -269,11 +187,14 @@
         $("#scenario-title").text(scenario["title"]);
         $("#scenario-description").html(scenario["description"]);
         loadMood(envObj);
-        createPhotoPickerDialog(envObj, function ($dialog) {
+        //var photoURL = undefined; // for testing
+        var photoURL = envObj.getApiRootUrl() + "/photos/random?count=30";
+        widgets.createUnsplashPhotoPickerDialog("dialog-photo-picker", photoURL, function ($dialog) {
           $("#vision-image-frame").on("click", function () {
             $dialog.dialog("open");
-            $("#photo-search-query").focus();
           });
+        }, function (d) {
+          $("#vision-image").data("raw", d).prop("src", d["urls"]["regular"]);
         });
         createSubmitVisionDialog(envObj, scenarioId, function ($dialog) {
           $("#submit-vision-button").on("click", function () {

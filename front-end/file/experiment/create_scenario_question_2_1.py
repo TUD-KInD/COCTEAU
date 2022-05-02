@@ -131,7 +131,7 @@ opinion_before = [
         ],
     },
     {
-        "text": "Please choose an image and provide a caption to explain why you choose the opinion.",
+        "text": "Choose an image and provide a caption to explain why you choose the opinion.",
         "is_create_vision": True,
     },
 ]

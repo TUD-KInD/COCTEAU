@@ -1578,6 +1578,8 @@
           var q = topicQuestions[i];
           if (q["question_type"] == null) {
             var $q = createTopicTextHTML(q["text"]);
+          } else if (q["question_type"] == "CREATE_VISION") {
+            var $q = createVisionAddHTML(q["id"], q["text"]);
           } else {
             var $q = createTopicQuestionHTML("dq" + i, q);
             $q.data("raw", q);
@@ -1725,6 +1727,28 @@
     }
 
     /**
+     * Create the UI for choosing and captioning an image.
+     * @public
+     * @param {string} uniqueIdSuffix - the unique suffix to add after the ID of DOM elements.
+     * @param {string} text - the text description.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createVisionAddHTML(uniqueIdSuffix, text) {
+      var html = '';
+      html += '<div class="custom-survey add-top-margin add-bottom-margin" id="create-vision-' + uniqueIdSuffix + '">';
+      html += '  <span class="text break-long-url">' + text + '</span>';
+      html += '  <a id="vision-image-frame-' + uniqueIdSuffix + '" class="painting-frame" href="javascript:void(0)" style="margin-top: 25px;">';
+      html += '    <div class="painting-frame-item">';
+      html += '      <img id="vision-image-' + uniqueIdSuffix + '" class="painting-frame-image" style="max-height: 300px;" src="img/dummy_image.png">';
+      html += '    </div>';
+      html += '  </a>';
+      html += '  <textarea class="custom-textbox-survey add-top-margin" style="min-height: 100px;" id="vision-description-' + uniqueIdSuffix + '" placeholder="Your caption about this image (max 140 characters)" maxlength="140"></textarea>';
+      html += '</div>';
+      var $html = $(html);
+      return $html;
+    }
+
+    /**
      * Add questions to the HTML container.
      * @public
      * @param {Object} $container - the jQuery object of the question container.
@@ -1754,8 +1778,7 @@
           if (q["question_type"] == null) {
             var $q = createScenarioTextHTML(q["text"]);
           } else if (q["question_type"] == "CREATE_VISION") {
-            console.log("yooooooo");
-            console.log(q);
+            var $q = createVisionAddHTML(q["id"], q["text"]);
           } else {
             // Shuffle the choices or not
             if (q["shuffle_choices"]) {
