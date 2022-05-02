@@ -229,6 +229,7 @@
           userData = getJwtPayload(userToken);
           sessionStorage.setItem("userToken", userToken);
           console.log("User ID: " + userData["user_id"]);
+          console.log("Client Type: " + userData["client_type"]);
           if (typeof success === "function") success(userData);
         }, function () {
           console.error("ERROR when getting user token.");
@@ -241,6 +242,7 @@
         userToken = storedUserToken;
         userData = getJwtPayload(userToken);
         console.log("User ID: " + userData["user_id"]);
+        console.log("Client Type: " + userData["client_type"]);
         if (typeof success === "function") success(userData);
       }
     }
@@ -595,6 +597,7 @@
      * @param {number} [order] - indicate the order of the question relative to the others.
      * @param {number} [page] - page of the questions that we want to get.
      * @param {boolean} [shuffleChoices] - indicate if we want to randomly shuffle the choices.
+     * @param {boolean} [isCreateVision] - indicate if the question should use the vision creation UI.
      */
 
     /**
@@ -603,7 +606,7 @@
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, page, shuffleChoices, success, error) {
+    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, page, shuffleChoices, isCreateVision, success, error) {
       var data = {
         "text": text
       };
@@ -637,6 +640,9 @@
       }
       if (typeof shuffleChoices !== "undefined") {
         data["shuffle_choices"] = shuffleChoices;
+      }
+      if (typeof isCreateVision !== "undefined") {
+        data["is_create_vision"] = isCreateVision;
       }
       return generalPost("/question/", {
         "data": [data]
@@ -1747,6 +1753,9 @@
           var q = questions[j]
           if (q["question_type"] == null) {
             var $q = createScenarioTextHTML(q["text"]);
+          } else if (q["question_type"] == "CREATE_VISION") {
+            console.log("yooooooo");
+            console.log(q);
           } else {
             // Shuffle the choices or not
             if (q["shuffle_choices"]) {

@@ -129,7 +129,11 @@ opinion_before = [
             {"text": opinion_4_txt, "value": 4},
             {"text": opinion_5_txt, "value": 5},
         ],
-    }
+    },
+    {
+        "text": "Please choose an image and provide a caption to explain why you choose the opinion.",
+        "is_create_vision": True,
+    },
 ]
 
 view_array = [

@@ -34,6 +34,7 @@ def create_random_game(user_id, scenario_id=None):
     excluded_v = [g.vision_id for g in excluded_g.distinct(Game.vision_id).all()]
 
     # Exclude the visions that are created by the same user or played by the user
+    # TODO: bug that the filter(Vision.id.not_in(excluded_v)) does not work
     q = Vision.query.filter(Vision.user_id!=user_id).filter(Vision.id.not_in(excluded_v))
     if scenario_id is not None:
         q = q.filter(Vision.scenario_id==scenario_id)

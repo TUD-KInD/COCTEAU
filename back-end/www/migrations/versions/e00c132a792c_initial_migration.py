@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 3faf5fe54314
+Revision ID: e00c132a792c
 Revises: 
-Create Date: 2022-02-28 19:48:12.974400
+Create Date: 2022-05-02 14:46:34.629011
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3faf5fe54314'
+revision = 'e00c132a792c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -53,9 +53,10 @@ def upgrade():
     op.create_table('question',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('text', sa.String(), nullable=False),
-    sa.Column('question_type', sa.Enum('SINGLE_CHOICE', 'MULTI_CHOICE', 'FREE_TEXT', name='questiontypeenum'), nullable=True),
+    sa.Column('question_type', sa.Enum('SINGLE_CHOICE', 'MULTI_CHOICE', 'FREE_TEXT', 'CREATE_VISION', name='questiontypeenum'), nullable=True),
     sa.Column('order', sa.Integer(), server_default='0', nullable=False),
     sa.Column('page', sa.Integer(), server_default='-1', nullable=False),
+    sa.Column('shuffle_choices', sa.Boolean(), server_default=sa.text('false'), nullable=True),
     sa.Column('scenario_id', sa.Integer(), nullable=True),
     sa.Column('topic_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['scenario_id'], ['scenario.id'], name=op.f('fk_question_scenario_id_scenario')),
