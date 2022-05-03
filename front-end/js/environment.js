@@ -1320,6 +1320,9 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     function getUserTokenWrapper(response, success, error) {
+      // We need to make sure that each Prolific user can have only one user ID
+      var queryParas = periscope.util.parseVars(window.location.search);
+      var userPlatformIdPart = "PROLIFIC_PID" in queryParas ? ".prolific." + queryParas["PROLIFIC_PID"] : "";
       if (typeof periscope.Tracker === "undefined") {
         // This means that some plugin blocks the tracker.js file so that the tracker object cannot be created
         console.warn("Failed to initialize the tracker object (maybe blocked by a third-party plugin).");
@@ -1327,7 +1330,7 @@
           // This means that the user did not sign in with Google
           // In this case, we need to manually generate the client ID to log in to the back-end
           getUserToken({
-            "client_id": "custom.cid." + new Date().getTime() + "." + Math.random().toString(36).substring(2)
+            "client_id": "custom.cid." + new Date().getTime() + "." + Math.random().toString(36).substring(2) + userPlatformIdPart
           }, success, error);
         } else {
           // This means that the user has signed in with Google
@@ -1349,8 +1352,9 @@
             // We also need to create the tracker
             tracker = new periscope.Tracker({
               "ready": function (trackerObj) {
+                console.log(trackerObj.getClientId() + userPlatformIdPart);
                 getUserToken({
-                  "client_id": trackerObj.getClientId()
+                  "client_id": trackerObj.getClientId() + userPlatformIdPart
                 }, success, error);
               }
             });
@@ -1375,8 +1379,9 @@
             // And the user did not sign in with Google
             // For example, when user signed out with Google on the account dialog
             // In this case, we need to use the Google Analytics client ID to log in to the back-end
+            console.log(trackerObj.getClientId() + userPlatformIdPart);
             getUserToken({
-              "client_id": tracker.getClientId()
+              "client_id": tracker.getClientId() + userPlatformIdPart
             }, success, error);
           } else {
             // This means that the tracker is already created

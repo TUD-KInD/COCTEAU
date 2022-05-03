@@ -356,7 +356,7 @@ def get_visions_by_scenario(scenario_id, paginate=True, order="desc", page_numbe
     return visions
 
 
-def get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, page_size=30):
+def get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, page_size=30, scenario_id=None):
     """
     Get all the vision created by a user.
 
@@ -374,6 +374,8 @@ def get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, pag
         The page number (only works when paginate is True).
     page_size : int
         The page size (only works when paginate is True).
+    scenario_id : int
+        ID of a scenario.
 
     Returns
     -------
@@ -383,6 +385,9 @@ def get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, pag
     """
     # TODO: need to improve the testing case to check pagination
     q = Vision.query.filter_by(user_id=user_id)
+
+    if scenario_id is not None:
+        q = q.filter_by(scenario_id=scenario_id)
 
     if order == "desc":
         q = q.order_by(desc(Vision.created_at))

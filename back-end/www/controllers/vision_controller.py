@@ -108,6 +108,9 @@ def vision():
         elif sn and not un and vn:
             return try_get_visions_by_user(user_id, paginate=paginate,
                     order=order, page_number=page_number, page_size=page_size)
+        elif not sn and not un and vn:
+            return try_get_visions_by_user(user_id, paginate=paginate,
+                    order=order, page_number=page_number, page_size=page_size, scenario_id=scenario_id)
         elif sn and un and not vn:
             return try_get_vision_by_id(vision_id)
         else:
@@ -167,9 +170,9 @@ def try_get_all_visions(paginate=True, order="desc", page_number=1, page_size=30
 
 
 @try_wrap_response
-def try_get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, page_size=30):
+def try_get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, page_size=30, scenario_id=None):
     data = get_visions_by_user(user_id, paginate=paginate,
-            order=order, page_number=page_number, page_size=page_size)
+            order=order, page_number=page_number, page_size=page_size, scenario_id=scenario_id)
     if paginate is True:
         total = data.total
         data = data.items

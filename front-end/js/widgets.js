@@ -452,12 +452,13 @@
         if (search == "") {
           console.log("no search term");
         } else {
+          var targetPhotoURL;
           if (typeof photoURL === "undefined") {
-            photoURL = "file/photo.json";
+            targetPhotoURL = "file/photo.json";
           } else {
-            photoURL += "&query=" + search;
+            targetPhotoURL = photoURL + "&query=" + search;
           }
-          $.getJSON(photoURL, function (data) {
+          $.getJSON(targetPhotoURL, function (data) {
             $html.find(".photos-masonry-error-message").hide();
             var $photos = $html.find(".masonry").empty().show();
             for (var i = 0; i < data.length; i++) {
