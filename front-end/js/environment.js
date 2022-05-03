@@ -1352,7 +1352,6 @@
             // We also need to create the tracker
             tracker = new periscope.Tracker({
               "ready": function (trackerObj) {
-                console.log(trackerObj.getClientId() + userPlatformIdPart);
                 getUserToken({
                   "client_id": trackerObj.getClientId() + userPlatformIdPart
                 }, success, error);
@@ -1379,7 +1378,6 @@
             // And the user did not sign in with Google
             // For example, when user signed out with Google on the account dialog
             // In this case, we need to use the Google Analytics client ID to log in to the back-end
-            console.log(trackerObj.getClientId() + userPlatformIdPart);
             getUserToken({
               "client_id": tracker.getClientId() + userPlatformIdPart
             }, success, error);
