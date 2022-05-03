@@ -1320,9 +1320,21 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     function getUserTokenWrapper(response, success, error) {
-      // We need to make sure that each Prolific user can have only one user ID
       var queryParas = periscope.util.parseVars(window.location.search);
-      var userPlatformIdPart = "PROLIFIC_PID" in queryParas ? ".prolific." + queryParas["PROLIFIC_PID"] : "";
+      var oldUserPlatformId = sessionStorage.getItem("userPlatformId");
+      var userPlatformIdPart = "";
+      if ("PROLIFIC_PID" in queryParas) {
+        // We need to make sure that each Prolific user can have only one user ID
+        // So we will append PROLIFIC_PID to the client ID when requesting the user token
+        var userPlatformIdPart = ".prolific." + queryParas["PROLIFIC_PID"];
+        if (oldUserPlatformId != queryParas["PROLIFIC_PID"]) {
+          // This means the PROLIFIC_PID query is changed, and we need to get a new user token
+          // So we need to clear the sessionStorage
+          sessionStorage.removeItem("userToken");
+          sessionStorage.removeItem("isGoogleTokenStored");
+        }
+        sessionStorage.setItem("userPlatformId", queryParas["PROLIFIC_PID"]);
+      }
       if (typeof periscope.Tracker === "undefined") {
         // This means that some plugin blocks the tracker.js file so that the tracker object cannot be created
         console.warn("Failed to initialize the tracker object (maybe blocked by a third-party plugin).");
