@@ -126,6 +126,7 @@ class QuestionTypeEnum(enum.Enum):
     MULTI_CHOICE = "Multi Choice"
     FREE_TEXT = "Free Text"
     CREATE_VISION = "Create Vision"
+    CREATE_MOOD = "Create Mood"
 
 
 class Question(db.Model):

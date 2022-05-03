@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: e00c132a792c
+Revision ID: fc9e28ea6036
 Revises: 
-Create Date: 2022-05-02 14:46:34.629011
+Create Date: 2022-05-03 11:49:09.533906
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e00c132a792c'
+revision = 'fc9e28ea6036'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -53,7 +53,7 @@ def upgrade():
     op.create_table('question',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('text', sa.String(), nullable=False),
-    sa.Column('question_type', sa.Enum('SINGLE_CHOICE', 'MULTI_CHOICE', 'FREE_TEXT', 'CREATE_VISION', name='questiontypeenum'), nullable=True),
+    sa.Column('question_type', sa.Enum('SINGLE_CHOICE', 'MULTI_CHOICE', 'FREE_TEXT', 'CREATE_VISION', 'CREATE_MOOD', name='questiontypeenum'), nullable=True),
     sa.Column('order', sa.Integer(), server_default='0', nullable=False),
     sa.Column('page', sa.Integer(), server_default='-1', nullable=False),
     sa.Column('shuffle_choices', sa.Boolean(), server_default=sa.text('false'), nullable=True),
