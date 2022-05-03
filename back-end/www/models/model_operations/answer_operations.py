@@ -13,7 +13,7 @@ from models.model_operations import scenario_operations
 from models.model_operations import topic_operations
 
 
-def create_free_text_answer(text, user_id, question_id):
+def create_free_text_answer(text, user_id, question_id, secret=None):
     """
     Create an answer for a FREE_TEXT question.
 
@@ -25,6 +25,8 @@ def create_free_text_answer(text, user_id, question_id):
         ID of the user providing the answer.
     question_id : int
         ID of the question the user wants to answer.
+    secret : str
+        Any secret information related to the answer for admin users.
 
     Returns
     -------
@@ -47,7 +49,7 @@ def create_free_text_answer(text, user_id, question_id):
     if question.question_type != QuestionTypeEnum.FREE_TEXT:
         raise Exception(question.question_type, " question does not support textual answer.")
 
-    answer = Answer(text=text, user_id=user_id, question_id=question_id)
+    answer = Answer(text=text, user_id=user_id, question_id=question_id, secret=secret)
 
     db.session.add(answer)
     db.session.commit()
@@ -55,7 +57,7 @@ def create_free_text_answer(text, user_id, question_id):
     return answer
 
 
-def create_choice_answer(choices, user_id, question_id, text=None):
+def create_choice_answer(choices, user_id, question_id, text=None, secret=None):
     """
     Create an answer for a FREE_TEXT question.
 
@@ -70,6 +72,8 @@ def create_choice_answer(choices, user_id, question_id, text=None):
     text : str
         String containing the free text answer with the choice answer.
         (for example, an optional textbox for user feedback)
+    secret : str
+        Any secret information related to the answer for admin users.
 
     Returns
     -------
@@ -98,7 +102,7 @@ def create_choice_answer(choices, user_id, question_id, text=None):
 
     selected_choices = list(filter(lambda x: x.id in choices, question.choices))
 
-    answer = Answer(user_id=user_id, choices=selected_choices, question_id=question_id, text=text)
+    answer = Answer(user_id=user_id, choices=selected_choices, question_id=question_id, text=text, secret=secret)
 
     db.session.add(answer)
     db.session.commit()

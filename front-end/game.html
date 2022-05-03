@@ -34,11 +34,9 @@
         <div class="flex-row">
           <div class="flex-item flex-column">
             <!-- The scenario title will be loaded by using the back-end API -->
-            <h2 id="scenario-title" class="add-top-margin"></h2>
-            <p class="text">
-              <!-- The scenario description will be loaded by using the back-end API -->
-              <span id="scenario-description"></span>
-            </p>
+            <h2 id="scenario-title"></h2>
+            <!-- The scenario description will be loaded by using the back-end API -->
+            <p class="text" id="scenario-description"></p>
             <hr>
             <p class="text highlight-text">
               Play a game!
@@ -108,6 +106,12 @@
         </div>
       </div>
     </div>
+  </div>
+  <div id="dialog-topic-question" title="Consent" data-role="none" style="display: none;">
+    <div id="topic-questions"></div>
+    <p class="add-top-margin">
+      <span class="custom-text-danger" id="submit-topic-question-error-message" style="display: none;"></span>
+    </p>
   </div>
 </body>
 

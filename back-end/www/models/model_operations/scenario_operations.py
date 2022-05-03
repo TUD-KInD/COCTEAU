@@ -4,7 +4,7 @@ from models.model import db
 from models.model import Scenario
 
 
-def create_scenario(title, description, image, topic_id):
+def create_scenario(title, description, image, topic_id, mode=0, view=0):
     """
     Create a scenario object.
 
@@ -18,6 +18,14 @@ def create_scenario(title, description, image, topic_id):
         An URL to an image relevant to the scenario.
     topic_id : int
         ID of the topic the scenario is related to.
+    mode : int
+        The system mode configuration (which affects the interaction type).
+        (0 means the normal deployment mode)
+        (other numbers mean different experiment modes)
+    view : int
+        The system view configuration (which affects the roles).
+        (0 means the normal deployment view)
+        (other numbers mean different experiment views)
 
     Returns
     ------
@@ -25,7 +33,7 @@ def create_scenario(title, description, image, topic_id):
         The created scenario.
     """
     scenario = Scenario(title=title, description=description,
-            image=image, topic_id=topic_id)
+            image=image, topic_id=topic_id, mode=mode, view=view)
 
     db.session.add(scenario)
     db.session.commit()
@@ -86,7 +94,7 @@ def get_all_scenarios():
     return scenarios
 
 
-def update_scenario(scenario_id, title=None, description=None, image=None, topic_id=None):
+def update_scenario(scenario_id, title=None, description=None, image=None, topic_id=None, mode=None, view=None):
     """
     Modify scenario's title, description or image.
 
@@ -100,6 +108,10 @@ def update_scenario(scenario_id, title=None, description=None, image=None, topic
         New scenario description.
     image : str
         New image URL for the scenario.
+    mode : int
+        The system configuration.
+        (0 means the normal deployment mode)
+        (other numbers mean different experiment modes)
 
     Returns
     -------
@@ -127,6 +139,12 @@ def update_scenario(scenario_id, title=None, description=None, image=None, topic
 
     if topic_id is not None:
         scenario.topic_id = topic_id
+
+    if mode is not None:
+        scenario.mode = mode
+
+    if view is not None:
+        scenario.view = view
 
     db.session.commit()
 

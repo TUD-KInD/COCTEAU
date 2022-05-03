@@ -20,6 +20,8 @@ from models.model_operations.answer_operations import create_free_text_answer
 from models.model_operations.answer_operations import create_choice_answer
 from models.schema import answer_schema
 from models.schema import answers_schema
+from models.schema import answer_admin_schema
+from models.schema import answers_admin_schema
 
 
 bp = Blueprint("answer_controller", __name__)
@@ -35,6 +37,7 @@ def answer():
     user_token : str
         The encoded user JWT, issued by the back-end.
         (required for POST and DELETE)
+        (optional for GET)
     question_id : int
         Question ID of the answer.
         (optional for GET)
@@ -55,6 +58,9 @@ def answer():
     text : str
         Free text answer to the question.
         (optional for POST)
+    secret : str
+        Any secret information related to the answer for admin users.
+        (optional for POST)
     choices : list of int
         List of choice IDs to the SINGLE_CHOICE or MULTI_CHOICE question.
         (optional for POST)
@@ -65,7 +71,6 @@ def answer():
         The retrieved answer object.
         Or a list of retrieved answer objects.
     """
-    # TODO: implement the PATCH method
     rj = request.json
 
     # Sanity and permission check
@@ -78,6 +83,10 @@ def answer():
     if request.method == "GET":
         # Get all answers or get one answer by its ID
         # Also get answers by question, user, topic, or scenario ID
+        is_admin = False
+        if "user_token" in request.args:
+            error, user_json = decode_user_token(request.args, config.JWT_PRIVATE_KEY, check_if_admin=False)
+            is_admin = user_json["client_type"] == 0
         question_id = request.args.get("question_id")
         scenario_id = request.args.get("scenario_id")
         topic_id = request.args.get("topic_id")
@@ -89,21 +98,21 @@ def answer():
         un = user_id is None
         an = answer_id is None
         if qn and sn and tn and un and an:
-            return try_get_all_answers()
+            return try_get_all_answers(is_admin=is_admin)
         elif not qn and sn and tn and un and an:
-            return try_get_answers_by_question(question_id)
+            return try_get_answers_by_question(question_id, is_admin=is_admin)
         elif qn and not sn and tn and un and an:
-            return try_get_answers_by_scenario(scenario_id)
+            return try_get_answers_by_scenario(scenario_id, is_admin=is_admin)
         elif qn and not sn and tn and not un and an:
-            return try_get_answers_by_scenario(scenario_id, user_id=user_id)
+            return try_get_answers_by_scenario(scenario_id, user_id=user_id, is_admin=is_admin)
         elif qn and sn and not tn and un and an:
-            return try_get_answers_by_topic(topic_id)
+            return try_get_answers_by_topic(topic_id, is_admin=is_admin)
         elif qn and sn and not tn and not un and an:
-            return try_get_answers_by_topic(topic_id, user_id=user_id)
+            return try_get_answers_by_topic(topic_id, user_id=user_id, is_admin=is_admin)
         elif qn and sn and tn and not un and an:
-            return try_get_answers_by_user(user_id)
+            return try_get_answers_by_user(user_id, is_admin=is_admin)
         elif qn and sn and tn and un and not an:
-            return try_get_answer_by_id(answer_id)
+            return try_get_answer_by_id(answer_id, is_admin=is_admin)
         else:
             e = InvalidUsage("Wrong combination of query parameters.", status_code=400)
             return handle_invalid_usage(e)
@@ -118,14 +127,15 @@ def answer():
         user_id = user_json["user_id"]
         choices = rj.get("choices")
         text = rj.get("text")
+        secret = rj.get("secret")
         if choices is None:
             if text is None:
                 e = InvalidUsage("Must have 'text' and/or 'choices'.", status_code=400)
                 return handle_invalid_usage(e)
             else:
-                return try_create_free_text_answer(text, user_id, question_id)
+                return try_create_free_text_answer(text, user_id, question_id, secret=secret)
         else:
-            return try_create_choice_answer(choices, user_id, question_id, text=text)
+            return try_create_choice_answer(choices, user_id, question_id, text=text, secret=secret)
     elif request.method == "DELETE":
         # Delete an answer (admin only)
         answer_id = rj.get("answer_id")
@@ -141,51 +151,69 @@ def answer():
 
 
 @try_wrap_response
-def try_create_choice_answer(choices, user_id, question_id, text=None):
-    data = create_choice_answer(choices, user_id, question_id, text=text)
+def try_create_choice_answer(choices, user_id, question_id, text=None, secret=None):
+    data = create_choice_answer(choices, user_id, question_id, text=text, secret=secret)
     return jsonify({"data": answer_schema.dump(data)})
 
 
 @try_wrap_response
-def try_create_free_text_answer(text, user_id, question_id):
-    data = create_free_text_answer(text, user_id, question_id)
+def try_create_free_text_answer(text, user_id, question_id, secret=None):
+    data = create_free_text_answer(text, user_id, question_id, secret=secret)
     return jsonify({"data": answer_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_answer_by_id(answer_id):
+def try_get_answer_by_id(answer_id, is_admin=False):
     data = get_answer_by_id(answer_id)
-    return jsonify({"data": answer_schema.dump(data)})
+    if is_admin:
+        return jsonify({"data": answer_admin_schema.dump(data)})
+    else:
+        return jsonify({"data": answer_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_all_answers():
+def try_get_all_answers(is_admin=False):
     data = get_all_answers()
-    return jsonify({"data": answers_schema.dump(data)})
+    if is_admin:
+        return jsonify({"data": answers_admin_schema.dump(data)})
+    else:
+        return jsonify({"data": answers_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_answers_by_user(user_id):
+def try_get_answers_by_user(user_id, is_admin=False):
     data = get_answers_by_user(user_id)
-    return jsonify({"data": answers_schema.dump(data)})
+    if is_admin:
+        return jsonify({"data": answers_admin_schema.dump(data)})
+    else:
+        return jsonify({"data": answers_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_answers_by_question(question_id):
+def try_get_answers_by_question(question_id, is_admin=False):
     data = get_answers_by_question(question_id)
-    return jsonify({"data": answers_schema.dump(data)})
+    if is_admin:
+        return jsonify({"data": answers_admin_schema.dump(data)})
+    else:
+        return jsonify({"data": answers_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_answers_by_scenario(scenario_id, user_id=None):
+def try_get_answers_by_scenario(scenario_id, user_id=None, is_admin=False):
     data = get_answers_by_scenario(scenario_id, user_id=user_id)
-    return jsonify({"data": answers_schema.dump(data)})
+    if is_admin:
+        return jsonify({"data": answers_admin_schema.dump(data)})
+    else:
+        return jsonify({"data": answers_schema.dump(data)})
 
 
 @try_wrap_response
-def try_get_answers_by_topic(topic_id, user_id=None):
+def try_get_answers_by_topic(topic_id, user_id=None, is_admin=False):
     data = get_answers_by_topic(topic_id, user_id=user_id)
-    return jsonify({"data": answers_schema.dump(data)})
+    if is_admin:
+        return jsonify({"data": answers_admin_schema.dump(data)})
+    else:
+        return jsonify({"data": answers_schema.dump(data)})
 
 
 @try_wrap_response

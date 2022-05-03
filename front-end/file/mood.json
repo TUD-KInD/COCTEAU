@@ -1,28 +1,37 @@
 [{
   "name": "Excited",
-  "image": "pam_excited.png"
+  "image": "pam_excited.png",
+  "order": 0
 }, {
   "name": "Happy",
-  "image": "pam_happy.png"
+  "image": "pam_happy.png",
+  "order": 1
 }, {
   "name": "Relaxed",
-  "image": "pam_relaxed.png"
+  "image": "pam_relaxed.png",
+  "order": 2
 }, {
   "name": "Calm",
-  "image": "pam_calm.png"
+  "image": "pam_calm.png",
+  "order": 3
 }, {
   "name": "Neutral",
-  "image": "pam_neutral.png"
+  "image": "pam_neutral.png",
+  "order": 4
 }, {
   "name": "Bored",
-  "image": "pam_bored.png"
+  "image": "pam_bored.png",
+  "order": 5
 }, {
   "name": "Sad",
-  "image": "pam_sad.png"
+  "image": "pam_sad.png",
+  "order": 6
 }, {
   "name": "Annoyed",
-  "image": "pam_annoyed.png"
+  "image": "pam_annoyed.png",
+  "order": 7
 }, {
   "name": "Nervous",
-  "image": "pam_nervous.png"
+  "image": "pam_nervous.png",
+  "order": 8
 }]

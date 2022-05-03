@@ -36,7 +36,8 @@ class QuestionSchema(ma.Schema):
     choices = ma.Nested(choices_schema)
     class Meta:
         model = Question
-        fields = ("id", "text", "question_type", "scenario_id", "topic_id", "choices")
+        fields = ("id", "text", "question_type", "scenario_id", "topic_id",
+                "choices", "order", "page", "shuffle_choices")
 question_schema = QuestionSchema()
 questions_schema = QuestionSchema(many=True)
 
@@ -56,7 +57,7 @@ class ScenarioSchema(ma.Schema):
     questions = ma.Nested(questions_schema)
     class Meta:
         model = Scenario
-        fields = ("id", "title", "description", "image", "topic_id", "questions")
+        fields = ("id", "title", "description", "image", "topic_id", "mode", "view")
 scenario_schema = ScenarioSchema()
 scenarios_schema = ScenarioSchema(many=True)
 
@@ -74,7 +75,7 @@ class MoodSchema(ma.Schema):
     """The schema for the Mood table, used for jsonify."""
     class Meta:
         model = Mood
-        fields = ("id", "name", "image")
+        fields = ("id", "name", "image", "order")
 mood_schema = MoodSchema()
 moods_schema = MoodSchema(many=True)
 
@@ -117,6 +118,16 @@ class AnswerSchema(ma.Schema):
         fields = ("id", "text", "user_id", "question_id", "choices")
 answer_schema = AnswerSchema()
 answers_schema = AnswerSchema(many=True)
+
+
+class AnswerAdminSchema(ma.Schema):
+    """The schema for the Answer table for admin users, used for jsonify."""
+    choices = ma.Nested(choices_schema)
+    class Meta:
+        model = Answer
+        fields = ("id", "text", "user_id", "question_id", "choices", "secret")
+answer_admin_schema = AnswerAdminSchema()
+answers_admin_schema = AnswerAdminSchema(many=True)
 
 
 class GuessSchema(ma.Schema):

@@ -88,48 +88,64 @@
     });
     $("#create-scenario").on("click", function () {
       var $scenarioTitle = $("#want-scenario-title");
-      var $scenarioDescription = $("#want-scenario-description");
-      var $scenarioImage = $("#want-scenario-image");
-      var $scenarioTopicId = $("#want-scenario-topic-id");
       var t = $scenarioTitle.val().trim();
       if (t == "") t = undefined;
+      var $scenarioDescription = $("#want-scenario-description");
       var d = $scenarioDescription.val().trim();
       if (d == "") d = undefined;
+      var $scenarioImage = $("#want-scenario-image");
       var i = $scenarioImage.val().trim();
       if (i == "") i = undefined;
+      var $scenarioTopicId = $("#want-scenario-topic-id");
       var ti = $scenarioTopicId.val();
       if (ti == "") ti = undefined;
-      envObj.createScenario(t, d, i, ti, function (returnData) {
+      var $scenarioMode = $("#want-scenario-mode");
+      var m = $scenarioMode.val();
+      if (m == "") m = undefined;
+      var $scenarioView = $("#want-scenario-view");
+      var v = $scenarioView.val();
+      if (v == "") v = undefined;
+      envObj.createScenario(t, d, i, ti, m, v, function (returnData) {
         console.log(returnData);
         $scenarioTitle.val("");
         $scenarioDescription.val("");
         $scenarioImage.val("");
         $scenarioTopicId.val("");
+        $scenarioMode.val("");
+        $scenarioView.val("");
       });
     });
     $("#update-scenario").on("click", function () {
       var $scenarioTitle = $("#want-scenario-title");
-      var $scenarioDescription = $("#want-scenario-description");
-      var $scenarioImage = $("#want-scenario-image");
-      var $scenarioTopicId = $("#want-scenario-topic-id");
-      var $scenarioId = $("#want-scenario-update-id");
       var t = $scenarioTitle.val().trim();
       if (t == "") t = undefined;
+      var $scenarioDescription = $("#want-scenario-description");
       var d = $scenarioDescription.val().trim();
       if (d == "") d = undefined;
+      var $scenarioImage = $("#want-scenario-image");
       var i = $scenarioImage.val().trim();
       if (i == "") i = undefined;
+      var $scenarioTopicId = $("#want-scenario-topic-id");
       var ti = $scenarioTopicId.val();
       if (ti == "") ti = undefined;
+      var $scenarioId = $("#want-scenario-update-id");
       var si = $scenarioId.val();
       if (si == "") si = undefined;
-      envObj.updateScenario(si, t, d, i, ti, function (returnData) {
+      var $scenarioMode = $("#want-scenario-mode");
+      var m = $scenarioMode.val();
+      if (m == "") m = undefined;
+      var $scenarioView = $("#want-scenario-view");
+      var v = $scenarioView.val();
+      if (v == "") v = undefined;
+      envObj.updateScenario(si, t, d, i, ti, m, v, function (returnData) {
         console.log(returnData);
         $scenarioTitle.val("");
         $scenarioDescription.val("");
         $scenarioImage.val("");
         $scenarioTopicId.val("");
         $scenarioId.val("");
+        $scenarioMode.val("");
+        $scenarioView.val("");
       });
     });
     $("#delete-scenario").on("click", function () {
@@ -144,35 +160,51 @@
     // End for Scenario
     // Start for Question
     $("#get-all-question").on("click", function () {
-      envObj.getAllQuestion(function (returnData) {
+      var $page = $("#want-question-get-page");
+      var p = $page.val();
+      if (p == "") p = undefined;
+      envObj.getAllQuestion(p, function (returnData) {
         console.log(returnData);
+        $page.val("");
       });
     });
     $("#get-question-by-topic-id").on("click", function () {
       var $topicId = $("#want-question-get-topic-id");
       var ti = $topicId.val();
       if (ti == "") ti = undefined;
-      envObj.getQuestionByTopicId(ti, function (returnData) {
+      var $page = $("#want-question-get-page");
+      var p = $page.val();
+      if (p == "") p = undefined;
+      envObj.getQuestionByTopicId(ti, p, function (returnData) {
         console.log(returnData);
         $topicId.val("");
+        $page.val("");
       });
     });
     $("#get-question-by-scenario-id").on("click", function () {
       var $scenarioId = $("#want-question-get-scenario-id");
       var si = $scenarioId.val();
       if (si == "") si = undefined;
-      envObj.getQuestionByScenarioId(si, function (returnData) {
+      var $page = $("#want-question-get-page");
+      var p = $page.val();
+      if (p == "") p = undefined;
+      envObj.getQuestionByScenarioId(si, p, function (returnData) {
         console.log(returnData);
         $scenarioId.val("");
+        $page.val("");
       });
     });
     $("#get-question-by-id").on("click", function () {
       var $questionId = $("#want-question-get-id");
       var qi = $questionId.val();
       if (qi == "") qi = undefined;
-      envObj.getQuestionById(qi, function (returnData) {
+      var $page = $("#want-question-get-page");
+      var p = $page.val();
+      if (p == "") p = undefined;
+      envObj.getQuestionById(qi, p, function (returnData) {
         console.log(returnData);
         $questionId.val("");
+        $page.val("");
       });
     });
     $("#question-choices-add-row").on("click", function () {
@@ -182,9 +214,6 @@
       deleteRow("choices-table");
     });
     $("#create-question").on("click", function () {
-      var $questionText = $("#want-question-text");
-      var $questionTopicId = $("#want-question-topic-id");
-      var $questionScenarioId = $("#want-question-scenario-id");
       var choices = [];
       $("#choices-table").find("tr").each(function () {
         var $this = $(this);
@@ -197,20 +226,41 @@
           });
         }
       });
+      if (choices.length == 0) choices = undefined;
       var $isMultipleChoice = $("#want-multiple-choice");
       var mc = $isMultipleChoice.is(":checked");
-      if (choices.length == 0) choices = undefined;
+      var $isJustDescription = $("#want-just-description");
+      var jd = $isJustDescription.is(":checked");
+      var $questionText = $("#want-question-text");
       var t = $questionText.val().trim();
       if (t == "") t = undefined;
+      var $questionTopicId = $("#want-question-topic-id");
       var ti = $questionTopicId.val();
       if (ti == "") ti = undefined;
+      var $questionScenarioId = $("#want-question-scenario-id");
       var si = $questionScenarioId.val();
       if (si == "") si = undefined;
-      envObj.createQuestion(t, choices, ti, si, mc, function (returnData) {
+      var $questionOrder = $("#want-question-order");
+      var order = $questionOrder.val();
+      if (order == "") order = undefined;
+      var $questionPage = $("#want-question-order");
+      var page = $questionPage.val();
+      if (page == "") page = undefined;
+      var $questionShuffleChoices = $("#want-question-shuffle-choices");
+      var shuffle = $questionShuffleChoices.is(":checked");
+      var $isCreateVision = $("#want-is-create-vision");
+      var icv = $isCreateVision.is(":checked");
+      envObj.createQuestion(t, choices, ti, si, mc, jd, order, page, shuffle, icv, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
         $questionScenarioId.val("");
+        $questionOrder.val("");
+        $questionPage.val("");
+        $isMultipleChoice.prop("checked", false);
+        $isJustDescription.prop("checked", false);
+        $questionShuffleChoices.prop("checked", false);
+        $isCreateVision.prop("checked", false);
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -221,13 +271,9 @@
           }
         });
         deleteRow("choices-table");
-        $isMultipleChoice.prop("checked", false);
       });
     });
     $("#update-question").on("click", function () {
-      var $questionText = $("#want-question-text");
-      var $questionTopicId = $("#want-question-topic-id");
-      var $questionScenarioId = $("#want-question-scenario-id");
       var choices = [];
       $("#choices-table").find("tr").each(function () {
         var $this = $(this);
@@ -240,22 +286,36 @@
           });
         }
       });
-      var $questionId = $("#want-question-update-id");
       if (choices.length == 0) choices = undefined;
+      var $questionText = $("#want-question-text");
       var t = $questionText.val().trim();
       if (t == "") t = undefined;
+      var $questionTopicId = $("#want-question-topic-id");
       var ti = $questionTopicId.val();
       if (ti == "") ti = undefined;
+      var $questionScenarioId = $("#want-question-scenario-id");
       var si = $questionScenarioId.val();
       if (si == "") si = undefined;
+      var $questionId = $("#want-question-update-id");
       var qi = $questionId.val();
       if (qi == "") qi = undefined;
-      envObj.updateQuestion(qi, t, choices, ti, si, function (returnData) {
+      var $questionOrder = $("#want-question-order");
+      var order = $questionOrder.val();
+      if (order == "") order = undefined;
+      var $questionPage = $("#want-question-order");
+      var page = $questionPage.val();
+      if (page == "") page = undefined;
+      var $questionShuffleChoices = $("#want-question-shuffle-choices");
+      var shuffle = $questionShuffleChoices.is(":checked");
+      envObj.updateQuestion(qi, t, choices, ti, si, order, page, shuffle, function (returnData) {
         console.log(returnData);
         $questionText.val("");
         $questionTopicId.val("");
         $questionScenarioId.val("");
         $questionId.val("");
+        $questionOrder.val("");
+        $questionPage.val("");
+        $questionShuffleChoices.prop("checked", false);
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -266,7 +326,6 @@
           }
         });
         deleteRow("choices-table");
-        $("#want-multiple-choice").prop("checked", false);
       });
     });
     $("#delete-question").on("click", function () {
@@ -297,11 +356,14 @@
     $("#create-mood").on("click", function () {
       var $moodName = $("#want-mood-name");
       var $moodImage = $("#want-mood-image");
+      var $moodOrder = $("#want-mood-order");
       var n = $moodName.val().trim();
       if (n == "") n = undefined;
       var i = $moodImage.val().trim();
       if (i == "") i = undefined;
-      envObj.createMood(n, i, function (returnData) {
+      var order = $moodOrder.val().trim();
+      if (order == "") order = undefined;
+      envObj.createMood(n, i, order, function (returnData) {
         console.log(returnData);
         $moodName.val("");
         $moodImage.val("");
@@ -573,6 +635,8 @@
    * @param {Object} envObj - environment object (in environment.js).
    */
   function deleteAllData(envObj) {
+    // TODO: make this function not depend on the timer
+    console.log("Start deleting data...");
     // Delete all games
     envObj.getAllGame(function (returnData) {
       var data = returnData["data"];
@@ -592,7 +656,7 @@
           });
         }
       });
-    }, 250);
+    }, 1000);
     // Delete all visions
     window.setTimeout(function () {
       envObj.getAllVision(function (returnData) {
@@ -603,18 +667,20 @@
           });
         }
       });
-    }, 500);
+    }, 5000);
     // Delete all questions
     window.setTimeout(function () {
-      envObj.getAllQuestion(function (returnData) {
+      envObj.getAllQuestion(undefined, function (returnData) {
         var data = returnData["data"];
+        var questionIdList = [];
         for (var i = 0; i < data.length; i++) {
-          envObj.deleteQuestion(data[i]["id"], function () {
-            console.log("Question deleted");
-          });
+          questionIdList.push(data[i]["id"]);
         }
+        envObj.deleteQuestionList(questionIdList, function () {
+          console.log("Question deleted");
+        });
       });
-    }, 750);
+    }, 6000);
     // Delete all scenarios
     window.setTimeout(function () {
       envObj.getAllScenario(function (returnData) {
@@ -625,7 +691,7 @@
           });
         }
       });
-    }, 1000);
+    }, 21000);
     // Delete all topics
     window.setTimeout(function () {
       envObj.getAllTopic(function (returnData) {
@@ -636,7 +702,7 @@
           });
         }
       });
-    }, 1250);
+    }, 22000);
     // Delete all moods
     window.setTimeout(function () {
       envObj.getAllMood(function (returnData) {
@@ -647,30 +713,21 @@
           });
         }
       });
-    }, 1500);
+    }, 23000);
   }
 
   /**
-   * Add a set of topic, scenario, question, and vision.
+   * Add a set of scenario, question, and vision.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    */
-  function addDataSet(envObj, topicPath, scenarioPath, topicQuestionPath, scenarioQuestionPath, moodId, visionPath) {
-    $.getJSON(topicPath, function (t) {
-      envObj.createTopic(t["title"], t["description"], function (topicData) {
-        console.log("Topic created.");
-        console.log(topicData);
-        var topicId = topicData["data"]["id"];
-        addQuestion(envObj, topicQuestionPath, topicId, undefined); // demographic questions
-        $.getJSON(scenarioPath, function (s) {
-          envObj.createScenario(s["title"], s["description"], s["image"], topicId, function (scenarioData) {
-            console.log("Scenario created.");
-            console.log(scenarioData);
-            var scenarioId = scenarioData["data"]["id"];
-            addQuestion(envObj, scenarioQuestionPath, undefined, scenarioId); // scenario questions
-            addVision(envObj, moodId, scenarioId, visionPath);
-          });
-        });
+  function addDataSet(envObj, topicId, scenarioPath, scenarioQuestionPath, moodId, visionPath) {
+    $.getJSON(scenarioPath, function (s) {
+      envObj.createScenario(s["title"], s["description"], s["image"], topicId, s["mode"], s["view"], function (scenarioData) {
+        console.log("Scenario created", scenarioData);
+        var scenarioId = scenarioData["data"]["id"];
+        addQuestion(envObj, scenarioQuestionPath, undefined, scenarioId); // scenario questions
+        addVision(envObj, moodId, scenarioId, visionPath);
       });
     });
   }
@@ -703,8 +760,7 @@
       var cn = v["unsplash_creator_name"];
       var cu = v["unsplash_creator_url"];
       envObj.createVision(moodId, scenarioId, d, url, iid, cn, cu, function (visionData) {
-        console.log("Vision created.");
-        console.log(visionData);
+        console.log("Vision created", visionData);
         visionList.push(visionData["data"]);
         addVisionInOrder(envObj, moodId, scenarioId, visions.slice(1), visionList, success, error);
       }, function () {
@@ -736,9 +792,8 @@
       return true;
     } else {
       var m = moods[0];
-      envObj.createMood(m["name"], m["image"], function (moodData) {
-        console.log("Mood created.");
-        console.log(moodData);
+      envObj.createMood(m["name"], m["image"], m["order"], function (moodData) {
+        console.log("Mood created", moodData);
         moodList.push(moodData["data"]);
         addMoodInOrder(envObj, moods.slice(1), moodList, success, error);
       }, function () {
@@ -755,31 +810,14 @@
    */
   function addQuestion(envObj, questionPath, topicId, scenarioId, success, error) {
     $.getJSON(questionPath, function (questions) {
-      addQuestionInOrder(envObj, questions, [], topicId, scenarioId, success, error);
+      for (var i = 0; i < questions.length; i++) {
+        questions[i]["topic_id"] = topicId;
+        questions[i]["scenario_id"] = scenarioId;
+      }
+      envObj.createQuestionList(questions, function (returnData) {
+        console.log("Questions created", returnData);
+      }, error);
     });
-  }
-
-  /**
-   * Add questions in the specified order.
-   * @private
-   * @param {Object} envObj - environment object (in environment.js).
-   */
-  function addQuestionInOrder(envObj, questions, questionList, topicId, scenarioId, success, error) {
-    if (questions.length == 0) {
-      if (typeof success === "function") success(questionList);
-      return true;
-    } else {
-      var q = questions[0];
-      envObj.createQuestion(q["text"], q["choices"], topicId, scenarioId, false, function (questionData) {
-        console.log("Question created.");
-        console.log(questionData);
-        questionList.push(questionData["data"]);
-        addQuestionInOrder(envObj, questions.slice(1), questionList, topicId, scenarioId, success, error);
-      }, function () {
-        if (typeof error === "function") error();
-        return false;
-      });
-    }
   }
 
   /**
@@ -790,9 +828,38 @@
   function setInitialData(envObj) {
     addMood(envObj, "file/mood.json", function (moodList) {
       var moodId = moodList[(moodList.length - 1) / 2]["id"]; // ID of the "Neutral" mood
-      addDataSet(envObj, "file/topic-1.json", "file/scenario-1.json", "file/topic-question-1.json", "file/scenario-question-1.json", moodId, "file/vision-1.json");
-      addDataSet(envObj, "file/topic-2.json", "file/scenario-2.json", "file/topic-question-2.json", "file/scenario-question-2.json", moodId, "file/vision-2.json");
-      addDataSet(envObj, "file/topic-3.json", "file/scenario-3.json", "file/topic-question-3.json", "file/scenario-question-3.json", moodId, "file/vision-3.json");
+      // Add the deployement studies
+      $.getJSON("file/topic_1.json", function (t) {
+        envObj.createTopic(t["title"], t["description"], function (topicData) {
+          console.log("Topic created", topicData);
+          var topicId = topicData["data"]["id"];
+          addQuestion(envObj, "file/topic_1_question.json", topicId, undefined); // topic questions
+          addDataSet(envObj, topicId, "file/scenario_1.json", "file/scenario_1_question.json", moodId, "file/scenario_1_vision.json");
+          addDataSet(envObj, topicId, "file/scenario_2.json", "file/scenario_2_question.json", moodId, "file/scenario_2_vision.json");
+          //addDataSet(envObj, topicId, "file/scenario_3.json", "file/scenario_3_question.json", moodId, "file/empty.json");
+          addDataSet(envObj, topicId, "file/scenario_4.json", "file/scenario_4_question.json", moodId, "file/scenario_4_vision.json");
+        });
+      });
+      // Add the crowdscouring experiments
+      var numOfModes = 3;
+      var numOfViews = 5;
+      var fileEndList = [];
+      for (var i = 1; i < numOfModes + 1; i++) {
+        for (var j = 1; j < numOfViews + 1; j++) {
+          fileEndList.push("_mode_" + i + "_view_" + j + ".json");
+        }
+      }
+      $.when.apply($, fileEndList.map(function (fileEnd) {
+        var filePath = "file/experiment/";
+        return $.getJSON(filePath + "topic_4" + fileEnd, function (t) {
+          envObj.createTopic(t["title"], t["description"], function (topicData) {
+            console.log("Topic created", topicData);
+            var topicId = topicData["data"]["id"];
+            addQuestion(envObj, filePath + "topic_4_question.json", topicId, undefined); // topic questions
+            addDataSet(envObj, topicId, filePath + "scenario_4" + fileEnd, filePath + "scenario_4_question" + fileEnd, moodId, "file/empty.json");
+          });
+        });
+      }));
     });
   }
 

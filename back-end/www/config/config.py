@@ -38,6 +38,5 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = Path(join(secret_dir, "db_url_testing")).read_text().strip()
 
 
-# TODO: find a better way to set the environment
 config = StagingConfig() # for staging
 #config = ProductionConfig() # for production

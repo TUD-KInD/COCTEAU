@@ -9,7 +9,7 @@ from models.model import MediaTypeEnum
 from models.model import Mood
 
 
-def create_mood(name, image=None):
+def create_mood(name, image=None, order=None):
     """
     Create a Mood object.
 
@@ -19,13 +19,17 @@ def create_mood(name, image=None):
         Label of the mood.
     image : str
         Image URL of the mood.
+    order : int
+        Order of the mood relative to others.
 
     Returns
     -------
     mood : Mood
         The newly created mood object.
     """
-    mood = Mood(name=name, image=image)
+    order = 0 if order is None else order
+
+    mood = Mood(name=name, image=image, order=order)
 
     db.session.add(mood)
     db.session.commit()
@@ -80,7 +84,7 @@ def remove_mood(mood_id):
     db.session.commit()
 
 
-def update_mood(mood_id, name=None, image=None):
+def update_mood(mood_id, name=None, image=None, order=None):
     """
     Modify a mood.
 
@@ -92,6 +96,8 @@ def update_mood(mood_id, name=None, image=None):
         New name of the mood.
     image : str
         Image URL of the mood.
+    order : int
+        Order of the mood relative to others.
 
     Returns
     -------
@@ -114,6 +120,9 @@ def update_mood(mood_id, name=None, image=None):
 
     if image is not None:
         mood.image = image
+
+    if order is not None:
+        mood.order = order
 
     db.session.commit()
 
@@ -347,7 +356,7 @@ def get_visions_by_scenario(scenario_id, paginate=True, order="desc", page_numbe
     return visions
 
 
-def get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, page_size=30):
+def get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, page_size=30, scenario_id=None):
     """
     Get all the vision created by a user.
 
@@ -365,6 +374,8 @@ def get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, pag
         The page number (only works when paginate is True).
     page_size : int
         The page size (only works when paginate is True).
+    scenario_id : int
+        ID of a scenario.
 
     Returns
     -------
@@ -374,6 +385,9 @@ def get_visions_by_user(user_id, paginate=True, order="desc", page_number=1, pag
     """
     # TODO: need to improve the testing case to check pagination
     q = Vision.query.filter_by(user_id=user_id)
+
+    if scenario_id is not None:
+        q = q.filter_by(scenario_id=scenario_id)
 
     if order == "desc":
         q = q.order_by(desc(Vision.created_at))

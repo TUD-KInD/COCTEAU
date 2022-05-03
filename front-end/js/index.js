@@ -14,6 +14,32 @@
   }
 
   /**
+   * Add the clicking event to a scenario image (for the deployment mode).
+   * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   * @param {Object} $element - the jQuery object of the scenario image.
+   */
+  function addDeploymentScenarioClickEvent(envObj, $element) {
+    $element.on("click", function () {
+      var d = $(this).data("raw");
+      var scenarioId = d["id"];
+      var topicId = d["topic_id"];
+      var queryString = "?scenario_id=" + scenarioId + "&topic_id=" + topicId;
+      // Get the scenario answers
+      envObj.getAnswerOfCurrentUserByScenarioId(scenarioId, function (data) {
+        var answer = data["data"];
+        if (typeof answer !== "undefined" && answer.length > 0) {
+          // Go to the vision page when there are scenario answers
+          window.location.href = "vision.html" + queryString;
+        } else {
+          // Go to the opinion page when there are no scenario answers
+          window.location.href = "opinion.html" + queryString;
+        }
+      });
+    });
+  }
+
+  /**
    * Initialize the user interface.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
@@ -27,24 +53,13 @@
         var $scenario = $("#scenario");
         for (var i = 0; i < scenarios.length; i++) {
           var d = scenarios[i];
-          var $t = createScenarioHTML(d["title"], "img/" + d["image"]);
-          $t.data("raw", d);
-          $scenario.append($t);
-          $t.on("click", function () {
-            var d = $(this).data("raw");
-            var scenarioId = d["id"];
-            // Get the scenario answers
-            envObj.getAnswerOfCurrentUserByScenarioId(scenarioId, function (data) {
-              var answer = data["data"];
-              if (typeof answer !== "undefined" && answer.length > 0) {
-                // Go to the vision page when there are scenario answers
-                window.location.href = "vision.html?&scenario_id=" + scenarioId;
-              } else {
-                // Go to the opinion page when there are no scenario answers
-                window.location.href = "opinion.html?&scenario_id=" + scenarioId;
-              }
-            });
-          });
+          if (d["mode"] == 0) {
+            // Only show mode 0 (i.e., the deployment setting) for the index page
+            var $t = createScenarioHTML(d["title"], "img/" + d["image"]);
+            $t.data("raw", d);
+            addDeploymentScenarioClickEvent(envObj, $t);
+            $scenario.append($t);
+          }
         }
         envObj.showPage();
       }
@@ -54,7 +69,6 @@
   /**
    * Initialize the page.
    * @private
-   * @todo Check if user logged in, if not, show the login dialog.
    */
   function init() {
     var env = new periscope.Environment({

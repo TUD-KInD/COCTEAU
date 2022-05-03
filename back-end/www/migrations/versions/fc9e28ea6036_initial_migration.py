@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: a294944cfb54
+Revision ID: fc9e28ea6036
 Revises: 
-Create Date: 2021-06-14 16:29:19.337508
+Create Date: 2022-05-03 11:49:09.533906
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a294944cfb54'
+revision = 'fc9e28ea6036'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,6 +21,8 @@ def upgrade():
     op.create_table('mood',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
+    sa.Column('image', sa.String(), nullable=True),
+    sa.Column('order', sa.Integer(), server_default='0', nullable=False),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_mood'))
     )
     op.create_table('topic',
@@ -33,6 +35,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
     sa.Column('client_id', sa.String(length=255), nullable=False),
+    sa.Column('client_type', sa.Integer(), server_default='1', nullable=False),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_user')),
     sa.UniqueConstraint('client_id', name=op.f('uq_user_client_id'))
     )
@@ -41,6 +44,8 @@ def upgrade():
     sa.Column('title', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=False),
     sa.Column('image', sa.String(), nullable=False),
+    sa.Column('mode', sa.Integer(), server_default='0', nullable=False),
+    sa.Column('view', sa.Integer(), server_default='0', nullable=False),
     sa.Column('topic_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['topic_id'], ['topic.id'], name=op.f('fk_scenario_topic_id_topic')),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_scenario'))
@@ -48,7 +53,10 @@ def upgrade():
     op.create_table('question',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('text', sa.String(), nullable=False),
-    sa.Column('question_type', sa.Enum('SINGLE_CHOICE', 'MULTI_CHOICE', 'FREE_TEXT', name='questiontypeenum'), nullable=True),
+    sa.Column('question_type', sa.Enum('SINGLE_CHOICE', 'MULTI_CHOICE', 'FREE_TEXT', 'CREATE_VISION', 'CREATE_MOOD', name='questiontypeenum'), nullable=True),
+    sa.Column('order', sa.Integer(), server_default='0', nullable=False),
+    sa.Column('page', sa.Integer(), server_default='-1', nullable=False),
+    sa.Column('shuffle_choices', sa.Boolean(), server_default=sa.text('false'), nullable=True),
     sa.Column('scenario_id', sa.Integer(), nullable=True),
     sa.Column('topic_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['scenario_id'], ['scenario.id'], name=op.f('fk_question_scenario_id_scenario')),
@@ -72,6 +80,7 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('question_id', sa.Integer(), nullable=True),
+    sa.Column('secret', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['question_id'], ['question.id'], name=op.f('fk_answer_question_id_question')),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], name=op.f('fk_answer_user_id_user')),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_answer'))

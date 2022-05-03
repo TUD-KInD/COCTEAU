@@ -1,0 +1,108 @@
+[{
+  "text": "<h2>Pre-Survey: Data Brainstorming</h2>",
+  "is_just_description": true,
+  "order": 0
+}, {
+  "text": "The COVID-19 pandemic drastically changed several aspects of our lives, including how we experience academic conferences. Several scientific venues were converted to online-only or hybrid events, providing opportunities to try new ways to organize such events and go beyond the classical conference structure. As society slowly moves back to normalcy, shaping and running events is still challenging for conference organizers, given the uncertain pandemic. While there is a general preference for in-person events, the past two years demonstrated the potential of digital technologies in offering hybrid experiences benefiting organizers and attendees alike.",
+  "is_just_description": true,
+  "order": 1
+}, {
+  "text": "<h3>Would you mind providing opinions on the following questions?</h3>",
+  "is_just_description": true,
+  "order": 2
+}, {
+  "text": "1. I enjoy using virtual environment platforms (e.g., gather.town) to participate in scientific conferences.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "order": 3
+}, {
+  "text": "2. Hybrid and in-person events provide the same networking possibilities.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "order": 4
+}, {
+  "text": "3. Online and hybrid events are more inclusive, as people with budget constraints can still attend.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "order": 5
+}, {
+  "text": "4. In-person events improve participants' engagement in discussions and events, resulting in a better experience overall.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "order": 6
+}, {
+  "text": "5. Online events drastically reduce interest in participating, especially as a non-author.",
+  "choices": [{
+    "text": "Strongly Agree",
+    "value": 1
+  }, {
+    "text": "Agree",
+    "value": 2
+  }, {
+    "text": "Neutral",
+    "value": 3
+  }, {
+    "text": "Disagree",
+    "value": 4
+  }, {
+    "text": "Strongly Disagree",
+    "value": 5
+  }],
+  "order": 7
+}]

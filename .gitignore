@@ -7,3 +7,4 @@
 *.log*
 **/secret/
 *.sql
+back-end/www/*.csv

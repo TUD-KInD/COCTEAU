@@ -14,6 +14,89 @@
    */
 
   /**
+   * The object for the "Choice" database table.
+   * @typedef {Object} Choice
+   * @property {string} text - text of the choice.
+   * @property {number} value - value of the choice.
+   */
+
+  /**
+   * The object for the "Question" database table.
+   * @typedef {Object} Question
+   * @param {number} id - ID of the question.
+   * @param {string} text - text of the question.
+   * @param {number} page - page of the question.
+   * @param {number} order - order of the question.
+   * @param {number} topic_id - topic ID of the question.
+   * @param {number} scenario_id - scenario ID of the question.
+   * @param {sting|null} question_type - type of the question.
+   * @param {Choice[]} choices - choices of the question.
+   */
+
+  /**
+   * The object for the "Media" database table.
+   * @typedef {Object} Media
+   * @property {number} id - ID of the media.
+   * @property {string} description - description of the media.
+   * @property {string} unsplash_creator_name - the creator name of the unsplash photo.
+   * @property {string} unsplash_creator_url - the creator URL of the unsplash photo.
+   * @property {string} unsplash_image_id - the ID of the unsplash photo.
+   * @property {string} url - URL of the media (the unsplash photo URL).
+   * @property {number} vision_id - ID of the vision.
+   */
+
+  /**
+   * The object for the "Vision" database table.
+   * @typedef {Object} Vision
+   * @property {number} id - ID of the vision.
+   * @property {Media[]} medias - medias of the vision.
+   * @property {number} scenario_id - scenario ID of the vision.
+   */
+
+  /**
+   * The JavaScript implementation of the python collections.defaultdict data type
+   * Below are usage examples:
+   * var a = new DefaultDict(Array);
+   * a["banana"].push("ya");
+   * var b = new DefaultDict(new DefaultDict(Array));
+   * b["orange"]["apple"].push("yo");
+   * var c = new DefaultDict(Number);
+   * c["banana"] = 1;
+   * var d = new DefaultDict([2]);
+   * d["banana"].push(1);
+   * var e = new DefaultDict(new DefaultDict(2));
+   * e["orange"]["apple"] = 3;
+   * var f = new DefaultDict(1);
+   * f["banana"] = 2;
+   */
+  class DefaultDict {
+    constructor(defaultInit) {
+      this.original = defaultInit;
+      return new Proxy({}, {
+        get: function (target, name) {
+          if (name in target) {
+            return target[name];
+          } else {
+            if (typeof defaultInit === "function") {
+              target[name] = new defaultInit().valueOf();
+            } else if (typeof defaultInit === "object") {
+              if (typeof defaultInit.original !== "undefined") {
+                target[name] = new DefaultDict(defaultInit.original);
+              } else {
+                target[name] = JSON.parse(JSON.stringify(defaultInit));
+              }
+            } else {
+              target[name] = defaultInit;
+            }
+            return target[name];
+          }
+        }
+      });
+    }
+  }
+  window.DefaultDict = DefaultDict;
+
+  /**
    * Class for setting the environment.
    * This class is used for PERISCOPE tool specific settings.
    * @public
@@ -92,16 +175,33 @@
      * @private
      */
     function initAccountUI() {
+      var userTokenError = function () {
+        fail("Back-end server error.");
+      };
       var accountObj = new periscope.Account({
-        "signInSuccess": function (accountObj, googleUserObj) {
-          getUserTokenWrapper(googleUserObj, function () {
+        "ready": function () {
+          getUserTokenWrapper(undefined, function () {
+            ready(thisObj);
+          }, userTokenError);
+          // Check if use signed in with Google before
+          var isGoogleTokenStored = sessionStorage.getItem("isGoogleTokenStored");
+          if (typeof isGoogleTokenStored !== "undefined" && isGoogleTokenStored == "true") {
             handleGoogleSignInSuccessUI(accountObj);
-          });
+          }
+        },
+        "signInSuccess": function (accountObj, response) {
+          sessionStorage.removeItem("userToken");
+          sessionStorage.removeItem("isGoogleTokenStored");
+          getUserTokenWrapper(response, function () {
+            handleGoogleSignInSuccessUI(accountObj);
+          }, userTokenError);
         },
         "signOutSuccess": function (accountObj) {
+          sessionStorage.removeItem("userToken");
+          sessionStorage.removeItem("isGoogleTokenStored");
           getUserTokenWrapper(undefined, function () {
             handleGoogleSignOutSuccessUI(accountObj);
-          });
+          }, userTokenError);
         }
       });
       $("#sign-in-prompt").on("click", function () {
@@ -111,7 +211,7 @@
     }
 
     /**
-     * Get user token from the back-end.
+     * Get user token from the back-end or the session storage.
      * @private
      * @param {Object.<string, *>} data - the data object to give to the back-end.
      * @param {string} [data.google_id_token] - the token returned by the Google Sign-In API.
@@ -120,18 +220,31 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     function getUserToken(data, success, error) {
-      generalRequest("POST", "/login/", data, function (returnData) {
-        userToken = returnData["user_token"];
+      var storedUserToken = sessionStorage.getItem("userToken");
+      if (storedUserToken == null || typeof storedUserToken === "undefined") {
+        console.log("No user token found in the session storage");
+        // This means that no user token is stored, so we need to request a token from the server.
+        generalRequest("POST", "/login/", data, function (returnData) {
+          userToken = returnData["user_token"];
+          userData = getJwtPayload(userToken);
+          sessionStorage.setItem("userToken", userToken);
+          console.log("User ID: " + userData["user_id"]);
+          console.log("Client Type: " + userData["client_type"]);
+          if (typeof success === "function") success(userData);
+        }, function () {
+          console.error("ERROR when getting user token.");
+          if (typeof error === "function") error();
+        });
+      } else {
+        console.log("User token found in the session storage");
+        // This means that the user has logged in before in another page.
+        // So we can just reuse the stored user token.
+        userToken = storedUserToken;
         userData = getJwtPayload(userToken);
-        if (typeof success === "function") {
-          success(returnData);
-        }
-      }, function () {
-        console.error("ERROR when getting user token.");
-        if (typeof error === "function") {
-          error();
-        }
-      });
+        console.log("User ID: " + userData["user_id"]);
+        console.log("Client Type: " + userData["client_type"]);
+        if (typeof success === "function") success(userData);
+      }
     }
 
     /**
@@ -149,15 +262,11 @@
         "type": requestType,
         "dataType": "json",
         "success": function (returnData) {
-          if (typeof success === "function") {
-            success(returnData);
-          }
+          if (typeof success === "function") success(returnData);
         },
         "error": function (xhr) {
           console.error(xhr);
-          if (typeof error === "function") {
-            error();
-          }
+          if (typeof error === "function") error();
           showErrorPage();
         }
       };
@@ -166,7 +275,7 @@
         request["contentType"] = "application/json";
         request["dataType"] = "json";
       }
-      $.ajax(request);
+      return $.ajax(request);
     }
 
     /**
@@ -177,7 +286,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     function generalGet(path, success, error) {
-      generalRequest("GET", path, undefined, success, error);
+      return generalRequest("GET", path, undefined, success, error);
     }
 
     /**
@@ -190,7 +299,7 @@
      */
     function generalDelete(path, data, success, error) {
       data["user_token"] = userToken;
-      generalRequest("DELETE", path, data, success, error);
+      return generalRequest("DELETE", path, data, success, error);
     }
 
     /**
@@ -203,7 +312,7 @@
      */
     function generalPost(path, data, success, error) {
       data["user_token"] = userToken;
-      generalRequest("POST", path, data, success, error);
+      return generalRequest("POST", path, data, success, error);
     }
 
     /**
@@ -216,7 +325,7 @@
      */
     function generalPatch(path, data, success, error) {
       data["user_token"] = userToken;
-      generalRequest("PATCH", path, data, success, error);
+      return generalRequest("PATCH", path, data, success, error);
     }
 
     /**
@@ -226,7 +335,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllTopic = function (success, error) {
-      generalGet("/topic/", success, error);
+      return generalGet("/topic/", success, error);
     };
 
     /**
@@ -237,7 +346,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getTopicById = function (topicId, success, error) {
-      generalGet("/topic/?topic_id=" + topicId, success, error);
+      return generalGet("/topic/?topic_id=" + topicId, success, error);
     };
 
     /**
@@ -253,7 +362,7 @@
         "title": title,
         "description": description
       };
-      generalPost("/topic/", data, success, error);
+      return generalPost("/topic/", data, success, error);
     };
 
     /**
@@ -275,7 +384,7 @@
       if (typeof description !== "undefined") {
         data["description"] = description;
       }
-      generalPatch("/topic/", data, success, error);
+      return generalPatch("/topic/", data, success, error);
     };
 
     /**
@@ -289,7 +398,7 @@
       var data = {
         "topic_id": topicId
       };
-      generalDelete("/topic/", data, success, error);
+      return generalDelete("/topic/", data, success, error);
     };
 
     /**
@@ -299,7 +408,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllScenario = function (success, error) {
-      generalGet("/scenario/", success, error);
+      return generalGet("/scenario/", success, error);
     };
 
     /**
@@ -310,7 +419,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getScenarioByTopicId = function (topicId, success, error) {
-      generalGet("/scenario/?topic_id=" + topicId, success, error);
+      return generalGet("/scenario/?topic_id=" + topicId, success, error);
     };
 
     /**
@@ -321,7 +430,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getScenarioById = function (scenarioId, success, error) {
-      generalGet("/scenario/?scenario_id=" + scenarioId, success, error);
+      return generalGet("/scenario/?scenario_id=" + scenarioId, success, error);
     };
 
     /**
@@ -331,17 +440,25 @@
      * @param {string} description - description of the scenario.
      * @param {string} image - image URL of the scenario.
      * @param {number} topicId - topic ID that the scenario is in.
+     * @param {number} [mode] - system mode configuration of the scenario (that affects the interaction type).
+     * @param {number} [view] - system view configuration of the scenario (that affects the role of the users).
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createScenario = function (title, description, image, topicId, success, error) {
+    this.createScenario = function (title, description, image, topicId, mode, view, success, error) {
       var data = {
         "title": title,
         "description": description,
         "image": image,
         "topic_id": topicId
       };
-      generalPost("/scenario/", data, success, error);
+      if (typeof mode !== "undefined") {
+        data["mode"] = mode;
+      }
+      if (typeof view !== "undefined") {
+        data["view"] = view;
+      }
+      return generalPost("/scenario/", data, success, error);
     };
 
     /**
@@ -351,11 +468,13 @@
      * @param {string} [title] - title of the scenario.
      * @param {string} [description] - description of the scenario.
      * @param {string} [image] - image URL of the scenario.
-     * @param {string} [topicId] - topic ID that the scenario is in.
+     * @param {number} [topicId] - topic ID that the scenario is in.
+     * @param {number} [mode] - system mode configuration of the scenario (that affects the interaction type).
+     * @param {number} [view] - system view configuration of the scenario (that affects the role of the users).
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.updateScenario = function (scenarioId, title, description, image, topicId, success, error) {
+    this.updateScenario = function (scenarioId, title, description, image, topicId, mode, view, success, error) {
       var data = {
         "scenario_id": scenarioId
       };
@@ -371,7 +490,13 @@
       if (typeof topicId !== "undefined") {
         data["topic_id"] = topicId;
       }
-      generalPatch("/scenario/", data, success, error);
+      if (typeof mode !== "undefined") {
+        data["mode"] = mode;
+      }
+      if (typeof view !== "undefined") {
+        data["view"] = view;
+      }
+      return generalPatch("/scenario/", data, success, error);
     };
 
     /**
@@ -385,50 +510,72 @@
       var data = {
         "scenario_id": scenarioId
       };
-      generalDelete("/scenario/", data, success, error);
+      return generalDelete("/scenario/", data, success, error);
     };
 
     /**
      * Get a list of all questions.
      * @public
+     * @param {number} [page] - page of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getAllQuestion = function (success, error) {
-      generalGet("/question/", success, error);
+    this.getAllQuestion = function (page, success, error) {
+      var path = "/question/?";
+      if (typeof page !== "undefined") {
+        path += "&page=" + page;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
      * Get a list of questions by topic ID.
      * @public
      * @param {number} topicId - topic ID of questions that we wish to get.
+     * @param {number} [page] - page of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getQuestionByTopicId = function (topicId, success, error) {
-      generalGet("/question/?topic_id=" + topicId, success, error);
+    var getQuestionByTopicId = function (topicId, page, success, error) {
+      var path = "/question/?topic_id=" + topicId;
+      if (typeof page !== "undefined") {
+        path += "&page=" + page;
+      }
+      return generalGet(path, success, error);
     };
+    this.getQuestionByTopicId = getQuestionByTopicId;
 
     /**
      * Get a list of questions by scenario ID.
      * @public
      * @param {number} scenarioId - scenario ID of questions that we wish to get.
+     * @param {number} [page] - page of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getQuestionByScenarioId = function (scenarioId, success, error) {
-      generalGet("/question/?scenario_id=" + scenarioId, success, error);
+    var getQuestionByScenarioId = function (scenarioId, page, success, error) {
+      var path = "/question/?scenario_id=" + scenarioId;
+      if (typeof page !== "undefined") {
+        path += "&page=" + page;
+      }
+      return generalGet(path, success, error);
     };
+    this.getQuestionByScenarioId = getQuestionByScenarioId;
 
     /**
      * Get a question by ID.
      * @public
      * @param {number} questionId - ID of the question that we wish to get.
+     * @param {number} [page] - page of the questions that we want to get.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getQuestionById = function (questionId, success, error) {
-      generalGet("/question/?question_id=" + questionId, success, error);
+    this.getQuestionById = function (questionId, page, success, error) {
+      var path = "/question/?question_id=" + questionId;
+      if (typeof page !== "undefined") {
+        path += "&page=" + page;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
@@ -439,21 +586,38 @@
      */
 
     /**
-     * Create a question.
-     * @private
+     * The object for the "Question" database table.
+     * @typedef {Object} Question
      * @param {string} text - text of the question.
      * @param {Choice[]} [choices] - choices of the question.
-     * @param {string} [topicId] - topic ID that the question is in (for demographic questions).
+     * @param {number} [topicId] - topic ID that the question is in (for topic questions).
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
      * @param {boolean} [isMulitpleChoice] - indicate if the question allows multiple choices.
+     * @param {boolean} [isJustDescription] - indicate if the question is just a description but not a question.
+     * @param {number} [order] - indicate the order of the question relative to the others.
+     * @param {number} [page] - page of the questions that we want to get.
+     * @param {boolean} [shuffleChoices] - indicate if we want to randomly shuffle the choices.
+     * @param {boolean} [isCreateVision] - indicate if the question should use the vision creation UI.
+     */
+
+    /**
+     * Create a question.
+     * @private
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, success, error) {
+    this.createQuestion = function (text, choices, topicId, scenarioId, isMulitpleChoice, isJustDescription, order, page, shuffleChoices, isCreateVision, success, error) {
       var data = {
         "text": text
       };
       if (typeof choices !== "undefined") {
+        for (var i = 0; i < choices.length; i++) {
+          var c = choices[i]["text"];
+          if (typeof c === "object") {
+            // If the choice text turns out to be a dictionary, we need to encode it into a string that can be decoded later.
+            choices[i]["text"] = encodeURIComponent(JSON.stringify(c));
+          }
+        };
         data["choices"] = choices;
       }
       if (typeof topicId !== "undefined") {
@@ -465,7 +629,49 @@
       if (typeof isMulitpleChoice !== "undefined") {
         data["is_mulitple_choice"] = isMulitpleChoice;
       }
-      generalPost("/question/", data, success, error);
+      if (typeof isJustDescription !== "undefined") {
+        data["is_just_description"] = isJustDescription;
+      }
+      if (typeof order !== "undefined") {
+        data["order"] = order;
+      }
+      if (typeof page !== "undefined") {
+        data["page"] = page;
+      }
+      if (typeof shuffleChoices !== "undefined") {
+        data["shuffle_choices"] = shuffleChoices;
+      }
+      if (typeof isCreateVision !== "undefined") {
+        data["is_create_vision"] = isCreateVision;
+      }
+      return generalPost("/question/", {
+        "data": [data]
+      }, success, error);
+    };
+
+    /**
+     * Create a list of questions.
+     * @private
+     * @param {Question[]} questions - list of questions.
+     * @param {function} [success] - callback function when the operation is successful.
+     * @param {function} [error] - callback function when the operation is failing.
+     */
+    this.createQuestionList = function (questions, success, error) {
+      for (var j = 0; j < questions.length; j++) {
+        var choices = questions[j]["choices"];
+        if (typeof choices !== "undefined") {
+          for (var i = 0; i < choices.length; i++) {
+            var c = choices[i]["text"];
+            if (typeof c === "object") {
+              // If the choice text turns out to be a dictionary, we need to encode it into a string that can be decoded later.
+              questions[j]["choices"][i]["text"] = encodeURIComponent(JSON.stringify(c));
+            }
+          };
+        }
+      }
+      return generalPost("/question/", {
+        "data": questions
+      }, success, error);
     };
 
     /**
@@ -474,12 +680,15 @@
      * @param {number} questionId - ID of the question.
      * @param {string} [text] - text of the question.
      * @param {Choice[]} [choices] - choices of the question.
-     * @param {string} [topicId] - topic ID that the question is in (for demographic questions).
+     * @param {number} [topicId] - topic ID that the question is in (for topic questions).
      * @param {string} [scenarioId] - scenario ID that the question is in (for scenario quesions).
+     * @param {number} [order] - indicate the order of the question relative to the others.
+     * @param {number} [page] - page of the questions that we want to get.
+     * @param {boolean} [shuffleChoices] - indicate if we want to randomly shuffle the choices.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.updateQuestion = function (questionId, text, choices, topicId, scenarioId, success, error) {
+    this.updateQuestion = function (questionId, text, choices, topicId, scenarioId, order, page, shuffleChoices, success, error) {
       var data = {
         "question_id": questionId
       };
@@ -495,7 +704,16 @@
       if (typeof scenarioId !== "undefined") {
         data["scenario_id"] = scenarioId;
       }
-      generalPatch("/question/", data, success, error);
+      if (typeof order !== "undefined") {
+        data["order"] = order;
+      }
+      if (typeof page !== "undefined") {
+        data["page"] = page;
+      }
+      if (typeof shuffleChoices !== "undefined") {
+        data["shuffle_choices"] = shuffleChoices;
+      }
+      return generalPatch("/question/", data, success, error);
     };
 
     /**
@@ -507,9 +725,23 @@
      */
     this.deleteQuestion = function (questionId, success, error) {
       var data = {
-        "question_id": questionId
+        "data": [questionId]
       };
-      generalDelete("/question/", data, success, error);
+      return generalDelete("/question/", data, success, error);
+    };
+
+    /**
+     * Delete a list of questions by their IDs.
+     * @public
+     * @param {number[]} questionIdList - list of the IDs of the questions.
+     * @param {function} [success] - callback function when the operation is successful.
+     * @param {function} [error] - callback function when the operation is failing.
+     */
+    this.deleteQuestionList = function (questionIdList, success, error) {
+      var data = {
+        "data": questionIdList
+      };
+      return generalDelete("/question/", data, success, error);
     };
 
     /**
@@ -518,9 +750,10 @@
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getAllMood = function (success, error) {
-      generalGet("/mood/", success, error);
+    var getAllMood = function (success, error) {
+      return generalGet("/mood/", success, error);
     };
+    this.getAllMood = getAllMood;
 
     /**
      * Get a mood by ID.
@@ -530,7 +763,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getMoodById = function (moodId, success, error) {
-      generalGet("/mood/?mood_id=" + moodId, success, error);
+      return generalGet("/mood/?mood_id=" + moodId, success, error);
     };
 
     /**
@@ -538,17 +771,21 @@
      * @public
      * @param {string} name - name of the mood.
      * @param {string} [image] - image of the mood.
+     * @param {number} [order] - indicate the order of the mood relative to the others.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createMood = function (name, image, success, error) {
+    this.createMood = function (name, image, order, success, error) {
       var data = {
         "name": name
       };
       if (typeof image !== "undefined") {
         data["image"] = image;
       }
-      generalPost("/mood/", data, success, error);
+      if (typeof order !== "undefined") {
+        data["order"] = order;
+      }
+      return generalPost("/mood/", data, success, error);
     };
 
     /**
@@ -570,7 +807,7 @@
       if (typeof image !== "undefined") {
         data["image"] = image;
       }
-      generalPatch("/mood/", data, success, error);
+      return generalPatch("/mood/", data, success, error);
     };
 
     /**
@@ -584,7 +821,7 @@
       var data = {
         "mood_id": moodId
       };
-      generalDelete("/mood/", data, success, error);
+      return generalDelete("/mood/", data, success, error);
     };
 
     /**
@@ -594,7 +831,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllVision = function (success, error) {
-      generalGet("/vision/?paginate=0", success, error);
+      return generalGet("/vision/?paginate=0", success, error);
     };
 
     /**
@@ -605,7 +842,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getVisionByScenarioId = function (scenarioId, success, error) {
-      generalGet("/vision/?paginate=0&scenario_id=" + scenarioId, success, error);
+      return generalGet("/vision/?paginate=0&scenario_id=" + scenarioId, success, error);
     };
 
     /**
@@ -616,7 +853,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getVisionByUserId = function (userId, success, error) {
-      generalGet("/vision/?paginate=0&user_id=" + userId, success, error);
+      return generalGet("/vision/?paginate=0&user_id=" + userId, success, error);
     };
 
     /**
@@ -627,7 +864,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getVisionById = function (visionId, success, error) {
-      generalGet("/vision/?vision_id=" + visionId, success, error);
+      return generalGet("/vision/?vision_id=" + visionId, success, error);
     };
 
     /**
@@ -643,7 +880,7 @@
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createVision = function (moodId, scenarioId, description, url, unsplashImageId, unsplashCreatorName, unsplashCreatorUrl, success, error) {
+    var createVision = function (moodId, scenarioId, description, url, unsplashImageId, unsplashCreatorName, unsplashCreatorUrl, success, error) {
       var data = {
         "mood_id": moodId,
         "medias": [{
@@ -656,8 +893,9 @@
         }],
         "scenario_id": scenarioId,
       };
-      generalPost("/vision/", data, success, error);
+      return generalPost("/vision/", data, success, error);
     };
+    this.createVision = createVision;
 
     /**
      * Update a vision.
@@ -696,7 +934,7 @@
         console.warn("Field 'unsplashCreatorUrl' is ignored.");
         console.warn("Must have all of the above ignored fields.");
       }
-      generalPatch("/vision/", data, success, error);
+      return generalPatch("/vision/", data, success, error);
     };
 
     /**
@@ -710,7 +948,7 @@
       var data = {
         "vision_id": visionId
       };
-      generalDelete("/vision/", data, success, error);
+      return generalDelete("/vision/", data, success, error);
     };
 
     /**
@@ -720,7 +958,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllAnswer = function (success, error) {
-      generalGet("/answer/", success, error);
+      var path = "/answer/";
+      if (typeof userToken !== "undefined") {
+        path += "?user_token=" + userToken;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
@@ -731,7 +973,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByScenarioId = function (scenarioId, success, error) {
-      generalGet("/answer/?scenario_id=" + scenarioId, success, error);
+      var path = "/answer/?scenario_id=" + scenarioId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
@@ -742,7 +988,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByQuestionId = function (questionId, success, error) {
-      generalGet("/answer/?question_id=" + questionId, success, error);
+      var path = "/answer/?question_id=" + questionId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
@@ -753,7 +1003,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerOfCurrentUserByScenarioId = function (scenarioId, success, error) {
-      generalGet("/answer/?scenario_id=" + scenarioId + "&user_id=" + userData["user_id"], success, error);
+      var path = "/answer/?scenario_id=" + scenarioId + "&user_id=" + userData["user_id"];
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
@@ -764,7 +1018,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByTopicId = function (topicId, success, error) {
-      generalGet("/answer/?topic_id=" + topicId, success, error);
+      var path = "/answer/?topic_id=" + topicId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
@@ -774,9 +1032,14 @@
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.getAnswerOfCurrentUserByTopicId = function (topicId, success, error) {
-      generalGet("/answer/?topic_id=" + topicId + "&user_id=" + userData["user_id"], success, error);
+    var getAnswerOfCurrentUserByTopicId = function (topicId, success, error) {
+      var path = "/answer/?topic_id=" + topicId + "&user_id=" + userData["user_id"];
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      return generalGet(path, success, error);
     };
+    this.getAnswerOfCurrentUserByTopicId = getAnswerOfCurrentUserByTopicId;
 
     /**
      * Get a list of answers by user ID.
@@ -786,7 +1049,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByUserId = function (userId, success, error) {
-      generalGet("/answer/?user_id=" + userId, success, error);
+      var path = "/answer/?user_id=" + userId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
@@ -796,7 +1063,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerByCurrentUserId = function (success, error) {
-      generalGet("/answer/?user_id=" + userData["user_id"], success, error);
+      var path = "/answer/?user_id=" + userData["user_id"];
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
@@ -807,7 +1078,11 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAnswerById = function (answerId, success, error) {
-      generalGet("/answer/?answer_id=" + answerId, success, error);
+      var path = "/answer/?answer_id=" + answerId;
+      if (typeof userToken !== "undefined") {
+        path += "&user_token=" + userToken;
+      }
+      return generalGet(path, success, error);
     };
 
     /**
@@ -820,22 +1095,21 @@
 
     /**
      * Create answers in the specified order.
-     * @private
-     * @param {Object} envObj - environment object (in environment.js).
+     * @public
      * @param {Answer[]} answers - list of answers that we want to create.
      * @param {Object[]} answerList - a list to collect the answer objects returned from the server.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    var createAnswersInOrder = function (envObj, answers, answerList, success, error) {
+    var createAnswersInOrder = function (answers, answerList, success, error) {
       if (answers.length == 0) {
         if (typeof success === "function") success(answerList);
         return true;
       } else {
         var a = answers[0];
-        envObj.createAnswer(a["questionId"], a["text"], a["choiceIdList"], function (data) {
+        createAnswer(a["questionId"], a["text"], a["choiceIdList"], a["secret"], function (data) {
           answerList.push(data["data"]);
-          createAnswersInOrder(envObj, answers.slice(1), answerList, success, error);
+          createAnswersInOrder(answers.slice(1), answerList, success, error);
         }, function () {
           if (typeof error === "function") error();
           return false;
@@ -846,14 +1120,15 @@
 
     /**
      * Create an answer.
-     * @private
+     * @public
      * @param {number} questionId - ID of the question that we want to fill in the answer.
      * @param {string} [text] - text of the answer.
      * @param {number[]} [choiceIdList] - array of the IDs of the selected choice objects.
+     * @param {string} [secret] - a secret message related to the answer that only admin users can see.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    this.createAnswer = function (questionId, text, choiceIdList, success, error) {
+    var createAnswer = function (questionId, text, choiceIdList, secret, success, error) {
       var data = {
         "question_id": questionId
       };
@@ -863,8 +1138,12 @@
       if (typeof choiceIdList !== "undefined") {
         data["choices"] = choiceIdList;
       }
-      generalPost("/answer/", data, success, error);
+      if (typeof secret !== "undefined") {
+        data["secret"] = secret;
+      }
+      return generalPost("/answer/", data, success, error);
     };
+    this.createAnswer = createAnswer;
 
     /**
      * Delete an answer by ID.
@@ -877,7 +1156,7 @@
       var data = {
         "answer_id": answerId
       };
-      generalDelete("/answer/", data, success, error);
+      return generalDelete("/answer/", data, success, error);
     };
 
     /**
@@ -887,7 +1166,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getAllGame = function (success, error) {
-      generalGet("/game/", success, error);
+      return generalGet("/game/", success, error);
     };
 
     /**
@@ -898,7 +1177,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getGameByUserId = function (userId, success, error) {
-      generalGet("/game/?user_id=" + userId, success, error);
+      return generalGet("/game/?user_id=" + userId, success, error);
     };
 
     /**
@@ -909,7 +1188,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getGameByVisionId = function (visionId, success, error) {
-      generalGet("/game/?vision_id=" + visionId, success, error);
+      return generalGet("/game/?vision_id=" + visionId, success, error);
     };
 
     /**
@@ -920,7 +1199,7 @@
      * @param {function} [error] - callback function when the operation is failing.
      */
     this.getGameById = function (gameId, success, error) {
-      generalGet("/game/?game_id=" + gameId, success, error);
+      return generalGet("/game/?game_id=" + gameId, success, error);
     };
 
     /**
@@ -935,7 +1214,7 @@
       if (typeof scenarioId !== "undefined") {
         data["scenario_id"] = scenarioId;
       }
-      generalPost("/game/", data, success, error);
+      return generalPost("/game/", data, success, error);
     };
 
     /**
@@ -957,7 +1236,7 @@
       if (typeof feedback !== "undefined") {
         data["feedback"] = feedback;
       }
-      generalPatch("/game/", data, success, error);
+      return generalPatch("/game/", data, success, error);
     };
 
     /**
@@ -971,7 +1250,7 @@
       var data = {
         "game_id": gameId
       };
-      generalDelete("/game/", data, success, error);
+      return generalDelete("/game/", data, success, error);
     };
 
     /**
@@ -1036,32 +1315,36 @@
     /**
      * A wrapper of the getUserToken function to make it easier to use.
      * @private
-     * @param {Object} googleUserObj - user object returned by the Google Sign-In API.
+     * @param {Object} response - response returned by the Google Sign-In API.
      * @param {function} [success] - callback function when the operation is successful.
      * @param {function} [error] - callback function when the operation is failing.
      */
-    function getUserTokenWrapper(googleUserObj, success, error) {
+    function getUserTokenWrapper(response, success, error) {
+      // We need to make sure that each Prolific user can have only one user ID
+      var queryParas = periscope.util.parseVars(window.location.search);
+      var userPlatformIdPart = "PROLIFIC_PID" in queryParas ? ".prolific." + queryParas["PROLIFIC_PID"] : "";
       if (typeof periscope.Tracker === "undefined") {
         // This means that some plugin blocks the tracker.js file so that the tracker object cannot be created
         console.warn("Failed to initialize the tracker object (maybe blocked by a third-party plugin).");
-        if (typeof googleUserObj === "undefined") {
+        if (typeof response === "undefined") {
           // This means that the user did not sign in with Google
           // In this case, we need to manually generate the client ID to log in to the back-end
           getUserToken({
-            "client_id": "custom.cid." + new Date().getTime() + "." + Math.random().toString(36).substring(2)
+            "client_id": "custom.cid." + new Date().getTime() + "." + Math.random().toString(36).substring(2) + userPlatformIdPart
           }, success, error);
         } else {
           // This means that the user has signed in with Google
           // In this case, we need to use the Google user token to log in to the back-end
+          sessionStorage.setItem("isGoogleTokenStored", "true");
           getUserToken({
-            "google_id_token": googleUserObj.getAuthResponse().id_token
+            "google_id_token": response.credential
           }, success, error);
         }
       } else {
         // This means that we can create the tracker (and it is not blocked)
         // The tracker object will handle the case if the Google Analytics script is blocked
         if (typeof tracker === "undefined") {
-          if (typeof googleUserObj === "undefined") {
+          if (typeof response === "undefined") {
             // This means that the tracker is not created yet
             // And the user did not sign in with Google
             // For example, initially when loading the application without Google sign-in
@@ -1070,7 +1353,7 @@
             tracker = new periscope.Tracker({
               "ready": function (trackerObj) {
                 getUserToken({
-                  "client_id": trackerObj.getClientId()
+                  "client_id": trackerObj.getClientId() + userPlatformIdPart
                 }, success, error);
               }
             });
@@ -1080,30 +1363,32 @@
             // For example, initially when loading the application with Google sign-in
             // In this case, we need to use the Google user token to log in to the back-end
             // We also need to create the tracker
+            sessionStorage.setItem("isGoogleTokenStored", "true");
             tracker = new periscope.Tracker({
               "ready": function () {
                 getUserToken({
-                  "google_id_token": googleUserObj.getAuthResponse().id_token
+                  "google_id_token": response.credential
                 }, success, error);
               }
             });
           }
         } else {
-          if (typeof googleUserObj === "undefined") {
+          if (typeof response === "undefined") {
             // This means that the tracker is already created
             // And the user did not sign in with Google
             // For example, when user signed out with Google on the account dialog
             // In this case, we need to use the Google Analytics client ID to log in to the back-end
             getUserToken({
-              "client_id": tracker.getClientId()
+              "client_id": tracker.getClientId() + userPlatformIdPart
             }, success, error);
           } else {
             // This means that the tracker is already created
             // And the user has signed in with Google
             // For example, when user signed in with Google on the account dialog
             // In this case, we need to use the Google user token to log in to the back-end
+            sessionStorage.setItem("isGoogleTokenStored", "true");
             getUserToken({
-              "google_id_token": googleUserObj.getAuthResponse().id_token
+              "google_id_token": response.credential
             }, success, error);
           }
         }
@@ -1119,7 +1404,7 @@
     function createErrorHTML(errorMessage) {
       var html = "";
       html += '<img src="https://images.unsplash.com/photo-1555861496-0666c8981751?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" />';
-      html += '<p class="server-error-text">';
+      html += '<p class="full-image-text">';
       if (typeof errorMessage === "undefined") {
         html += '  Something is wrong (sad face)';
       } else {
@@ -1135,8 +1420,8 @@
      */
     var showErrorPage = function (errorMessage) {
       var $container = $("#main-content-container");
-      if (!$container.hasClass("error")) {
-        $("#main-content-container").addClass("error").empty().append(createErrorHTML(errorMessage)).show();
+      if (!$container.hasClass("full-image")) {
+        $("#main-content-container").addClass("full-image").empty().append(createErrorHTML(errorMessage)).show();
       }
     };
     this.showErrorPage = showErrorPage;
@@ -1151,30 +1436,642 @@
     this.showPage = showPage;
 
     /**
+     * Submit the answers to topic questions from the UI to the back-end.
+     * @private
+     * @param {function} [success] - callback function when the operation is successful.
+     * @param {function} [error] - callback function when the operation is failing.
+     */
+    function submitTopicQuestionAnswer(success, error) {
+      var answers = [];
+      var areAllQuestionsAnswered = true;
+      var valueOfCheckedChoices = [];
+      var handleError = function (errorMessage) {
+        // Error when the user disagree with our consent
+        console.error(errorMessage);
+        $("#submit-topic-question-error-message").text(errorMessage).stop(true).fadeIn(500).delay(5000).fadeOut(500);
+        $("#dialog-topic-question").scrollTop($("#topic-questions").height() + 30);
+        if (typeof error === "function") error();
+      };
+      $(".topic-question-item").each(function () {
+        var $this = $(this);
+        var $allChoices = $this.find("option");
+        var $checkedChoices = $this.find("option:selected");
+        var answer = {
+          "questionId": $this.data("raw")["id"]
+        };
+        if ($allChoices.length > 0) {
+          // This condition means that this is a single or multiple choice question
+          if ($checkedChoices.length > 0 && $checkedChoices.val() != "none") {
+            // This condition means that user provides the answer
+            // So we need to get the list of the choices
+            answer["choiceIdList"] = $checkedChoices.map(function () {
+              return parseInt($(this).val());
+            }).get();
+            // Also we need to store some extra experiment information in the text
+            var queryParas = periscope.util.parseVars(window.location.search);
+            var scenarioId = queryParas["scenario_id"];
+            var userPlatformId = queryParas["PROLIFIC_PID"];
+            if (typeof scenarioId !== "undefined" && typeof userPlatformId !== "undefined") {
+              var info = {
+                "scenario_id": scenarioId,
+                "user_platform_id": userPlatformId
+              };
+              answer["secret"] = JSON.stringify(info);
+            }
+            // Add the answer to the answer list that we will submit
+            answers.push(answer);
+            // Only record the values of answers to YES/NO questions
+            // The length should be 3 since there should be "Select", "Yes", and "No" options
+            if ($allChoices.length == 3) {
+              valueOfCheckedChoices.push($checkedChoices.map(function () {
+                return parseInt($(this).data("value"));
+              }).get());
+            }
+          } else {
+            // This condition means that there are no answers to this question
+            areAllQuestionsAnswered = false;
+          }
+        }
+      });
+      // Check if all the questions are answered
+      if (areAllQuestionsAnswered) {
+        // Check if the YES/NO quesions are all answered as YES (i.e., having value 1)
+        var doesUserAgree = function (valueOfCheckedChoices) {
+          var consent = true;
+          for (var i = 0; i < valueOfCheckedChoices.length; i++) {
+            var choices = valueOfCheckedChoices[i];
+            // Must choose only one option, cannot be more than one
+            if (choices.length != 1) {
+              consent = false;
+              break;
+            } else {
+              // Must choose the "Yes" option with value 1, cannot be others
+              if (choices[0] != 1) {
+                consent = false;
+                break;
+              }
+            }
+          }
+          return consent;
+        }
+        if (doesUserAgree(valueOfCheckedChoices)) {
+          // Create the answers when the user provides consent and agrees with our policy
+          createAnswersInOrder(answers, [], success, error);
+        } else {
+          // Error when the user disagree with our consent
+          handleError("(Sorry that we are unable to proceed since you did not provide consent.)");
+        }
+      } else {
+        // Error when some questions are not answered
+        handleError("(Would you please select an answer for all questions?)");
+      }
+    }
+
+    /**
+     * Create the html elements for a topic question.
+     * @private
+     * @param {string} uniqueId - a unique ID for the topic question.
+     * @param {Question} question - the topic question object.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createTopicQuestionHTML(uniqueId, question) {
+      var option = question["choices"];
+      var html = '';
+      html += '<div class="topic-question-item">';
+      html += '  <ul class="small-left-padding"><li><b>' + question["text"] + '</b></li></ul>';
+      html += '  <select id="topic-question-select-' + uniqueId + '" data-role="none">';
+      html += '    <option selected="" value="none">Select...</option>';
+      for (var i = 0; i < option.length; i++) {
+        html += '    <option value="' + option[i]["id"] + '" data-value="' + option[i]["value"] + '">' + option[i]["text"] + '</option>';
+      }
+      html += '  </select>';
+      html += '</div>';
+      return $(html);
+    }
+
+    /**
+     * Create the html elements for a topic question as a text description.
+     * @public
+     * @param {string} text - the text description.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    var createTopicTextHTML = function (text) {
+      var $html;
+      try {
+        $html = $(text);
+      } catch (error) {
+        $html = $('<p class="text">' + text + '</p>');
+      }
+      return $html;
+    };
+    this.createTopicTextHTML = createTopicTextHTML;
+
+    /**
+     * Create and display the topic question dialog.
+     * @private
+     * @param {number} topicId - the ID of the topic.
+     * @param {function} [create] - callback function after creating the dialog.
+     * @param {function} [submit] - callback function after answers are submitted successfully.
+     */
+    function createTopicQuestionDialog(topicId, create, submit) {
+      getQuestionByTopicId(topicId, undefined, function (data) {
+        // Add topic questions
+        var topicQuestions = data["data"];
+        periscope.util.sortArrayOfDictByKeyInPlace(topicQuestions, "order");
+        var $topicQuestions = $("#topic-questions");
+        for (var i = 0; i < topicQuestions.length; i++) {
+          var q = topicQuestions[i];
+          if (q["question_type"] == null) {
+            var $q = createTopicTextHTML(q["text"]);
+          } else if (q["question_type"] == "CREATE_VISION") {
+            var $q = createImageCaptionHTML(q["id"], q["text"]);
+            $q.data("raw", q);
+          } else {
+            var $q = createTopicQuestionHTML("dq" + i, q);
+            $q.data("raw", q);
+          }
+          $topicQuestions.append($q);
+        }
+        var widgets = new edaplotjs.Widgets();
+        // Set the topic question dialog
+        // We need to give the parent element so that on small screens, the dialog can be scrollable
+        var $topicQuestionDialog = widgets.createCustomDialog({
+          "selector": "#dialog-topic-question",
+          "action_text": "Submit",
+          "width": 290,
+          "class": "dialog-container-topic-question",
+          "show_cancel_btn": false,
+          "close_dialog_on_action": false,
+          "show_close_button": false,
+          "action_callback": function () {
+            $topicQuestionDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
+            submitTopicQuestionAnswer(function (answerList) {
+              // Success condition
+              if (typeof submit === "function") submit(answerList);
+              $topicQuestionDialog.dialog("close");
+            }, function () {
+              // Error condition
+              $topicQuestionDialog.dialog("widget").find("button.ui-action-button").prop("disabled", false);
+            });
+          }
+        });
+        $topicQuestionDialog.on("dialogopen", function (event, ui) {
+          $topicQuestionDialog.scrollTop(0);
+        });
+        $(window).resize(function () {
+          periscope.util.fitDialogToScreen($topicQuestionDialog);
+        });
+        periscope.util.fitDialogToScreen($topicQuestionDialog);
+        if (typeof create === "function") create($topicQuestionDialog);
+      });
+    }
+
+    /**
+     * Create the html elements for a scenario question.
+     * @private
+     * @param {string} uniqueId - a unique ID for the scenario question.
+     * @param {Question} question - the scenario question object.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createScenarioQuestionHTML(uniqueId, question) {
+      var option = question["choices"];
+      // Check if it is a multiple choice question
+      var isMulitpleChoice = question["question_type"] == "MULTI_CHOICE";
+      // Check if the choices are images
+      var isImageOnly = false;
+      if (typeof option[0] !== "undefined") {
+        var firstText = option[0]["text"];
+        if (firstText.indexOf("%7B") !== -1 && firstText.indexOf("%7D") !== -1) {
+          // This means that it is likely to be an encoded JSON string
+          // Which means it is going to be a meme image
+          try {
+            var ti = JSON.parse(decodeURIComponent(firstText));
+            isImageOnly = true;
+          } catch (err) {
+            console.error(err.message);
+            isImageOnly = false;
+          }
+        }
+      }
+      // Construct the HTML
+      var html = '';
+      html += '<div class="custom-survey add-top-margin add-bottom-margin" id="' + uniqueId + '">';
+      html += '  <span class="text">' + question["text"] + '</span>';
+      if (isImageOnly) {
+        html += '  <div class="custom-radio-group-survey image-only add-top-margin">';
+      } else {
+        html += '  <div class="custom-radio-group-survey add-top-margin">';
+      }
+      for (var i = 0; i < option.length; i++) {
+        html += '  <div>';
+        var inputId = 'scenario-question-' + uniqueId + '-item-' + i;
+        if (isMulitpleChoice) {
+          html += '    <input type="checkbox" name="scenario-question-' + uniqueId + '-scale" value="' + option[i]["id"] + '" id="' + inputId + '">'
+        } else {
+          html += '    <input type="radio" name="scenario-question-' + uniqueId + '-scale" value="' + option[i]["id"] + '" id="' + inputId + '">'
+        }
+        var ti = option[i]["text"];
+        var isTextJson = false;
+        if (ti.indexOf("%7B") !== -1 && ti.indexOf("%7D") !== -1) {
+          // This means that it is likely to be an encoded JSON string
+          try {
+            ti = JSON.parse(decodeURIComponent(ti));
+            isTextJson = true;
+          } catch (err) {
+            console.error(err.message);
+            isTextJson = false;
+          }
+        }
+        if (isTextJson) {
+          if ("url" in ti) {
+            // Add a DOM item with image and text
+            var imageSrc = ti["url"];
+            var caption = ti["description"];
+            var credit = 'Credit: ' + ti["unsplash_creator_name"];
+            var figcaptionElement = '<figcaption>' + caption + '</figcaption>';
+            if (typeof caption === "undefined" || caption == "") {
+              figcaptionElement = "";
+            }
+            html += '<label for="' + inputId + '"><figure><img src="' + imageSrc + '"><div>' + credit + '</div>' + figcaptionElement + '</figure></label>';
+          } else {
+            // Add a DOM item with only text
+            var caption = ti["description"];
+            var figcaptionElement = '<figcaption class="text-only">' + caption + '</figcaption>';
+            if (typeof caption === "undefined" || caption == "") {
+              figcaptionElement = "";
+            }
+            html += '<label for="' + inputId + '"><figure>' + figcaptionElement + '</figure></label>';
+          }
+        } else {
+          // Add the normal question item
+          html += '    <label class="break-long-url" for="' + inputId + '">' + ti + '</label>'
+        }
+        html += '  </div>';
+      }
+      html += '  </div>';
+      if (option.length == 0) {
+        html += '  <textarea class="custom-textbox-survey add-top-margin" placeholder="Your opinion (max 500 characters)" maxlength="500"></textarea>';
+      }
+      html += '</div>';
+      return $(html);
+    }
+
+    /**
+     * Create the html elements for a scenario question as a text description.
+     * @private
+     * @param {string} text - the text description.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createScenarioTextHTML(text) {
+      var $html;
+      try {
+        $html = $(text);
+      } catch (error) {
+        $html = $('<p class="text break-long-url">' + text + '</p>');
+      }
+      return $html;
+    }
+
+    /**
+     * Create the UI for choosing and captioning an image.
+     * @public
+     * @param {string} uniqueIdSuffix - the unique suffix to add after the ID of DOM elements.
+     * @param {string} text - the text description.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createImageCaptionHTML(uniqueIdSuffix, text) {
+      var html = '';
+      html += '<div class="custom-survey add-top-margin add-bottom-margin" id="create-vision-' + uniqueIdSuffix + '">';
+      html += '  <span class="text break-long-url">' + text + '</span>';
+      html += '  <a class="painting-frame" href="javascript:void(0)" style="margin-top: 25px;">';
+      html += '    <div class="painting-frame-item">';
+      html += '      <img class="painting-frame-image" style="max-height: 300px;" src="img/dummy_image.png">';
+      html += '    </div>';
+      html += '  </a>';
+      html += '  <textarea class="custom-textbox-survey add-top-margin" style="min-height: 100px;" placeholder="Your caption about this image (max 140 characters)" maxlength="140"></textarea>';
+      html += '</div>';
+      var $html = $(html);
+      return $html;
+    }
+
+    /**
+     * Add questions to the HTML container.
+     * @public
+     * @param {Object} $container - the jQuery object of the question container.
+     * @param {number} scenarioId - ID of the scenario that we wish to get the corresponding questions.
+     * @param {number} page - page number of the scenario questions that we want to load.
+     * @param {bool} oneByOne - a special setting to show the questions one-by-one after the user answers one question.
+     * @param {function} [success] - callback function when the operation is successful.
+     */
+    this.addScenarioQuestionsToContainer = function ($container, scenarioId, page, oneByOne, success) {
+      var pageNumberList = [-1, page];
+      var questions = []
+      $.when.apply($, pageNumberList.map(function (pageNumber) {
+        return getQuestionByScenarioId(scenarioId, pageNumber, function (returnData) {
+          questions = questions.concat(returnData["data"]);
+        });
+      })).done(function () {
+        // We need to first randomly shuffle the array
+        // So that questions with the same order will be randomly sorted later
+        periscope.util.shuffleArrayInPlace(questions);
+        // Sort questions by their order
+        periscope.util.sortArrayOfDictByKeyInPlace(questions, "order");
+        // Create HTML elements
+        var questionNumer = 0;
+        var $previousQuestion;
+        for (var j = 0; j < questions.length; j++) {
+          var q = questions[j]
+          if (q["question_type"] == null) {
+            var $q = createScenarioTextHTML(q["text"]);
+            $container.append($q);
+          } else if (q["question_type"] == "CREATE_VISION") {
+            var widgets = new edaplotjs.Widgets();
+            var $q = createImageCaptionHTML(q["id"], q["text"]);
+            $q.data("raw", q);
+            $container.append($q);
+            var photoURL = getApiRootUrl() + "/photos/random?count=30";
+            var $photoPickerDialog = widgets.createUnsplashPhotoPickerDialog("dialog-photo-picker-" + q["id"], q, photoURL, function (d, $dialog) {
+              $("#create-vision-" + $dialog.data("raw")["id"] + " .painting-frame-image").data("raw", d).prop("src", d["urls"]["regular"]);
+            });
+            $q.find(".painting-frame").on("click", function () {
+              $photoPickerDialog.dialog("open");
+            });
+          } else {
+            // Shuffle the choices or not
+            if (q["shuffle_choices"]) {
+              periscope.util.shuffleArrayInPlace(q["choices"]);
+            }
+            var qid = "sq-" + q["id"];
+            var $q = createScenarioQuestionHTML(qid, q);
+            $q.data("raw", q);
+            // Show all the questions or one-by-one
+            if (oneByOne == true) {
+              $q.data("isFinalQuestion", true);
+              // Hide the questions except the first one
+              if (questionNumer > 0) {
+                $q.hide();
+              }
+              // Hide the footer that has the button to go to the next page
+              $("#footer").hide();
+              // Create the next button for the previous question
+              if (typeof $previousQuestion !== "undefined") {
+                $previousQuestion.data("isFinalQuestion", false);
+                var nextButtonHTML = "";
+                nextButtonHTML += '<div class="control-group">';
+                nextButtonHTML += '  <buttton id="next-question-button-' + questionNumer + '" class="custom-button-flat large pulse-primary stretch-on-mobile">';
+                nextButtonHTML += '    <img src="img/next.png"><span>Next Question</span>';
+                nextButtonHTML += '  </buttton>';
+                nextButtonHTML += '</div>';
+                var $nextButtonContainer = $(nextButtonHTML);
+                var $nextButton = $nextButtonContainer.find(".custom-button-flat");
+                $nextButton.data("qid", qid);
+                $nextButton.on("click", function () {
+                  var $this = $(this);
+                  // Hide the button
+                  $this.hide();
+                  // Show the next question
+                  var $nextQuestion = $("#" + $this.data("qid"));
+                  $nextQuestion.show();
+                  // Show the button to go to the next page or not
+                  if ($nextQuestion.data("isFinalQuestion") == true) {
+                    $("#footer").show();
+                  }
+                  // Hide current question and scroll to the top of it
+                  var $currentQuestion = $this.parent().parent();
+                  periscope.util.scrollTop($currentQuestion);
+                  $currentQuestion.children().hide();
+                  $currentQuestion.append($('<span class="text-no-margin">Completed Question</span>'));
+                });
+                $previousQuestion.append($nextButtonContainer);
+              }
+            }
+            questionNumer += 1;
+            $previousQuestion = $q;
+            $container.append($q);
+          }
+          if (oneByOne && questionNumer == 1) {
+            $("#footer").show();
+          }
+        }
+        if (typeof success === "function") success(questions);
+      });
+    };
+
+    /**
+     * Submit the scenario answers to the back-end.
+     * @public
+     * @param {Object} $container - the jQuery object of the container for putting scenario questions.
+     * @param {number} scenarioId - the ID of the scenario.
+     * @param {function} [success] - callback function when the operation is successful.
+     * @param {function} [error] - callback function when the operation is failing.
+     */
+    this.submitScenarioAnswer = function ($container, scenarioId, success, error) {
+      var answers = [];
+      var areAllQuestionsAnswered = true;
+      var errorMessage;
+      var visions = [];
+      $container.find(".custom-survey").each(function () {
+        var $this = $(this);
+        var $allChoices = $this.find("input[type='radio'], input[type='checkbox']");
+        var $checkedChoices = $this.find("input[type='radio']:checked, input[type='checkbox']:checked");
+        var answer = {
+          "questionId": $this.data("raw")["id"],
+          "text": $this.find(".custom-textbox-survey").val()
+        };
+        if ($allChoices.length > 0) {
+          // This condition means that this is a single or multiple choice question
+          if ($checkedChoices.length > 0) {
+            // This condition means that user provides the answer
+            answer["choiceIdList"] = $checkedChoices.map(function () {
+              return parseInt($(this).val());
+            }).get();
+            answers.push(answer);
+          } else {
+            // This condition means that there are no answers to this question
+            if ($allChoices.attr("type") == "radio") {
+              // Only do the answer check for radio (not checkbox)
+              areAllQuestionsAnswered = false;
+              errorMessage = "(Would you please select an answer for all questions that have choices?)";
+            }
+          }
+        } else {
+          var $image = $this.find(".painting-frame-image");
+          if ($image.length == 0) {
+            // This condition means that this is a free text question
+            answers.push(answer);
+          } else {
+            // This condition means that this is a vision creation UI
+            var imageData = $image.data("raw");
+            if (typeof imageData === "undefined") {
+              areAllQuestionsAnswered = false;
+              errorMessage = "(Would you please select an image and provide the caption?)"
+            } else {
+              var vision = {
+                "url": imageData["urls"]["regular"],
+                "unsplash_image_id": imageData["id"],
+                "unsplash_creator_name": imageData["user"]["name"],
+                "unsplash_creator_url": imageData["user"]["links"]["html"],
+                "description": $this.find("textarea").val()
+              };
+              visions.push(vision);
+            }
+          }
+        }
+      });
+      if (areAllQuestionsAnswered) {
+        // Create answers
+        createAnswersInOrder(answers, [], success, error);
+        // Create visions
+        if (visions.length > 0) {
+          getAllMood(function (data) {
+            var moodList = data["data"];
+            periscope.util.sortArrayOfDictByKeyInPlace(moodList, "order");
+            for (var i = 0; i < visions.length; i++) {
+              var v = visions[i];
+              var moodId = moodList[(moodList.length - 1) / 2]["id"]; // ID of the "Neutral" mood
+              var d = v["description"];
+              var url = v["url"];
+              var iid = v["unsplash_image_id"];
+              var cn = v["unsplash_creator_name"];
+              var cu = v["unsplash_creator_url"];
+              createVision(moodId, scenarioId, d, url, iid, cn, cu);
+            }
+          });
+        }
+      } else {
+        console.error(errorMessage);
+        if (typeof error === "function") error(errorMessage);
+      }
+    };
+
+    /**
+     * Create the html elements for a vision.
+     * @private
+     * @param {string} caption - the caption of the vision.
+     * @param {string} imageSrc - the source URL of an image for the vision.
+     * @param {string} credit - the credit of the photo.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createVisionHTML(caption, imageSrc, credit) {
+      // This is a hack for Firefox, since Firefox does not respect the CSS "break-inside" and "page-break-inside"
+      // We have to set the CSS display to "inline-flex" to prevent Firefox from breaking the figure in the middle
+      // But, setting display to inline-flex will cause another problem in Chrome, where the columns will not be balanced
+      // So we want Chrome to use "display: flex", and we want Firefox to use "display: inline-flex"
+      var html = '<figure style="display: none;">';
+      if (periscope.util.isFirefox()) {
+        html = '<figure style="display: inline-flex">';
+      }
+      var figcaptionElement = '<figcaption>' + caption + '</figcaption>';
+      if (typeof caption === "undefined" || caption == "") {
+        figcaptionElement = "";
+      }
+      html += '<img src="' + imageSrc + '"><div>' + credit + '</div>' + figcaptionElement + '</figure>';
+      var $html = $(html);
+      $html.find("img").one("load", function () {
+        // Only show the figure when the image is loaded
+        $(this).parent().show();
+      });
+      return $html;
+    }
+
+    /**
+     * Load and display visions.
+     * @public
+     * @param {Object} $container - the jQuery object of the container for putting visions.
+     * @param {Vision[]} visions - a list of vision objects to load.
+     */
+    this.addVisionsToContainer = function ($container, visions) {
+      $container.empty();
+      for (var i = 0; i < visions.length; i++) {
+        var v = visions[i];
+        var media = v["medias"][0];
+        var imageSrc = media["url"];
+        var caption = media["description"];
+        var credit = 'Credit: <a href="' + media["unsplash_creator_url"] + '" target="_blank">' + media["unsplash_creator_name"] + '</a>';
+        var $t = createVisionHTML(caption, imageSrc, credit);
+        $t.attr("id", "vision-id-" + v["id"]);
+        $container.append($t);
+      }
+    };
+
+    /**
+     * Create the html elements for a vision with only text.
+     * @private
+     * @param {string} caption - the caption of the vision.
+     * @returns {Object} - a jQuery DOM object.
+     */
+    function createTextVisionHTML(caption) {
+      // This is a hack for Firefox, since Firefox does not respect the CSS "break-inside" and "page-break-inside"
+      // We have to set the CSS display to "inline-flex" to prevent Firefox from breaking the figure in the middle
+      // But, setting display to inline-flex will cause another problem in Chrome, where the columns will not be balanced
+      // So we want Chrome to use "display: flex", and we want Firefox to use "display: inline-flex"
+      var html = '<figure>';
+      if (periscope.util.isFirefox()) {
+        html = '<figure style="display: inline-flex">';
+      }
+      var figcaptionElement = '<figcaption class="text-only">' + caption + '</figcaption>';
+      if (typeof caption === "undefined" || caption == "") {
+        figcaptionElement = "";
+      }
+      html += figcaptionElement + '</figure>';
+      var $html = $(html);
+      return $html;
+    }
+
+    /**
+     * Load and display visions with only text.
+     * @public
+     * @param {Object} $container - the jQuery object of the container for putting visions.
+     * @param {Vision[]} visions - a list of vision objects to load.
+     */
+    this.addTextVisionsToContainer = function ($container, visions) {
+      $container.empty();
+      for (var i = 0; i < visions.length; i++) {
+        var v = visions[i];
+        var media = v["medias"][0];
+        var caption = media["description"];
+        var $t = createTextVisionHTML(caption);
+        $t.attr("id", "vision-id-" + v["id"]);
+        $container.append($t);
+      }
+    };
+
+    /**
+     * Check if the user provided consent.
+     * @public
+     * @param {number} topicId - the ID of the topic.
+     * @param {function} [pass] - callback function when the user has provided consent.
+     */
+    var checkUserConsent = function (topicId, pass) {
+      // Get the answers to topic questions (i.e., the consent questions with binary YES/NO options)
+      // The logic ensures that only the YES answers will be entered into the database
+      getAnswerOfCurrentUserByTopicId(topicId, function (data) {
+        var answerList = data["data"];
+        if (typeof answerList === "undefined" || answerList.length == 0) {
+          // This means that the user has not provided consent yet
+          createTopicQuestionDialog(topicId, function ($topicQuestionDialog) {
+            // This means that the topic question dialog is created
+            $topicQuestionDialog.dialog("open");
+          }, function () {
+            // This means that the answers to the questions are submitted successfully
+            // And also that the user has provided consent
+            if (typeof pass === "function") pass();
+          });
+        } else {
+          // This means that the user has provided consent
+          if (typeof pass === "function") pass();
+        }
+      });
+    };
+    this.checkUserConsent = checkUserConsent;
+
+    /**
      * Class constructor.
      * @constructor
      * @private
      */
     function Environment() {
-      var accountObj = initAccountUI();
-      var userTokenSuccess = function () {
-        ready(thisObj);
-      };
-      var userTokenError = function () {
-        fail("Back-end server error.");
-      };
-      accountObj.silentSignInWithGoogle(function (isUserSignedInWithGoogle, googleUserObj) {
-        if (isUserSignedInWithGoogle) {
-          getUserTokenWrapper(googleUserObj, function () {
-            handleGoogleSignInSuccessUI(accountObj);
-            userTokenSuccess();
-          }, userTokenError);
-        } else {
-          getUserTokenWrapper(undefined, function () {
-            userTokenSuccess();
-          }, userTokenError);
-        }
-      });
+      initAccountUI();
     }
     Environment();
   };

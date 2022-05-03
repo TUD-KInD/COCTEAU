@@ -120,6 +120,10 @@
                 <textarea name="" id="want-scenario-description" cols="30" rows="5"></textarea><br>
                 <label for="want-scenario-image">Scenario image URL:</label><br>
                 <textarea name="" id="want-scenario-image" cols="30" rows="5"></textarea><br>
+                <label for="want-scenario-mode">Scenario mode:</label><br>
+                <input type="number" id="want-scenario-mode" name=""><br>
+                <label for="want-scenario-view">Scenario view:</label><br>
+                <input type="number" id="want-scenario-view" name=""><br>
                 <button id="create-scenario">Create scenario</button><br>
                 <label for="want-scenario-update-id">Scenario ID to update:</label><br>
                 <input type="number" id="want-scenario-update-id" name=""><br>
@@ -135,6 +139,8 @@
                 <!-- Begin for Question -->
                 <hr class="custom-hr">
                 <h3>GET Question</h3>
+                <label for="want-question-get-page">Page of the questions:</label><br>
+                <input type="number" id="want-question-get-page" name=""><br>
                 <button id="get-all-question">Get all questions</button><br>
                 <label for="want-question-get-topic-id">Topic ID of the questions:</label><br>
                 <input type="number" id="want-question-get-topic-id" name=""><br>
@@ -156,6 +162,16 @@
                 <textarea name="" id="want-question-text" cols="30" rows="5"></textarea><br>
                 <label for="want-multiple-choice">Is multiple-choice question?</label>
                 <input type="checkbox" id="want-multiple-choice" name="" /><br>
+                <label for="want-just-description">Is just a description?</label>
+                <input type="checkbox" id="want-just-description" name="" /><br>
+                <label for="want-question-order">Order of the question:</label><br>
+                <input type="number" id="want-question-order" name=""><br>
+                <label for="want-question-page">Page of the question:</label><br>
+                <input type="number" id="want-question-page" name=""><br>
+                <label for="want-question-shuffle-choices">Shuffle the choices?</label>
+                <input type="checkbox" id="want-question-shuffle-choices" name="" /><br>
+                <label for="want-is-create-vision">Use vision creation UI?</label>
+                <input type="checkbox" id="want-is-create-vision" name="" /><br>
                 <button id="question-choices-add-row">Add a choice</button>
                 <button id="question-choices-delete-row">Delete choices</button>
                 <table id="choices-table">
@@ -191,6 +207,8 @@
                 <textarea name="" id="want-mood-name" cols="30" rows="2"></textarea><br>
                 <label for="want-mood-image">Mood image URL:</label><br>
                 <textarea name="" id="want-mood-image" cols="30" rows="5"></textarea><br>
+                <label for="want-mood-order">Order of the mood:</label><br>
+                <input type="number" id="want-mood-order" name=""><br>
                 <button id="create-mood">Create mood</button><br>
                 <label for="want-mood-update-id">Mood ID to update:</label><br>
                 <input type="number" id="want-mood-update-id" name=""><br>

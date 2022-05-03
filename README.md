@@ -18,7 +18,7 @@ For development, please check this [video labeling tool](https://github.com/CMU-
 - [Setup development environment](#setup-dev-env)
 - [Setup initial data](#setup-init-data)
 - [Manipulate database](#manipulate-database)
-- [Code infrastructure](#code-infrastructure)
+- [Update and test code infrastructure](#code-infrastructure)
 - [Deploy back-end using uwsgi (administrator only)](#deploy-back-end-using-uwsgi)
 - [Setup back-end and front-end on apache (administrator only)](#setup-apache)
 - [Setup SSL certificates for https (administrator only)](#setup-https)
@@ -87,7 +87,10 @@ For Mac OS, I recommend installing postgresql by using [Homebrew](https://brew.s
 brew install postgresql@13
 
 # Start the service
-brew services start postgresql
+brew services start postgresql@13
+
+# Add to path
+echo 'export PATH="/usr/local/opt/postgresql@13/bin:$PATH"' >> ~/.zshrc
 ```
 Enter the postgres shell.
 ```sh
@@ -100,7 +103,7 @@ psql postgres
 In the psql shell, create a project user, create a database for the user with a password, and check if the user and database exist. Replace the [SECRET_PROJECT_PASSWORD] with the project user password. IMPORTANT: do not forget the semicolon and the end of the commands.
 ```sh
 # Set the password encryption method
-SET password_encryption = 'md5';
+SET password_encryption = 'scram-sha-256';
 # Give the project user with a password
 CREATE USER public_engagement_tool PASSWORD '[SECRET_PROJECT_PASSWORD]';
 
@@ -131,26 +134,26 @@ Edit the "pg_hba.conf" file to set the authentication methods to the ones that r
 ```sh
 # For Ubuntu
 sudo vim /etc/postgresql/13/main/pg_hba.conf
-# Scroll to the end and relace all "peer" with "md5", except those for the local connections
+# Scroll to the end and relace all "peer" with "scram-sha-256", except those for the local connections
 # Below are examples
 local   all             postgres                                peer
 local   all             all                                     peer
-host    all             all             127.0.0.1/32            md5
-host    all             all             ::1/128                 md5
+host    all             all             127.0.0.1/32            scram-sha-256
+host    all             all             ::1/128                 scram-sha-256
 local   replication     all                                     peer
-host    replication     all             127.0.0.1/32            md5
-host    replication     all             ::1/128                 md5
+host    replication     all             127.0.0.1/32            scram-sha-256
+host    replication     all             ::1/128                 scram-sha-256
 
 # For Mac OS
-vim /usr/local/var/postgres/pg_hba.conf
-# Scroll to the end and relace all "trust" with "md5", except those for the local connections
+vim /usr/local/var/postgresql@13/pg_hba.conf
+# Scroll to the end and relace all "trust" with "scram-sha-256", except those for the local connections
 # Below are examples
 local   all             all                                     trust
-host    all             all             127.0.0.1/32            md5
-host    all             all             ::1/128                 md5
+host    all             all             127.0.0.1/32            scram-sha-256
+host    all             all             ::1/128                 scram-sha-256
 local   replication     all                                     trust
-host    replication     all             127.0.0.1/32            md5
-host    replication     all             ::1/128                 md5
+host    replication     all             127.0.0.1/32            scram-sha-256
+host    replication     all             ::1/128                 scram-sha-256
 ```
 If you want to delete a user or a database, enter the postgres shell and use the following:
 ```sh
@@ -180,8 +183,8 @@ For Mac OS, I recommend installing conda by using [Homebrew](https://brew.sh/).
 ```sh
 # For Mac OS
 brew install --cask miniconda
-echo 'export PATH="/usr/local/Caskroom/miniconda/base/bin:$PATH"' >> ~/.bash_profile
-echo '. /usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh' >> ~/.bash_profile
+echo 'export PATH="/usr/local/Caskroom/miniconda/base/bin:$PATH"' >> ~/.zshrc
+echo '. /usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh' >> ~/.zshrc
 source ~/.bash_profile
 ```
 Clone this repository
@@ -226,6 +229,32 @@ cd periscope-public-engagement-tool/back-end/secret/
 echo "[GOOGLE_SIGNIN_API_CLIENT_ID_STAGING]" > google_signin_client_id_staging
 echo "[GOOGLE_SIGNIN_API_CLIENT_ID_PRODUCTION]" > google_signin_client_id_production
 ```
+Also notice that you need to change the gid in the getGoogleSignInClientId() function in the [account.js](front-end/js/account.js).
+```JavaScript
+/**
+ * Get the client ID for the Google Sign-In API.
+ * @private
+ * @returns {string} - the client ID for the Google Sign-In API.
+ */
+function getGoogleSignInClientId() {
+  var urlHostName = window.location.hostname;
+  var gid;
+  if (urlHostName.indexOf("[REPLACE_TO_YOUR_CUSTOM_STAGING_URL]") !== -1) {
+    // staging back-end
+    gid = "[REPLACE_TO_YOUR_STAGING_GID]";
+  } else if (urlHostName.indexOf("staging") !== -1) {
+    // staging back-end
+    gid = "[REPLACE_TO_YOUR_STAGING_GID]"";
+  } else if (urlHostName.indexOf("periscope.io.tudelft.nl") !== -1) {
+    // production back-end
+    gid = "[REPLACE_TO_YOUR_PRODUCTION_GID]";
+  } else if (urlHostName.indexOf("localhost") !== -1) {
+    // developement back-end
+    gid = "[REPLACE_TO_YOUR_DEVELOPEMENT_GID]";
+  }
+  return gid;
+}
+```
 Create a private key for the server to encode the JSON Web Tokens for user login:
 ```sh
 cd periscope-public-engagement-tool/back-end/www/
@@ -242,6 +271,8 @@ echo "[YOUR_UNSPLASH_PRODUCTION_APP_ACCESS_KEY]" > unsplash_access_key_productio
 Notice that you will need to later [upgrade the application](https://help.unsplash.com/en/articles/2511245-unsplash-api-guidelines) (no cost) to the actural "production" version so that you can make more requests using the Unsplash API. The Unsplash API documentation is [here](https://unsplash.com/documentation).
 
 # <a name="setup-ga"></a>Setup Google Analytics (administrator only)
+IMPORTANT: do not use the gid in the getGoogleAnalyticsId() function in the [tracker.js](front-end/js/tracker.js).
+
 This web-based application uses the [Google Analytics tracker API](https://developers.google.com/analytics/devguides/collection/gtagjs). First, follow [the steps](https://support.google.com/analytics/answer/9304153?hl=en) to set up a Google Analytics property and a data stream. After that, [get the Measurement ID](https://support.google.com/analytics/answer/9539598) and paste it into the "getGoogleAnalyticsId()" function in the tracker script [tracker.js](front-end/js/tracker.js). Then the tracker script will load Google's global site tag (gtag.js), set custom dimensions, and send the initial page view to the Google Analytics property. You can use the "sendEvent()" function in the tracker script to send events to the property. Note that it is better to have different data steams for development, staging, and production environments, where you can put different Measurement IDs in the "getGoogleAnalyticsId()" function in the tracker script.
 
 # <a name="setup-dev-env"></a>Setup development environment
@@ -325,7 +356,7 @@ If you want to downgrade the database to a previous state, run the following.
 sh db.sh downgrade
 ```
 
-# <a name="code-infrastructure"></a>Code infrastructure
+# <a name="code-infrastructure"></a>Update and test code infrastructure
 For the back-end, the test cases are stored in the "back-end/www/tests" folder and written using [Flask-Testing](https://pythonhosted.org/Flask-Testing/). Remember to write test cases for the model operations in the "back-end/www/models/model_operations" folder. Below shows how to run test cases:
 ```sh
 cd periscope-public-engagement-tool/back-end/www/tests
@@ -333,6 +364,10 @@ cd periscope-public-engagement-tool/back-end/www/tests
 python run_all_tests.py
 # Run one test
 python answer_tests.py
+```
+Remember that every time the back-end script is pulled from the repository, you need to restart the service:
+```sh
+sudo systemctl restart ppet
 ```
 
 # <a name="deploy-back-end-using-uwsgi"></a>Deploy back-end using uwsgi (administrator only)

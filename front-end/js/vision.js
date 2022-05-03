@@ -9,6 +9,7 @@
   function loadMood(envObj) {
     envObj.getAllMood(function (data) {
       var moods = data["data"];
+      periscope.util.sortArrayOfDictByKeyInPlace(moods, "order");
       var $moodOptionContainer = $("#mood-option-container");
       for (var i = 0; i < moods.length; i++) {
         var m = moods[i];
@@ -22,12 +23,10 @@
    * @private
    * @param {Object} envObj - environment object (in environment.js).
    * @param {number} scenarioId - the desired scenario ID of the vision.
-   * @param {function} [callback] - callback function after creating the dialog.
+   * @returns {Object} - a jQuery object of the dialog.
    */
-  function createSubmitVisionDialog(envObj, scenarioId, callback) {
+  function createSubmitVisionDialog(envObj, scenarioId) {
     var widgets = new edaplotjs.Widgets();
-    // Set the image picker dialog
-    // We need to give the parent element so that on small screens, the dialog can be scrollable
     var $submitVisionDialog = widgets.createCustomDialog({
       "selector": "#dialog-submit-vision",
       "action_text": "Submit",
@@ -46,76 +45,7 @@
       periscope.util.fitDialogToScreen($submitVisionDialog);
     });
     periscope.util.fitDialogToScreen($submitVisionDialog);
-    if (typeof callback === "function") {
-      callback($submitVisionDialog);
-    }
-  }
-
-  /**
-   * Create and display the image picker dialog.
-   * @private
-   * @param {Object} envObj - environment object (in environment.js).
-   * @param {function} [callback] - callback function after creating the dialog.
-   * @todo Make createPhotoPickerDialog a reusable function in the website template.
-   */
-  function createPhotoPickerDialog(envObj, callback) {
-    var widgets = new edaplotjs.Widgets();
-    // Set the image picker dialog
-    // We need to give the parent element so that on small screens, the dialog can be scrollable
-    var $imagePickerDialog = widgets.createCustomDialog({
-      "selector": "#dialog-photo-picker",
-      "action_text": "Select",
-      "width": 290,
-      "class": "dialog-container-photo-picker",
-      "show_cancel_btn": false,
-      "action_callback": function () {
-        var d = $($("#photos-masonry").find(".selected")[0]).data("raw");
-        $("#vision-image").data("raw", d).prop("src", d["urls"]["regular"]);
-      }
-    });
-    $imagePickerDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
-    $("#photo-search-form").on("submit", function (event) {
-      event.preventDefault();
-      var search = $("#photo-search-query").blur().val();
-      if (search == "") {
-        console.log("no search term");
-      } else {
-        //var url = "file/photo.json";
-        var url = envObj.getApiRootUrl() + "/photos/random?query=" + search + "&count=30";
-        $.getJSON(url, function (data) {
-          $("#photos-masonry-error-message").hide();
-          var $photos = $("#photos-masonry").empty().show();
-          for (var i = 0; i < data.length; i++) {
-            var d = data[i];
-            var imageUrl = d["urls"]["regular"];
-            var credit = 'Credit: <a href="' + d["user"]["links"]["html"] + '" target="_blank">' + d["user"]["name"] + '</a>';
-            var $d = createPhotoHTML(credit, imageUrl);
-            $d.data("raw", d);
-            $photos.append($d);
-          }
-          $photos.find("figure").on("click", function () {
-            if ($(this).hasClass("selected")) {
-              $(this).removeClass("selected");
-              $imagePickerDialog.dialog("widget").find("button.ui-action-button").prop("disabled", true);
-            } else {
-              $photos.find(".selected").removeClass("selected");
-              $(this).addClass("selected");
-              $imagePickerDialog.dialog("widget").find("button.ui-action-button").prop("disabled", false);
-            }
-          });
-        }).fail(function () {
-          $("#photos-masonry").empty().hide();
-          $("#photos-masonry-error-message").show();
-        });
-      }
-    });
-    $(window).resize(function () {
-      periscope.util.fitDialogToScreen($imagePickerDialog);
-    });
-    periscope.util.fitDialogToScreen($imagePickerDialog);
-    if (typeof callback === "function") {
-      callback($imagePickerDialog);
-    }
+    return $submitVisionDialog;
   }
 
   /**
@@ -130,23 +60,6 @@
     var radioId = "express-emotion-item-" + moodId;
     var html = '<div><input type="radio" name="express-emotion-scale" value="' + moodId + '" id="' + radioId + '"><label for="' + radioId + '">' + name + '<img src="' + imageUrl + '" /></label></div>';
     return $(html);
-  }
-
-  /**
-   * Create the html elements for a photo.
-   * @private
-   * @param {string} credit - the credit of the photo.
-   * @param {string} imageUrl - the source URL of an image for the photo.
-   * @returns {Object} - a jQuery DOM object.
-   */
-  function createPhotoHTML(credit, imageUrl) {
-    var html = '<figure style="display: none;"><img src="' + imageUrl + '"><div>' + credit + '</div></figure>';
-    var $html = $(html);
-    $html.find("img").one("load", function () {
-      // Only show the figure when the image is loaded
-      $(this).parent().show();
-    });
-    return $html;
   }
 
   /**
@@ -255,6 +168,47 @@
   }
 
   /**
+   * Load the content of the page.
+   * @private
+   * @param {Object} envObj - environment object (in environment.js).
+   * @param {number} scenarioId - the ID of the scenario.
+   */
+  function loadPageContent(envObj, scenarioId) {
+    var widgets = new edaplotjs.Widgets();
+    envObj.getScenarioById(scenarioId, function (data) {
+      var scenario = data["data"];
+      if ($.isEmptyObject(scenario)) {
+        envObj.showErrorPage();
+      } else {
+        $("#scenario-title").text(scenario["title"]);
+        $("#scenario-description").html(scenario["description"]);
+        loadMood(envObj);
+        //var photoURL = undefined; // for testing
+        var photoURL = envObj.getApiRootUrl() + "/photos/random?count=30";
+        var $photoPickerDialog = widgets.createUnsplashPhotoPickerDialog("dialog-photo-picker", undefined, photoURL, function (d) {
+          $("#vision-image").data("raw", d).prop("src", d["urls"]["regular"]);
+        });
+        $("#vision-image-frame").on("click", function () {
+          $photoPickerDialog.dialog("open");
+        });
+        var $submitVisionDialog = createSubmitVisionDialog(envObj, scenarioId);
+        $("#submit-vision-button").on("click", function () {
+          if (submitVisionSanityCheck()) {
+            $submitVisionDialog.dialog("open");
+          }
+        });
+        $("#game-button").on("click", function () {
+          window.location.href = "game.html" + window.location.search;
+        });
+        $("#browse-button").on("click", function () {
+          window.location.href = "browse.html" + window.location.search;
+        });
+        envObj.showPage();
+      }
+    });
+  }
+
+  /**
    * Initialize the user interface.
    * @private
    * @param {Object} envObj - environment object (in environment.js).
@@ -262,36 +216,11 @@
   function initUI(envObj) {
     var queryParas = periscope.util.parseVars(window.location.search);
     var scenarioId = "scenario_id" in queryParas ? queryParas["scenario_id"] : undefined;
+    var topicId = "topic_id" in queryParas ? queryParas["topic_id"] : undefined;
     if (typeof scenarioId !== "undefined") {
-      envObj.getScenarioById(scenarioId, function (data) {
-        var scenario = data["data"];
-        if ($.isEmptyObject(scenario)) {
-          envObj.showErrorPage();
-        } else {
-          $("#scenario-title").text(scenario["title"]);
-          $("#scenario-description").html(scenario["description"]);
-          loadMood(envObj);
-          createPhotoPickerDialog(envObj, function ($dialog) {
-            $("#vision-image-frame").on("click", function () {
-              $dialog.dialog("open");
-              $("#photo-search-query").focus();
-            });
-          });
-          createSubmitVisionDialog(envObj, scenarioId, function ($dialog) {
-            $("#submit-vision-button").on("click", function () {
-              if (submitVisionSanityCheck()) {
-                $dialog.dialog("open");
-              }
-            });
-          });
-          $("#game-button").on("click", function () {
-            window.location.replace("game.html" + window.location.search);
-          });
-          $("#browse-button").on("click", function () {
-            window.location.replace("browse.html" + window.location.search);
-          });
-          envObj.showPage();
-        }
+      envObj.checkUserConsent(topicId, function () {
+        // The user has provided consent
+        loadPageContent(envObj, scenarioId);
       });
     } else {
       envObj.showErrorPage();

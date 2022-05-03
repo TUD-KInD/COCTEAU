@@ -2,6 +2,7 @@
 
 import datetime
 from sqlalchemy import func
+from sqlalchemy.sql import exists
 from sqlalchemy.orm import load_only
 from models.model import db
 from models.model import Game
@@ -29,15 +30,10 @@ def create_random_game(user_id, scenario_id=None):
     game : Game
         The created game object or None.
     """
-    # Get the list of vision IDs that the user played before
-    excluded_g = Game.query.filter((Game.user_id==user_id)&(Game.status==GameStatusEnum.COMPLETED))
-    excluded_v = [g.vision_id for g in excluded_g.distinct(Game.vision_id).all()]
-
     # Exclude the visions that are created by the same user or played by the user
-    if scenario_id is None:
-        q = Vision.query.filter((Vision.user_id!=user_id)&(Vision.id.not_in(excluded_v)))
-    else:
-        q = Vision.query.filter((Vision.scenario_id==scenario_id)&(Vision.user_id!=user_id)&(Vision.id.not_in(excluded_v)))
+    q = Vision.query.filter(Vision.user_id!=user_id).filter(~exists().where(Vision.id==Game.vision_id, Game.user_id==user_id, Game.status==GameStatusEnum.COMPLETED))
+    if scenario_id is not None:
+        q = q.filter(Vision.scenario_id==scenario_id)
 
     # Randomly choose a vision
     vision = q.order_by(func.random()).first()

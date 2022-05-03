@@ -42,6 +42,9 @@ def mood():
     image : str
         Image URL of the mood.
         (optional for POST and PATCH)
+    order : int
+        Order of the mood relative to others.
+        (optional for POST and PATCH)
 
     Returns
     -------
@@ -72,11 +75,12 @@ def mood():
         # Create a mood (admin only)
         name = rj.get("name")
         image = rj.get("image")
+        order = rj.get("order")
         if name is None:
             e = InvalidUsage("Must have 'name'.", status_code=400)
             return handle_invalid_usage(e)
         else:
-            return try_create_mood(name, image=image)
+            return try_create_mood(name, image=image, order=order)
     elif request.method == "PATCH":
         # Update a mood (admin only)
         mood_id = rj.get("mood_id")
@@ -86,11 +90,12 @@ def mood():
         else:
             name = rj.get("name")
             image = rj.get("image")
-            if name is None and image is None:
+            order = rj.get("order")
+            if name is None and image is None and order is None:
                 e = InvalidUsage("Must have at least one field to update.", status_code=400)
                 return handle_invalid_usage(e)
             else:
-                return try_update_mood(mood_id, name=name, image=image)
+                return try_update_mood(mood_id, name=name, image=image, order=order)
     elif request.method == "DELETE":
         # Delete a topic (admin only)
         mood_id = rj.get("mood_id")
@@ -118,14 +123,14 @@ def try_get_all_moods():
 
 
 @try_wrap_response
-def try_create_mood(name, image=None):
-    data = create_mood(name, image=image)
+def try_create_mood(name, image=None, order=None):
+    data = create_mood(name, image=image, order=order)
     return jsonify({"data": mood_schema.dump(data)})
 
 
 @try_wrap_response
-def try_update_mood(mood_id, name=None, image=None):
-    data = update_mood(mood_id, name=name, image=image)
+def try_update_mood(mood_id, name=None, image=None, order=None):
+    data = update_mood(mood_id, name=name, image=image, order=order)
     return jsonify({"data": mood_schema.dump(data)})
 
 

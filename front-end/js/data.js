@@ -39,8 +39,11 @@
         var $scenario = $("#scenario");
         for (var i = 0; i < scenarios.length; i++) {
           var d = scenarios[i];
-          var $t = createScenarioHTML(d["id"], d["title"], "img/" + d["image"], $dataDialog);
-          $scenario.append($t);
+          if (d["mode"] == 0) {
+            // Only show the scenarios in the deployment mode (exclude the ones in the experiment mode)
+            var $t = createScenarioHTML(d["id"], d["title"], "img/" + d["image"], $dataDialog);
+            $scenario.append($t);
+          }
         }
         envObj.showPage();
       }
@@ -50,7 +53,6 @@
   /**
    * Initialize the page.
    * @private
-   * @todo Check if user logged in, if not, show the login dialog.
    */
   function init() {
     var env = new periscope.Environment({

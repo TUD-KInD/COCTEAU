@@ -4,6 +4,7 @@ import enum
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from sqlalchemy import MetaData
+from sqlalchemy.sql import expression
 
 
 # Set the naming convention for database columns
@@ -42,7 +43,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, server_default=func.now())
     client_id = db.Column(db.String(255), unique=True, nullable=False)
-    client_type = db.Column(db.Integer, nullable=False, default=1)
+    client_type = db.Column(db.Integer, nullable=False, server_default="1")
     answers = db.relationship("Answer", backref=db.backref("user", lazy=True), lazy=True)
 
     def __repr__(self):
@@ -92,6 +93,14 @@ class Scenario(db.Model):
         Short description of the scenario.
     image : str
         A URL to an image describing the scenario.
+    mode : int
+        The system mode configuration (which affects the interaction type).
+        (0 means the normal deployment mode)
+        (other numbers mean different experiment modes)
+    view : int
+        The system view configuration (which affects the roles).
+        (0 means the normal deployment view)
+        (other numbers mean different experiment views)
     topic_id : int
         The ID of the parent Topic.
     questions : relationship
@@ -101,6 +110,8 @@ class Scenario(db.Model):
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=False)
+    mode = db.Column(db.Integer, nullable=False, server_default="0")
+    view = db.Column(db.Integer, nullable=False, server_default="0")
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"))
     questions = db.relationship("Question", backref=db.backref("scenario", lazy=True), lazy=True)
 
@@ -114,6 +125,8 @@ class QuestionTypeEnum(enum.Enum):
     SINGLE_CHOICE = "Single Choice"
     MULTI_CHOICE = "Multi Choice"
     FREE_TEXT = "Free Text"
+    CREATE_VISION = "Create Vision"
+    CREATE_MOOD = "Create Mood"
 
 
 class Question(db.Model):
@@ -133,12 +146,22 @@ class Question(db.Model):
     question_type : enum.Enum
         Type of the question.
         It can be SINGLE_CHOICE, MULTI_CHOICE or FREE_TEXT.
+        NULL means that the question is a description, not a question.
+    order : int
+        Position of the Question with respect to the others.
+    page : int
+        The page number for the question.
+        (for creating questions on different pages on the front-end side)
+        Page -1 means the question will appear on any page.
+    shuffle_choices : bool
+        Whether we want to randomly shuffle the choices or not.
+        (for the front-end to decide how to handle this parameter)
     scenario_id : int
         ID of the Scenario the question belongs to.
         Either the scenario_id or topic_id must be set, not both.
     topic_id : int
         ID of the Scenario the question belongs to.
-        Either the scenario_id or topic_id must be set. not both.
+        Either the scenario_id or topic_id must be set, not both.
     choices : relationship
         List of possible choices (only of SINGLE_CHOICE and MULTI_CHOICE questions).
     answers : relationship
@@ -147,14 +170,17 @@ class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String, nullable=False)
     question_type = db.Column(db.Enum(QuestionTypeEnum))
+    order = db.Column(db.Integer, nullable=False, server_default="0")
+    page = db.Column(db.Integer, nullable=False, server_default="-1")
+    shuffle_choices = db.Column(db.Boolean, server_default=expression.false())
     scenario_id = db.Column(db.Integer, db.ForeignKey("scenario.id"))
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"))
     choices = db.relationship("Choice", backref=db.backref("question", lazy=True), lazy=True)
     answers = db.relationship("Answer", backref=db.backref("question", lazy=True), lazy=True)
 
     def __repr__(self):
-        return "<Question id=%r text=%r question_type=%r scenario_id=%r topic_id=%r choices=%r>" % (
-                self.id, self.text, self.question_type, self.scenario_id, self.topic_id, self.choices)
+        return "<Question id=%r text=%r question_type=%r scenario_id=%r topic_id=%r>" % (
+                self.id, self.text, self.question_type, self.scenario_id, self.topic_id)
 
 
 answer_choice_table = db.Table("answers_choice_table", db.Model.metadata,
@@ -201,6 +227,8 @@ class Answer(db.Model):
         Unique identifier.
     text : str
         The text of the Answer, only available for FREE_TEXT questions.
+    secret : str
+        Any secret information related to the answer for admin users.
     created_at : datetime
         Timestamp of when the answer was submitted.
     user_id : int
@@ -216,6 +244,7 @@ class Answer(db.Model):
     created_at = db.Column(db.DateTime, server_default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     question_id = db.Column(db.Integer, db.ForeignKey("question.id"))
+    secret = db.Column(db.String, nullable=True)
     choices = db.relationship("Choice",
             secondary=answer_choice_table, lazy="subquery", back_populates="answers")
 
@@ -267,10 +296,13 @@ class Mood(db.Model):
         Name of the mood.
     image : str
         Image URL of the mood.
+    order : int
+        Position of the Mood with respect to the others.
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=True)
+    order = db.Column(db.Integer, nullable=False, server_default="0")
 
     def __repr__(self):
         return "<Mood id=%r name=%r image=%r>" % (

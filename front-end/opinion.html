@@ -32,44 +32,28 @@
     <div class="content">
       <div class="content-table flex-column">
         <div class="flex-row">
-          <div class="flex-item flex-column">
-            <!-- The scenario title will be loaded by using the back-end API -->
-            <h2 id="scenario-title" class="add-top-margin"></h2>
-            <p class="text">
-              <!-- The scenario description will be loaded by using the back-end API -->
-              <span id="scenario-description"></span>
-            </p>
-            <hr>
-            <p class="text highlight-text">
-              Would you mind providing opinions on this scenario?
-              Please let us know by answering the questions below.
-            </p>
-          </div>
           <!-- The questions will be loaded by using the back-end API -->
           <div class="flex-item flex-column-no-wrap full-width" id="scenario-questions"></div>
-          <div class="flex-item flex-column">
+          <div class="flex-item flex-column" id="footer">
             <p class="text">
-              Thank you! Please click the button below to submit opinions.
+              Thank you! Please click the button below to submit the answers.
               <span class="custom-text-danger" id="submit-survey-error-message" style="display: none;"></span>
             </p>
             <div class="control-group">
               <a id="next-button" class="custom-button-flat large pulse-primary stretch-on-mobile" href="javascript:void(0)">
-                <img src="img/next.png"><span>Submit opinions</span>
+                <img src="img/next.png"><span>Submit</span>
               </a>
             </div>
-          </div>
-          <div id="dialog-demographics" title="Demographics" data-role="none" style="display: none;">
-            <p>
-              Would you mind helping us understand the diversity of opinions?
-              Your data will only be used in anonymous and aggregated form.
-              Thank you!
-              <span class="custom-text-danger" id="submit-demographics-error-message" style="display: none;"></span>
-            </p>
-            <div id="demographics-questions" class="add-top-margin"></div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <div id="dialog-topic-question" title="Consent" data-role="none" style="display: none;">
+    <div id="topic-questions"></div>
+    <p class="add-top-margin">
+      <span class="custom-text-danger" id="submit-topic-question-error-message" style="display: none;"></span>
+    </p>
   </div>
 </body>
 
