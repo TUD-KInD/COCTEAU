@@ -46,7 +46,7 @@ study_head = [
         "is_just_description": True,
     },
     {
-        "text": "Please answer the following questions regarding empathy.",
+        "text": "Please indicate how much you DISAGREE or AGREE with each of the following statements.",
         "is_just_description": True,
     },
 ]
