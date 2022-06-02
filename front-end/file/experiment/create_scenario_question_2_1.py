@@ -131,7 +131,7 @@ opinion_before = [
         ],
     },
     {
-        "text": "Express your opinion with an image and a caption. To do so, use the provided tool below to look for an image that helps convey your perspective and add a few words to better explain your point of view. Note that you can be creative with the choice of the image and the text (e.g., the text should not simply describe the image).",
+        "text": "Motivate your opinion with an image and a caption. To do so, use the provided tool below to look for an image that helps convey your perspective and add a few words to better explain your point of view. Note that you can be creative with the choice of the image and the text (e.g., the text should not simply describe the image).",
         "is_create_vision": True,
     },
 ]
