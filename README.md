@@ -355,6 +355,23 @@ If you want to downgrade the database to a previous state, run the following.
 # Downgrade the database to the previous migration
 sh db.sh downgrade
 ```
+Dump and restore database on the Ubuntu server.
+```sh
+# Dump production database
+sudo -u postgres pg_dump public_engagement_tool_production > public_engagement_tool_production_20220602.sql
+
+# Restart staging to be able to delete the database
+sudo systemctl restart ppet
+
+# Delete the staging database
+sudo -u postgres psql template1 -c "DROP DATABASE public_engagement_tool_staging;"
+
+# Create the staging database
+sudo -u postgres psql template1 -c "CREATE DATABASE public_engagement_tool_staging OWNER public_engagement_tool;"
+
+# Restore staging database from production
+sudo -u postgres psql public_engagement_tool_staging < public_engagement_tool_production_20220602.sql
+```
 
 # <a name="code-infrastructure"></a>Update and test code infrastructure
 For the back-end, the test cases are stored in the "back-end/www/tests" folder and written using [Flask-Testing](https://pythonhosted.org/Flask-Testing/). Remember to write test cases for the model operations in the "back-end/www/models/model_operations" folder. Below shows how to run test cases:
