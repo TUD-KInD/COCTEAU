@@ -252,15 +252,16 @@
       var icv = $isCreateVision.is(":checked");
       envObj.createQuestion(t, choices, ti, si, mc, jd, order, page, shuffle, icv, function (returnData) {
         console.log(returnData);
-        $questionText.val("");
+        //$questionText.val("");
         $questionTopicId.val("");
         $questionScenarioId.val("");
-        $questionOrder.val("");
-        $questionPage.val("");
+        //$questionOrder.val("");
+        //$questionPage.val("");
         $isMultipleChoice.prop("checked", false);
         $isJustDescription.prop("checked", false);
         $questionShuffleChoices.prop("checked", false);
         $isCreateVision.prop("checked", false);
+        /*
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -271,6 +272,7 @@
           }
         });
         deleteRow("choices-table");
+        */
       });
     });
     $("#update-question").on("click", function () {
@@ -309,13 +311,14 @@
       var shuffle = $questionShuffleChoices.is(":checked");
       envObj.updateQuestion(qi, t, choices, ti, si, order, page, shuffle, function (returnData) {
         console.log(returnData);
-        $questionText.val("");
+        //$questionText.val("");
         $questionTopicId.val("");
         $questionScenarioId.val("");
         $questionId.val("");
-        $questionOrder.val("");
-        $questionPage.val("");
+        //$questionOrder.val("");
+        //$questionPage.val("");
         $questionShuffleChoices.prop("checked", false);
+        /*
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
           if (idx == 0) {
@@ -326,6 +329,7 @@
           }
         });
         deleteRow("choices-table");
+        */
       });
     });
     $("#delete-question").on("click", function () {
