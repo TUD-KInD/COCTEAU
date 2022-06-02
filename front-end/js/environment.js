@@ -1732,14 +1732,15 @@
      * Create the html elements for a scenario question as a text description.
      * @private
      * @param {string} text - the text description.
+     * @param {number} scenarioId - ID of the scenario that we wish to get the corresponding questions.
      * @returns {Object} - a jQuery DOM object.
      */
-    function createScenarioTextHTML(text) {
+    function createScenarioTextHTML(text, scenarioId) {
       var $html;
       try {
         $html = $(text);
       } catch (error) {
-        $html = $('<p class="text break-long-url">' + text + '</p>');
+        $html = $('<p class="text break-long-url" id="st-' + scenarioId + '">' + text + '</p>');
       }
       return $html;
     }
@@ -1794,7 +1795,7 @@
         for (var j = 0; j < questions.length; j++) {
           var q = questions[j]
           if (q["question_type"] == null) {
-            var $q = createScenarioTextHTML(q["text"]);
+            var $q = createScenarioTextHTML(q["text"], q["id"]);
             $container.append($q);
           } else if (q["question_type"] == "CREATE_VISION") {
             var widgets = new edaplotjs.Widgets();
