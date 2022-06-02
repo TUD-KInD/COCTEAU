@@ -302,7 +302,7 @@
       var $questionOrder = $("#want-question-order");
       var order = $questionOrder.val();
       if (order == "") order = undefined;
-      var $questionPage = $("#want-question-order");
+      var $questionPage = $("#want-question-page");
       var page = $questionPage.val();
       if (page == "") page = undefined;
       var $questionShuffleChoices = $("#want-question-shuffle-choices");
