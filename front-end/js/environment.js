@@ -1760,7 +1760,7 @@
       html += '      <img class="painting-frame-image" style="max-height: 300px;" src="img/dummy_image.png">';
       html += '    </div>';
       html += '  </a>';
-      html += '  <textarea class="custom-textbox-survey add-top-margin" style="min-height: 100px;" placeholder="Your caption about this image (max 140 characters)" maxlength="140"></textarea>';
+      html += '  <textarea class="custom-textbox-survey add-top-margin" style="min-height: 100px;" placeholder="Please provide a few words to explain your point of view (max 140 characters)" maxlength="140"></textarea>';
       html += '</div>';
       var $html = $(html);
       return $html;

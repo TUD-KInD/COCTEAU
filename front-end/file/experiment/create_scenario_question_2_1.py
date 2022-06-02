@@ -11,7 +11,7 @@ likert_scale_5 = [
 ]
 
 empathy_questions = [
-    {"text": "Before criticizing somebody, I try to imagine how I would feel if I were in their place."},
+    {"text": "Before criticizing somebody, I try to imagine how I would feel if I were in their place."}, # Q2
     {"text": "When I see someone being taken advantage of, I feel kind of protective toward them."},
     {"text": "If I'm sure I'm right about something, I don't waste much time listening to other people's arguments."},
     {"text": "When I see someone being treated unfairly, I sometimes don't feel very much pity for them."},
@@ -20,13 +20,13 @@ empathy_questions = [
     {"text": "I believe that there are two sides to every question and try to look at them both."},
     {"text": "I would describe myself as a pretty soft-hearted person."},
     {"text": "I sometimes find it difficult to see things from the other person's point of view."},
-    {"text": "Sometimes I don't feel sorry for other people when they are having problems."},
-    {"text": "I do not try to imagine how I would feel if I were in somebody's place before criticizing them."},
+    {"text": "Sometimes I don't feel sorry for other people when they are having problems."}, # Q1
+    {"text": "I do not try to imagine how I would feel if I were in somebody's place before criticizing them."}, # reversed question of Q2
     {"text": "I try to look at everybody's side of a disagreement before I make a decision."},
     {"text": "Other people's misfortunes do not usually disturb me a great deal."},
     {"text": "When I'm upset at someone, I usually try to put myself in their shoes for a while."},
     {"text": "I am often quite touched by things that I see happen."},
-    {"text": "Sometimes I feel sorry for other people when they are having problems."},
+    {"text": "Sometimes I feel sorry for other people when they are having problems."}, # reversed question of Q1
 ]
 
 for i in range(len(empathy_questions)):
@@ -131,7 +131,7 @@ opinion_before = [
         ],
     },
     {
-        "text": "Choose an image and provide a caption to explain why you choose the opinion.",
+        "text": "Express your opinion with an image and a caption. To do so, use the provided tool below to look for an image that helps convey your perspective and add a few words to better explain your point of view. Note that you can be creative with the choice of the image and the text (e.g., the text should not simply describe the image).",
         "is_create_vision": True,
     },
 ]
