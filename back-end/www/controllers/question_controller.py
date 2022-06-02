@@ -127,7 +127,7 @@ def question():
             return handle_invalid_usage(e)
         else:
             return try_update_question(question_id, text=t, choices=c,
-                    topic_id=ti, scenario_id=si, order=o, page=p, shuffle_choices=shuffle_choices)
+                    topic_id=ti, scenario_id=si, order=o, page=p, shuffle_choices=sc)
     elif request.method == "DELETE":
         # Delete a question (admin only)
         question_id_list = rj.get("data", [])
