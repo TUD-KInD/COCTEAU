@@ -1722,7 +1722,7 @@
       }
       html += '  </div>';
       if (option.length == 0) {
-        html += '  <textarea class="custom-textbox-survey add-top-margin" placeholder="Your opinion (max 500 characters)" maxlength="500"></textarea>';
+        html += '  <textarea class="custom-textbox-survey add-top-margin" placeholder="(max 500 characters)" maxlength="500"></textarea>';
       }
       html += '</div>';
       return $(html);
