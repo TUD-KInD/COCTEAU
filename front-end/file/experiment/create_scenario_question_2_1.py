@@ -20,6 +20,7 @@ empathy_questions = [
     {"text": "I believe that there are two sides to every question and try to look at them both."},
     {"text": "I would describe myself as a pretty soft-hearted person."},
     {"text": "I sometimes find it difficult to see things from the other person's point of view."},
+    {"text": "Please select the option Strongly Agree from the list of choices below."}, # attention check
     {"text": "Sometimes I don't feel sorry for other people when they are having problems."}, # Q1
     {"text": "I do not try to imagine how I would feel if I were in somebody's place before criticizing them."}, # reversed question of Q2
     {"text": "I try to look at everybody's side of a disagreement before I make a decision."},
@@ -238,6 +239,7 @@ rethink = [
         "text": "Based on your assigned role, what is your opinion on the scenario?",
         "choices": opinion_after,
     },
+    {"text": "Please enter 'I confirm my opinion' to the text box below."},
 ]
 
 motivations_meme = [
