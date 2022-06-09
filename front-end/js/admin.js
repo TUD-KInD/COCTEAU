@@ -257,9 +257,9 @@
         $questionScenarioId.val("");
         //$questionOrder.val("");
         //$questionPage.val("");
-        $isMultipleChoice.prop("checked", false);
-        $isJustDescription.prop("checked", false);
-        $questionShuffleChoices.prop("checked", false);
+        //$isMultipleChoice.prop("checked", false);
+        //$isJustDescription.prop("checked", false);
+        //$questionShuffleChoices.prop("checked", false);
         $isCreateVision.prop("checked", false);
         /*
         $("#choices-table").find("tr").each(function (idx) {
@@ -317,7 +317,7 @@
         $questionId.val("");
         //$questionOrder.val("");
         //$questionPage.val("");
-        $questionShuffleChoices.prop("checked", false);
+        //$questionShuffleChoices.prop("checked", false);
         /*
         $("#choices-table").find("tr").each(function (idx) {
           var $this = $(this);
